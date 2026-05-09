@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#f8fafc">
   <title>Protocolo Actuacion Defensoria</title>
 
@@ -19,13 +19,15 @@
       --text-sec: #475569;
       --accent: #1e3a5f;
       --accent-light: #e2e8f0;
+      --glass-blue: rgba(59, 130, 246, 0.7);
+      --glass-glow: rgba(59, 130, 246, 0.25);
       --danger: #dc2626;
       --danger-bg: #fef2f2;
       --danger-border: #fca5a5;
       --shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
       --radius: 14px;
       --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      --filter-height: 48px;
+      --filter-height: 54px;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -70,9 +72,9 @@
     }
 
     .menu-btn {
-      padding: 5px 10px;
+      padding: 6px 12px;
       background: transparent; border: 1px solid var(--border);
-      border-radius: 8px; cursor: pointer;
+      border-radius: 10px; cursor: pointer;
       font-size: 0.85rem; font-weight: 500;
       color: var(--accent); transition: var(--transition);
       font-family: inherit;
@@ -96,8 +98,8 @@
     .menu-dropdown.open { opacity: 1; visibility: visible; transform: translateY(0); }
 
     .menu-item {
-      padding: 8px 10px;
-      border-radius: 8px;
+      padding: 10px 12px;
+      border-radius: 10px;
       font-size: 0.85rem;
       font-weight: 500;
       color: var(--text-main);
@@ -109,11 +111,11 @@
     .menu-item:hover { background: var(--accent-light); color: var(--accent); }
 
     .logout-btn {
-      padding: 5px 12px;
+      padding: 6px 14px;
       background: transparent;
       border: 1px solid var(--danger);
       color: var(--danger);
-      border-radius: 8px;
+      border-radius: 10px;
       font-weight: 500;
       font-size: 0.85rem;
       cursor: pointer;
@@ -130,7 +132,7 @@
       overflow-y: auto;
       overflow-x: hidden;
       padding: clamp(12px, 3vw, 20px);
-      padding-bottom: calc(6px + var(--filter-height));
+      padding-bottom: calc(8px + var(--filter-height));
       scroll-behavior: smooth;
       min-height: 0;
     }
@@ -186,6 +188,7 @@
       flex: 1 0 auto;
     }
 
+    /* Layout responsivo: escritorio 5 columnas, tablet 2, móvil 1 */
     @media (min-width: 768px) {
       .content-grid {
         grid-template-columns: repeat(5, 1fr);
@@ -206,27 +209,45 @@
       background: #fff;
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: clamp(16px, 2vw, 24px);
+      padding: clamp(14px, 2vw, 24px);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       transition: var(--transition);
       border-left: 4px solid transparent;
-      min-height: 110px;
+      min-height: 100px;
       height: 100%;
       text-align: center;
     }
     .content-card.hidden { display: none; }
+    
+    /* Efecto base hover (se mantiene en móvil pero con cambios mínimos, sin glass) */
     .content-card:hover {
       border-left-color: var(--accent);
       box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
       background: #fafbfc;
       transform: translateY(-2px);
     }
+
+    /* Efecto GLASS AZUL exclusivo para escritorio (hover con puntero y ancho mínimo) */
+    @media (hover: hover) and (pointer: fine) and (min-width: 768px) {
+      .content-card:hover {
+        border: 1px solid var(--glass-blue);
+        border-left: 4px solid var(--glass-blue);
+        box-shadow: 0 12px 24px -12px rgba(59, 130, 246, 0.35), 0 0 0 1px rgba(59, 130, 246, 0.2);
+        background: rgba(255, 255, 255, 0.96);
+        backdrop-filter: blur(2px);
+        transform: translateY(-2px);
+        transition: all 0.2s ease;
+      }
+      .content-card:hover h3 {
+        color: #1e40af;
+      }
+    }
     
     .content-card h3 {
-      font-size: clamp(0.9rem, 2.2vw, 1.2rem);
+      font-size: clamp(0.85rem, 2.2vw, 1.2rem);
       font-weight: 600;
       color: var(--text-main);
       line-height: 1.3;
@@ -249,7 +270,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 12px 16px;
+      padding: 14px 16px;
       border-bottom: 1px solid var(--border);
       background: #fefefe;
       gap: 12px;
@@ -270,7 +291,7 @@
     .back-btn {
       background: var(--accent-light);
       border: none;
-      padding: 6px 16px;
+      padding: 8px 20px;
       border-radius: 40px;
       font-weight: 500;
       cursor: pointer;
@@ -335,30 +356,31 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
+    /* ===== FILTRO FLOTANTE RESPONSIVO (táctil amigable) ===== */
     .chat-filter {
       position: fixed;
       bottom: 12px;
       left: 50%;
       transform: translateX(-50%);
       width: min(94%, 600px);
-      background: #fff;
+      background: rgba(255, 255, 255, 0.96);
       border: 1px solid var(--border);
-      border-radius: 40px;
-      padding: 4px 6px;
+      border-radius: 60px;
+      padding: 6px 10px;
       display: flex;
       align-items: center;
-      gap: 4px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      gap: 8px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
       z-index: 100;
-      backdrop-filter: blur(8px);
-      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      background: rgba(255,255,255,0.94);
     }
     .chat-filter input {
       flex: 1;
       border: none;
       outline: none;
-      font-size: 0.85rem;
-      padding: 8px 6px;
+      font-size: 0.9rem;
+      padding: 10px 8px;
       background: transparent;
       font-family: inherit;
       color: var(--text-main);
@@ -366,16 +388,16 @@
     .chat-filter input::placeholder {
       color: var(--text-sec);
       opacity: 0.7;
-      font-size: 0.8rem;
+      font-size: 0.85rem;
     }
     .chat-filter button {
-      padding: 6px 12px;
-      border-radius: 32px;
+      padding: 8px 18px;
+      border-radius: 40px;
       border: none;
       background: var(--accent);
       color: #fff;
       cursor: pointer;
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       font-weight: 500;
       font-family: inherit;
       transition: var(--transition);
@@ -385,6 +407,74 @@
       background: #16304d;
     }
 
+    /* Mejoras táctiles en móvil */
+    @media (max-width: 768px) {
+      .chat-filter {
+        padding: 6px 8px;
+        bottom: 10px;
+      }
+      .chat-filter input {
+        padding: 12px 8px;
+        font-size: 0.9rem;
+      }
+      .chat-filter button {
+        padding: 10px 20px;
+        font-size: 0.85rem;
+      }
+      .menu-btn, .logout-btn {
+        padding: 8px 14px;
+        font-size: 0.8rem;
+      }
+      .back-btn {
+        padding: 8px 16px;
+      }
+      .content-card {
+        min-height: 85px;
+        padding: 12px 8px;
+      }
+      .content-card h3 {
+        font-size: 0.9rem;
+      }
+      .top-bar {
+        height: 54px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .top-bar {
+        padding: 0 12px;
+      }
+      .header-title {
+        display: none;
+      }
+      .menu-dropdown {
+        width: calc(100vw - 24px);
+        left: 50%;
+        transform: translateX(-50%) translateY(-8px);
+      }
+      .menu-dropdown.open {
+        transform: translateX(-50%) translateY(0);
+      }
+      .menu-item {
+        padding: 12px 14px;
+        font-size: 0.9rem;
+      }
+      .content-card {
+        min-height: 80px;
+      }
+      .welcome-banner h2 {
+        font-size: 0.95rem;
+      }
+      .iframe-header h3 {
+        font-size: 0.9rem;
+      }
+      .back-btn {
+        font-size: 0.75rem;
+        padding: 6px 14px;
+      }
+    }
+
+    /* Modal responsivo */
     .modal-overlay {
       position: fixed; inset: 0;
       background: rgba(15, 23, 42, 0.45);
@@ -399,8 +489,8 @@
       background: var(--danger-bg);
       border: 1px solid var(--danger-border);
       border-radius: var(--radius);
-      padding: 20px;
-      width: min(90%, 300px);
+      padding: 24px 20px;
+      width: min(90%, 320px);
       text-align: center;
       box-shadow: 0 12px 32px rgba(220, 38, 38, 0.15);
       transform: scale(0.95);
@@ -408,32 +498,31 @@
     }
     .modal-overlay.open .modal-card { transform: scale(1); }
 
-    .modal-card h2 { color: var(--danger); margin-bottom: 6px; font-size: 1rem; font-weight: 600; }
-    .modal-card p { color: #991b1b; margin-bottom: 16px; font-size: 0.85rem; }
+    .modal-card h2 { color: var(--danger); margin-bottom: 8px; font-size: 1.1rem; font-weight: 600; }
+    .modal-card p { color: #991b1b; margin-bottom: 20px; font-size: 0.85rem; }
 
-    .modal-actions { display: flex; gap: 8px; justify-content: center; }
+    .modal-actions { display: flex; gap: 12px; justify-content: center; }
     .modal-btn {
-      padding: 8px 14px; border-radius: 8px; border: none;
-      font-weight: 500; font-size: 0.85rem; cursor: pointer;
-      flex: 1; max-width: 100px; font-family: inherit;
+      padding: 10px 18px; border-radius: 40px; border: none;
+      font-weight: 600; font-size: 0.85rem; cursor: pointer;
+      flex: 1; max-width: 110px; font-family: inherit;
     }
     .btn-cancel { background: #f1f5f9; color: var(--text-main); }
     .btn-cancel:hover { background: #e2e8f0; }
     .btn-confirm { background: var(--danger); color: #fff; }
     .btn-confirm:hover { background: #b91c1c; }
 
-    @media (max-width: 768px) {
-      .top-bar { height: 52px; }
-      .header-title { display: none; }
-      .menu-dropdown { width: calc(100vw - 24px); left: 50%; transform: translateX(-50%) translateY(-6px); }
-      .menu-dropdown.open { transform: translateX(-50%) translateY(0); }
-      .chat-filter { width: calc(100% - 20px); bottom: 10px; }
-      .iframe-header h3 { font-size: 0.95rem; }
+    /* Ajustes extra para evitar desbordes */
+    .main-content::-webkit-scrollbar {
+      width: 5px;
     }
-    @media (max-width: 480px) {
-      .logout-btn, .menu-btn { font-size: 0.75rem; padding: 4px 8px; }
-      .content-card { padding: 12px 8px; min-height: 80px; }
-      .content-card h3 { font-size: 0.85rem; }
+    .main-content::-webkit-scrollbar-track {
+      background: #e2e8f0;
+      border-radius: 10px;
+    }
+    .main-content::-webkit-scrollbar-thumb {
+      background: #94a3b8;
+      border-radius: 10px;
     }
   </style>
 </head>
@@ -467,7 +556,7 @@
   </main>
 
   <div class="chat-filter" id="filterBar">
-    <input type="text" id="filterInput" placeholder="Buscar tema..." autocomplete="off">
+    <input type="text" id="filterInput" placeholder="Buscar tema (atención, plazos, leyes...)" autocomplete="off">
     <button id="filterBtn">Buscar</button>
   </div>
 
@@ -483,7 +572,7 @@
   </div>
 
   <script>
-    // ========== URLS (EDITABLE) ==========
+    // ========== URLs (EDITABLE) ==========
     const externalUrls = {
       atencion_publico: "publico.html",
       documentos_previos: "",
@@ -526,21 +615,17 @@
       if (!currentIframeActive) return false;
       mainContent.classList.remove('iframe-mode');
       rebuildGrid();
-      // No ocultamos el banner si ya estaba oculto, pero al salir del detalle lo mostramos
       welcomeBanner.classList.remove('hide-banner');
       currentIframeActive = false;
       return true;
     }
 
-    // Reconstruye la grilla y luego aplica el filtro actual (si lo hay)
+    // Reconstruye la grilla y luego aplica el filtro actual si existe
     function rebuildAndFilter() {
       rebuildGrid();
-      // El filtro se aplica automáticamente después de rebuildGrid porque llamamos a applyFilterOnGrid
-      // pero como rebuildGrid llama a attachCardEvents y no aplica filtro, lo hacemos aquí.
       if (filterInput.value.trim() !== "") {
         applyFilterOnGrid();
       } else {
-        // Asegurar que no haya mensaje "no resultados" y que todas las tarjetas sean visibles
         const allCards = document.querySelectorAll('.content-card');
         allCards.forEach(c => c.classList.remove('hidden'));
         const noResultsMsg = document.getElementById('noResultsMsg');
@@ -654,7 +739,6 @@
       const closeBtn = document.getElementById('closeIframeBtn');
       if (closeBtn) closeBtn.addEventListener('click', () => {
         closeIframeView();
-        // Después de cerrar, si hay filtro activo, aplicarlo
         if (filterInput.value.trim() !== "") {
           applyFilterOnGrid();
         }
@@ -698,13 +782,11 @@
     // Función principal de filtrado: cierra cualquier contenido abierto y luego aplica el filtro
     function handleFilterAndClose() {
       if (currentIframeActive) {
-        closeIframeView();  // Esto reconstruye la grilla y muestra banner
-        // Después de cerrar, la grilla ya está reconstruida, ahora aplicamos filtro
+        closeIframeView();
         if (filterInput.value.trim() !== "") {
           applyFilterOnGrid();
         }
       } else {
-        // Si no hay iframe, simplemente aplicamos filtro sobre la grilla actual
         applyFilterOnGrid();
       }
     }
@@ -734,11 +816,10 @@
       rebuildGrid();
       welcomeBanner.classList.remove('hide-banner');
       filterInput.value = '';
-      applyFilterOnGrid(); // no hay filtro, muestra todas
+      applyFilterOnGrid(); 
       currentIframeActive = false;
       mainContent.classList.remove('iframe-mode');
       
-      // Eventos de filtro: al escribir o hacer clic, cierran el detalle y filtran
       filterInput.addEventListener('input', handleFilterAndClose);
       filterBtn.addEventListener('click', handleFilterAndClose);
       
@@ -766,7 +847,6 @@
         if (e.key === 'Escape') {
           if (currentIframeActive) {
             closeIframeView();
-            // Si había filtro, aplicarlo después de cerrar
             if (filterInput.value.trim() !== "") {
               applyFilterOnGrid();
             }
