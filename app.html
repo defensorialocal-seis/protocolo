@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#f8fafc">
+  <title>Protocolo Actuacion Defensoria</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-app: #f1f5f9;
+      --bg-panel: rgba(255, 255, 255, 0.82);
+      --border: rgba(30, 41, 59, 0.12);
+      --text-main: #0f172a;
+      --text-sec: #475569;
+      --accent: #1e3a5f;
+      --accent-light: #e2e8f0;
+      --danger: #dc2626;
+      --danger-bg: #fef2f2;
+      --danger-border: #fca5a5;
+      --shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+      --radius: 14px;
+      --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      --filter-height: 48px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-app);
+      color: var(--text-main);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ===== PANEL SUPERIOR FIJO ===== */
+    .top-bar {
+      height: 56px;
+      background: var(--bg-panel);
+      backdrop-filter: blur(16px) saturate(140%);
+      -webkit-backdrop-filter: blur(16px) saturate(140%);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 clamp(12px, 3vw, 20px);
+      position: relative;
+      z-index: 50;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      flex-shrink: 0;
+    }
+
+    .header-left { display: flex; align-items: center; gap: 10px; position: relative; }
+    .header-title {
+      font-size: clamp(0.85rem, 2.2vw, 0.95rem);
+      font-weight: 600;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
+    }
+
+    .menu-btn {
+      padding: 5px 10px;
+      background: transparent; border: 1px solid var(--border);
+      border-radius: 8px; cursor: pointer;
+      font-size: 0.85rem; font-weight: 500;
+      color: var(--accent); transition: var(--transition);
+      font-family: inherit;
+    }
+    .menu-btn:hover { background: var(--accent-light); }
+
+    .menu-dropdown {
+      position: absolute;
+      top: 100%; left: 0; margin-top: 6px;
+      width: min(90vw, 280px);
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 6px;
+      display: flex; flex-direction: column; gap: 2px;
+      opacity: 0; visibility: hidden; transform: translateY(-8px);
+      transition: var(--transition);
+      z-index: 60;
+    }
+    .menu-dropdown.open { opacity: 1; visibility: visible; transform: translateY(0); }
+
+    .menu-item {
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-main);
+      cursor: pointer;
+      transition: var(--transition);
+      border: none; background: transparent; width: 100%; text-align: left;
+      font-family: inherit;
+    }
+    .menu-item:hover { background: var(--accent-light); color: var(--accent); }
+
+    .logout-btn {
+      padding: 5px 12px;
+      background: transparent;
+      border: 1px solid var(--danger);
+      color: var(--danger);
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: inherit;
+    }
+    .logout-btn:hover { background: var(--danger); color: #fff; }
+
+    /* ===== CONTENIDO PRINCIPAL ===== */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: clamp(12px, 3vw, 20px);
+      padding-bottom: calc(6px + var(--filter-height));
+      scroll-behavior: smooth;
+      min-height: 0;
+    }
+
+    .main-content.iframe-mode {
+      padding: 0 !important;
+      padding-bottom: var(--filter-height) !important;
+      background: #ffffff;
+      overflow-y: auto;
+    }
+
+    .main-content.iframe-mode #dynamicContainer {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+      height: 100%;
+    }
+
+    .welcome-banner {
+      background: linear-gradient(135deg, var(--accent), #334155);
+      color: #fff;
+      border-radius: var(--radius);
+      padding: clamp(14px, 3vw, 20px);
+      margin-bottom: 16px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(30, 58, 95, 0.15);
+      flex-shrink: 0;
+    }
+    .welcome-banner.hide-banner {
+      display: none;
+    }
+    .welcome-banner h2 { 
+      font-size: clamp(1rem, 2.5vw, 1.3rem); 
+      font-weight: 600; 
+      line-height: 1.3;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    #dynamicContainer {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      min-height: 0;
+    }
+
+    .content-grid {
+      display: grid;
+      gap: 16px;
+      width: 100%;
+      flex: 1 0 auto;
+    }
+
+    @media (min-width: 768px) {
+      .content-grid {
+        grid-template-columns: repeat(5, 1fr);
+      }
+    }
+    @media (max-width: 767px) {
+      .content-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 480px) {
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .content-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: clamp(16px, 2vw, 24px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+      border-left: 4px solid transparent;
+      min-height: 110px;
+      height: 100%;
+      text-align: center;
+    }
+    .content-card.hidden { display: none; }
+    .content-card:hover {
+      border-left-color: var(--accent);
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+      background: #fafbfc;
+      transform: translateY(-2px);
+    }
+    
+    .content-card h3 {
+      font-size: clamp(0.9rem, 2.2vw, 1.2rem);
+      font-weight: 600;
+      color: var(--text-main);
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+    }
+    .content-card:hover h3 { color: var(--accent); }
+
+    .iframe-panel {
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+      width: 100%;
+      flex: 1;
+      min-height: 0;
+      height: 100%;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .iframe-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      background: #fefefe;
+      gap: 12px;
+      flex-wrap: wrap;
+      flex-shrink: 0;
+    }
+    .main-content.iframe-mode .iframe-header {
+      padding-left: clamp(12px, 4vw, 20px);
+      padding-right: clamp(12px, 4vw, 20px);
+    }
+
+    .iframe-header h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--accent);
+      word-break: break-word;
+    }
+    .back-btn {
+      background: var(--accent-light);
+      border: none;
+      padding: 6px 16px;
+      border-radius: 40px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      color: var(--accent);
+      transition: var(--transition);
+      font-size: 0.85rem;
+    }
+    .back-btn:hover {
+      background: var(--accent);
+      color: white;
+    }
+
+    .iframe-container {
+      flex: 1;
+      position: relative;
+      background: #f8fafc;
+      min-height: 0;
+      width: 100%;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    .preparation-message {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+      background: #fefefe;
+      min-height: 0;
+      overflow-y: auto;
+    }
+    .preparation-message-content {
+      color: var(--text-sec);
+      max-width: 300px;
+      margin: 0 auto;
+    }
+    .preparation-message svg {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 0.8rem;
+      opacity: 0.6;
+    }
+    .preparation-message h3 {
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+    .preparation-message p {
+      font-size: 0.85rem;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .chat-filter {
+      position: fixed;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(94%, 600px);
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 40px;
+      padding: 4px 6px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      z-index: 100;
+      backdrop-filter: blur(8px);
+      background: rgba(255,255,255,0.92);
+    }
+    .chat-filter input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 0.85rem;
+      padding: 8px 6px;
+      background: transparent;
+      font-family: inherit;
+      color: var(--text-main);
+    }
+    .chat-filter input::placeholder {
+      color: var(--text-sec);
+      opacity: 0.7;
+      font-size: 0.8rem;
+    }
+    .chat-filter button {
+      padding: 6px 12px;
+      border-radius: 32px;
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 500;
+      font-family: inherit;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+    .chat-filter button:hover {
+      background: #16304d;
+    }
+
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(4px);
+      display: grid; place-items: center;
+      opacity: 0; visibility: hidden; transition: var(--transition);
+      z-index: 200;
+    }
+    .modal-overlay.open { opacity: 1; visibility: visible; }
+
+    .modal-card {
+      background: var(--danger-bg);
+      border: 1px solid var(--danger-border);
+      border-radius: var(--radius);
+      padding: 20px;
+      width: min(90%, 300px);
+      text-align: center;
+      box-shadow: 0 12px 32px rgba(220, 38, 38, 0.15);
+      transform: scale(0.95);
+      transition: var(--transition);
+    }
+    .modal-overlay.open .modal-card { transform: scale(1); }
+
+    .modal-card h2 { color: var(--danger); margin-bottom: 6px; font-size: 1rem; font-weight: 600; }
+    .modal-card p { color: #991b1b; margin-bottom: 16px; font-size: 0.85rem; }
+
+    .modal-actions { display: flex; gap: 8px; justify-content: center; }
+    .modal-btn {
+      padding: 8px 14px; border-radius: 8px; border: none;
+      font-weight: 500; font-size: 0.85rem; cursor: pointer;
+      flex: 1; max-width: 100px; font-family: inherit;
+    }
+    .btn-cancel { background: #f1f5f9; color: var(--text-main); }
+    .btn-cancel:hover { background: #e2e8f0; }
+    .btn-confirm { background: var(--danger); color: #fff; }
+    .btn-confirm:hover { background: #b91c1c; }
+
+    @media (max-width: 768px) {
+      .top-bar { height: 52px; }
+      .header-title { display: none; }
+      .menu-dropdown { width: calc(100vw - 24px); left: 50%; transform: translateX(-50%) translateY(-6px); }
+      .menu-dropdown.open { transform: translateX(-50%) translateY(0); }
+      .chat-filter { width: calc(100% - 20px); bottom: 10px; }
+      .iframe-header h3 { font-size: 0.95rem; }
+    }
+    @media (max-width: 480px) {
+      .logout-btn, .menu-btn { font-size: 0.75rem; padding: 4px 8px; }
+      .content-card { padding: 12px 8px; min-height: 80px; }
+      .content-card h3 { font-size: 0.85rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="top-bar">
+    <div class="header-left">
+      <button class="menu-btn" id="menuBtn">Menú</button>
+      <span class="header-title">Protocolo de Actuación</span>
+      <nav class="menu-dropdown" id="menuDropdown">
+        <button class="menu-item" data-key="atencion_publico">Cómo atender al público</button>
+        <button class="menu-item" data-key="documentos_previos">Qué revisar antes de empezar</button>
+        <button class="menu-item" data-key="subrogacion">Subrogación</button>
+        <button class="menu-item" data-key="antes_tramitar">Antes de mover un expediente</button>
+        <button class="menu-item" data-key="escribir_documentos">Cómo escribir documentos</button>
+        <button class="menu-item" data-key="opiniones_tecnicas">Opinión técnica: Dictamen</button>
+        <button class="menu-item" data-key="leyes_utiles">Leyes que vas a usar</button>
+        <button class="menu-item" data-key="situaciones_especiales">Situaciones especiales</button>
+        <button class="menu-item" data-key="plazos_vencimientos">Plazos y Vencimientos</button>
+        <button class="menu-item" data-key="modelos_usar">Modelos para usar</button>
+      </nav>
+    </div>
+    <button class="logout-btn" id="btnLogout">Salir</button>
+  </header>
+
+  <main class="main-content" id="mainContent">
+    <div class="welcome-banner" id="welcomeBanner">
+      <h2>Hola, Defensoría.<br>Seleccioná un tema para ver el contenido completo.</h2>
+    </div>
+    <div id="dynamicContainer"></div>
+  </main>
+
+  <div class="chat-filter" id="filterBar">
+    <input type="text" id="filterInput" placeholder="Buscar tema..." autocomplete="off">
+    <button id="filterBtn">Buscar</button>
+  </div>
+
+  <div class="modal-overlay" id="logoutModal" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <h2>¿Cerrar sesión?</h2>
+      <p>Se perderán los filtros. Puedes volver cuando quieras.</p>
+      <div class="modal-actions">
+        <button class="modal-btn btn-cancel" id="btnCancelLogout">Cancelar</button>
+        <button class="modal-btn btn-confirm" id="btnConfirmLogout">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ========== URLS (EDITABLE) ==========
+    const externalUrls = {
+      atencion_publico: "publico.html",
+      documentos_previos: "",
+      subrogacion: "",
+      antes_tramitar: "",
+      escribir_documentos: "",
+      opiniones_tecnicas: "",
+      leyes_utiles: "",
+      situaciones_especiales: "",
+      plazos_vencimientos: "",
+      modelos_usar: ""
+    };
+
+    const mainContent = document.getElementById('mainContent');
+    const dynamicContainer = document.getElementById('dynamicContainer');
+    const filterInput = document.getElementById('filterInput');
+    const filterBtn = document.getElementById('filterBtn');
+    const menuBtn = document.getElementById('menuBtn');
+    const menuDropdown = document.getElementById('menuDropdown');
+    const logoutBtn = document.getElementById('btnLogout');
+    const logoutModal = document.getElementById('logoutModal');
+    const btnCancel = document.getElementById('btnCancelLogout');
+    const btnConfirm = document.getElementById('btnConfirmLogout');
+    const welcomeBanner = document.getElementById('welcomeBanner');
+
+    let currentIframeActive = false;
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+      });
+    }
+
+    // Cierra el iframe o vista detalle y restaura la grilla
+    function closeIframeView() {
+      if (!currentIframeActive) return false;
+      mainContent.classList.remove('iframe-mode');
+      rebuildGrid();
+      // No ocultamos el banner si ya estaba oculto, pero al salir del detalle lo mostramos
+      welcomeBanner.classList.remove('hide-banner');
+      currentIframeActive = false;
+      return true;
+    }
+
+    // Reconstruye la grilla y luego aplica el filtro actual (si lo hay)
+    function rebuildAndFilter() {
+      rebuildGrid();
+      // El filtro se aplica automáticamente después de rebuildGrid porque llamamos a applyFilterOnGrid
+      // pero como rebuildGrid llama a attachCardEvents y no aplica filtro, lo hacemos aquí.
+      if (filterInput.value.trim() !== "") {
+        applyFilterOnGrid();
+      } else {
+        // Asegurar que no haya mensaje "no resultados" y que todas las tarjetas sean visibles
+        const allCards = document.querySelectorAll('.content-card');
+        allCards.forEach(c => c.classList.remove('hidden'));
+        const noResultsMsg = document.getElementById('noResultsMsg');
+        if (noResultsMsg) noResultsMsg.remove();
+      }
+    }
+
+    // Construye el grid de tarjetas (sin filtro aplicado todavía)
+    function rebuildGrid() {
+      const gridHtml = `
+        <div class="content-grid" id="contentGrid">
+          <article class="content-card" data-key="atencion_publico" data-keywords="atencion publico trato personas paciencia escucha activa">
+            <h3>Cómo atender al público</h3>
+          </article>
+          <article class="content-card" data-key="documentos_previos" data-keywords="documentos previos revisar papeles checklist legajo">
+            <h3>Qué revisar antes de empezar</h3>
+          </article>
+          <article class="content-card" data-key="subrogacion" data-keywords="subrogación suplencia ausencia temporal reemplazo">
+            <h3>Subrogación</h3>
+          </article>
+          <article class="content-card" data-key="antes_tramitar" data-keywords="antes de tramitar revisar expediente competencia firmas">
+            <h3>Antes de mover un expediente</h3>
+          </article>
+          <article class="content-card" data-key="escribir_documentos" data-keywords="escribir documentos claros simples estructura redacción">
+            <h3>Cómo escribir documentos</h3>
+          </article>
+          <article class="content-card" data-key="opiniones_tecnicas" data-keywords="opiniones tecnicas analisis conclusiones fundamentar dictamen">
+            <h3>Opinión técnica: Dictamen</h3>
+          </article>
+          <article class="content-card" data-key="leyes_utiles" data-keywords="leyes utiles normas consulta rapida codigos">
+            <h3>Leyes que vas a usar</h3>
+          </article>
+          <article class="content-card" data-key="situaciones_especiales" data-keywords="situaciones especiales urgencias excepciones vulnerabilidad">
+            <h3>Situaciones especiales</h3>
+          </article>
+          <article class="content-card" data-key="plazos_vencimientos" data-keywords="plazos vencimientos fechas caducidad términos perentorio cómputo">
+            <h3>Plazos y Vencimientos</h3>
+          </article>
+          <article class="content-card" data-key="modelos_usar" data-keywords="modelos formatos plantillas ejemplos documentos escritos redacción">
+            <h3>Modelos para usar</h3>
+          </article>
+        </div>
+      `;
+      dynamicContainer.innerHTML = gridHtml;
+      attachCardEvents();
+    }
+
+    function attachCardEvents() {
+      const cards = document.querySelectorAll('.content-card');
+      cards.forEach(card => {
+        card.removeEventListener('click', cardClickHandler);
+        card.addEventListener('click', cardClickHandler);
+      });
+    }
+
+    function cardClickHandler(e) {
+      const card = e.currentTarget;
+      const key = card.dataset.key;
+      const title = card.querySelector('h3')?.innerText || "Protocolo";
+      if (key && externalUrls.hasOwnProperty(key)) {
+        showFullContent(key, title);
+      } else {
+        showFullContent('atencion_publico', title);
+      }
+    }
+
+    function showFullContent(key, title) {
+      const url = externalUrls[key];
+      const hasValidUrl = url && url.trim() !== "";
+      
+      welcomeBanner.classList.add('hide-banner');
+      mainContent.classList.add('iframe-mode');
+      dynamicContainer.innerHTML = '';
+      
+      const panel = document.createElement('div');
+      panel.className = 'iframe-panel';
+      
+      if (hasValidUrl) {
+        panel.innerHTML = `
+          <div class="iframe-header">
+            <h3>${escapeHtml(title)}</h3>
+            <button class="back-btn" id="closeIframeBtn">← Volver</button>
+          </div>
+          <div class="iframe-container">
+            <iframe src="${escapeHtml(url)}" title="${escapeHtml(title)}" sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-modals"></iframe>
+          </div>
+        `;
+      } else {
+        panel.innerHTML = `
+          <div class="iframe-header">
+            <h3>${escapeHtml(title)}</h3>
+            <button class="back-btn" id="closeIframeBtn">← Volver</button>
+          </div>
+          <div class="preparation-message">
+            <div class="preparation-message-content">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                <polyline points="15 3 21 3 21 9"/>
+                <line x1="10" y1="14" x2="21" y2="3"/>
+              </svg>
+              <h3>Contenido en preparación</h3>
+              <p>Próximamente disponible <strong>${escapeHtml(title)}</strong>.</p>
+            </div>
+          </div>
+        `;
+      }
+      
+      dynamicContainer.appendChild(panel);
+      currentIframeActive = true;
+      
+      const closeBtn = document.getElementById('closeIframeBtn');
+      if (closeBtn) closeBtn.addEventListener('click', () => {
+        closeIframeView();
+        // Después de cerrar, si hay filtro activo, aplicarlo
+        if (filterInput.value.trim() !== "") {
+          applyFilterOnGrid();
+        }
+      });
+    }
+
+    // Aplica el filtro sobre la grilla existente
+    function applyFilterOnGrid() {
+      const grid = document.getElementById('contentGrid');
+      if (!grid || currentIframeActive) return;
+    
+      const query = filterInput.value.toLowerCase().trim();
+      const cards = document.querySelectorAll('.content-card');
+      let visibleCount = 0;
+      
+      cards.forEach(card => {
+        const title = card.querySelector('h3').textContent.toLowerCase();
+        const keywords = card.dataset.keywords ? card.dataset.keywords.toLowerCase() : '';
+        const match = !query || title.includes(query) || keywords.includes(query);
+        card.classList.toggle('hidden', !match);
+        if (match) visibleCount++;
+      });
+      
+      let noResultsMsg = document.getElementById('noResultsMsg');
+      if (visibleCount === 0 && query) {
+        if (!noResultsMsg) {
+          noResultsMsg = document.createElement('p');
+          noResultsMsg.id = 'noResultsMsg';
+          noResultsMsg.style.textAlign = 'center';
+          noResultsMsg.style.color = 'var(--text-sec)';
+          noResultsMsg.style.marginTop = '16px';
+          noResultsMsg.style.fontSize = '0.85rem';
+          noResultsMsg.textContent = 'No se encontró el tema. Prueba con otras palabras.';
+          grid.after(noResultsMsg);
+        }
+      } else if (noResultsMsg) {
+        noResultsMsg.remove();
+      }
+    }
+
+    // Función principal de filtrado: cierra cualquier contenido abierto y luego aplica el filtro
+    function handleFilterAndClose() {
+      if (currentIframeActive) {
+        closeIframeView();  // Esto reconstruye la grilla y muestra banner
+        // Después de cerrar, la grilla ya está reconstruida, ahora aplicamos filtro
+        if (filterInput.value.trim() !== "") {
+          applyFilterOnGrid();
+        }
+      } else {
+        // Si no hay iframe, simplemente aplicamos filtro sobre la grilla actual
+        applyFilterOnGrid();
+      }
+    }
+
+    function attachMenuEvents() {
+      const menuItems = document.querySelectorAll('.menu-item');
+      menuItems.forEach(item => {
+        item.removeEventListener('click', menuClickHandler);
+        item.addEventListener('click', menuClickHandler);
+      });
+    }
+    
+    function menuClickHandler(e) {
+      e.stopPropagation();
+      const target = e.currentTarget;
+      const key = target.dataset.key;
+      const title = target.innerText.trim();
+      if (key && externalUrls.hasOwnProperty(key)) {
+        showFullContent(key, title);
+      } else {
+        showFullContent('atencion_publico', title);
+      }
+      menuDropdown.classList.remove('open');
+    }
+    
+    function init() {
+      rebuildGrid();
+      welcomeBanner.classList.remove('hide-banner');
+      filterInput.value = '';
+      applyFilterOnGrid(); // no hay filtro, muestra todas
+      currentIframeActive = false;
+      mainContent.classList.remove('iframe-mode');
+      
+      // Eventos de filtro: al escribir o hacer clic, cierran el detalle y filtran
+      filterInput.addEventListener('input', handleFilterAndClose);
+      filterBtn.addEventListener('click', handleFilterAndClose);
+      
+      menuBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        menuDropdown.classList.toggle('open');
+      });
+      document.addEventListener('click', (e) => {
+        if (!menuDropdown.contains(e.target) && e.target !== menuBtn) {
+          menuDropdown.classList.remove('open');
+        }
+      });
+      attachMenuEvents();
+      
+      logoutBtn.addEventListener('click', () => logoutModal.classList.add('open'));
+      btnCancel.addEventListener('click', () => logoutModal.classList.remove('open'));
+      btnConfirm.addEventListener('click', () => {
+        window.location.href = 'index.html';
+      });
+      logoutModal.addEventListener('click', (e) => {
+        if (e.target === logoutModal) logoutModal.classList.remove('open');
+      });
+      
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          if (currentIframeActive) {
+            closeIframeView();
+            // Si había filtro, aplicarlo después de cerrar
+            if (filterInput.value.trim() !== "") {
+              applyFilterOnGrid();
+            }
+          }
+          logoutModal.classList.remove('open');
+          menuDropdown.classList.remove('open');
+        }
+      });
+    }
+    
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

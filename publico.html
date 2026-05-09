@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Atencion al publico Defensoría</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      height: 100%;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f4f7fc;
+      color: #0a2b3e;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Fondo general para detectar clics en el "vacio" */
+    .app-wrapper {
+      flex: 1;
+      display: flex;
+      width: 100%;
+      height: 100%;
+      min-height: 0;  /* importante para el scroll interno */
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 2rem;
+      padding: 2rem;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    /* COLUMNA IZQUIERDA */
+    .columna-izquierda {
+      overflow-y: auto;
+      padding-right: 1rem;
+      min-height: 0;
+    }
+
+    .titulo-principal {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #1e4a6b;
+      margin-bottom: 2rem;
+      text-transform: uppercase;
+      line-height: 1.2;
+      border-bottom: 3px solid #ff9800;
+      padding-bottom: 10px;
+    }
+
+    .tarjeta-perfil {
+      background: white;
+      border-radius: 15px;
+      padding: 1.5rem;
+      margin-bottom: 1.2rem;
+      border: 1px solid #dce9f0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .tarjeta-perfil:hover {
+      transform: scale(1.02);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    }
+
+    .perfil-titulo {
+      font-size: 1.2rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    /* Colores destacados */
+    .color-principios { color: #1e4a6b; border-left: 6px solid #1e4a6b; padding-left: 12px; }
+    .color-1 { color: #2c7da0; border-left: 6px solid #2c7da0; padding-left: 12px; }
+    .color-2 { color: #8e44ad; border-left: 6px solid #8e44ad; padding-left: 12px; }
+    .color-3 { color: #27ae60; border-left: 6px solid #27ae60; padding-left: 12px; }
+    .color-4 { color: #d35400; border-left: 6px solid #d35400; padding-left: 12px; }
+
+    /* COLUMNA DERECHA */
+    .columna-derecha {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      position: relative;
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 2rem;
+      border: 1px solid #dce9f0;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      min-height: 0;   /* permite que los hijos se contraigan */
+    }
+
+    .btn-recordar {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #ff9800;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    .principios-scroll {
+      flex: 1;
+      overflow-y: auto;
+      margin-top: 1rem;
+      min-height: 0;
+    }
+
+    /* Lista numerada de pasos */
+    .lista-pasos {
+      list-style: none;
+      counter-reset: paso-counter;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .lista-pasos li {
+      counter-increment: paso-counter;
+      background: #f8fbff;
+      margin-bottom: 10px;
+      padding: 12px 15px 12px 50px;
+      border-radius: 10px;
+      position: relative;
+      font-size: 0.95rem;
+      line-height: 1.4;
+      border: 1px solid #eef2f7;
+    }
+
+    .lista-pasos li::before {
+      content: counter(paso-counter);
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #2c7da0;
+      color: white;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(10, 43, 62, 0.85);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 2.5rem;
+      border-radius: 25px;
+      max-width: 550px;
+      width: 90%;
+      position: relative;
+    }
+
+    @media (max-width: 800px) {
+      .container { grid-template-columns: 1fr; overflow-y: auto; }
+      .columna-derecha { min-height: 500px; }
+    }
+  </style>
+</head>
+<body onclick="checkClickVacio(event)">
+
+<div class="app-wrapper">
+  <div class="container" id="mainContainer">
+    <div class="columna-izquierda">
+      <h1 class="titulo-principal">Reglas a seguir en la atención al público</h1>
+      
+      <div class="tarjeta-perfil" onclick="stopPropagation(event); mostrarPasos('principios')">
+        <span class="perfil-titulo color-principios">Principios Básicos</span>
+        <p style="font-size: 0.85rem; color: #5a7184;">Normas fundamentales de ética y responsabilidad judicial.</p>
+      </div>
+
+      <div class="tarjeta-perfil" onclick="stopPropagation(event); mostrarPasos('atencion')">
+        <span class="perfil-titulo color-1">Trastorno de Atención / Autismo</span>
+        <p style="font-size: 0.85rem; color: #5a7184;">Fomentar la predictibilidad y claridad en el proceso legal.</p>
+      </div>
+
+      <div class="tarjeta-perfil" onclick="stopPropagation(event); mostrarPasos('adicciones')">
+        <span class="perfil-titulo color-2">Problema de Adicciones</span>
+        <p style="font-size: 0.85rem; color: #5a7184;">Atención libre de estigmas con enfoque en derechos humanos.</p>
+      </div>
+
+      <div class="tarjeta-perfil" onclick="stopPropagation(event); mostrarPasos('discapacidad')">
+        <span class="perfil-titulo color-3">Personas con Discapacidad</span>
+        <p style="font-size: 0.85rem; color: #5a7184;">Garantizar accesibilidad universal y ajustes razonables.</p>
+      </div>
+
+      <div class="tarjeta-perfil" onclick="stopPropagation(event); mostrarPasos('mayores')">
+        <span class="perfil-titulo color-4">Persona Adulto Mayor</span>
+        <p style="font-size: 0.85rem; color: #5a7184;">Prioridad de paso y comunicación adaptada a sus tiempos.</p>
+      </div>
+    </div>
+
+    <div class="columna-derecha" onclick="stopPropagation(event)">
+      <button class="btn-recordar" onclick="toggleModal(true)">RECORDÁ ESTO</button>
+      
+      <div id="headerDinamico">
+        <h2 id="tituloDerecho" style="color: #1e4a6b; font-size: 1.4rem; margin-bottom: 5px;">Cargando...</h2>
+        <p id="subtituloDerecho" style="color: #7f8c8d; font-size: 0.9rem; margin-bottom: 15px;"></p>
+      </div>
+
+      <div class="principios-scroll" id="contenidoDerecho">
+        </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalInfo" onclick="toggleModal(false)">
+  <div class="modal-content" onclick="stopPropagation(event)">
+    <button style="position:absolute; top:15px; right:20px; background:none; border:none; font-size:1.8rem; cursor:pointer; color:#95a5a6;" onclick="toggleModal(false)">&times;</button>
+    <div style="background:#eef4fa; border-left:5px solid #1e6f5c; padding:1.2rem; margin-bottom:1.5rem; border-radius:12px;">
+      <h4 style="color:#1a5d6c; margin-bottom:8px;">Excelencia Técnica</h4>
+      <p style="font-size:0.9rem; line-height:1.5;">Su asesoramiento es una herramienta de justicia. Una palabra mal empleada puede afectar el derecho a la defensa de un ciudadano.</p>
+    </div>
+    <div style="background:#fff4e5; border-left:5px solid #ff9800; padding:1.2rem; border-radius:12px;">
+      <h4 style="color:#a35200; margin-bottom:8px;">Deber de Consulta</h4>
+      <p style="font-size:0.9rem; line-height:1.5;">La Defensoría es un equipo. Ante dudas procesales complejas, recurra siempre a sus superiores. La responsabilidad es compartida.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  const protocolos = {
+    principios: {
+      titulo: "10 Principios Básicos de Atención",
+      pasos: [
+        "Puntualidad: Inicie la atención en el horario previsto respetando el tiempo del ciudadano.",
+        "Identificación: Preséntese con nombre y cargo, explicando su rol en la Defensoría.",
+        "Trato Digno: Use siempre el trato de 'Usted' y mantenga una postura profesional y formal.",
+        "Escucha Activa: Permita que el consultante relate su situación sin interrupciones constantes.",
+        "Lenguaje Comprensible: Traduzca los términos jurídicos a palabras que el ciudadano entienda.",
+        "Confidencialidad: Asegure que toda la información brindada está protegida por el secreto profesional.",
+        "Veracidad: Brinde información real sobre las posibilidades del caso, sin generar falsas esperanzas.",
+        "Constancia Escrita: Entregue siempre un comprobante o guía de pasos a seguir por escrito.",
+        "Empatía Judicial: Comprenda el estado de vulnerabilidad del ciudadano sin perder la objetividad.",
+        "Responsabilidad: Registre cada atención en el sistema interno para garantizar la trazabilidad."
+      ]
+    },
+    atencion: {
+      titulo: "Protocolo: Trastorno de Atención / Autismo",
+      pasos: [
+        "Elimine ruidos o distracciones visuales innecesarias en el box de atención.",
+        "Utilice lenguaje literal; evite ironías, sarcasmos o metáforas jurídicas complejas.",
+        "Eructure la información de manera cronológica (inicio, nudo y desenlace del trámite).",
+        "Proporcione un esquema visual o escrito de los pasos que el ciudadano debe seguir.",
+        "Divida las instrucciones largas en pasos únicos y secuenciales.",
+        "Permita silencios prolongados para que el consultante procese la información recibida.",
+        "Evite el contacto físico innecesario y respete el espacio personal del ciudadano.",
+        "Anticipe posibles cambios en el proceso para reducir la ansiedad del consultante.",
+        "Verifique la comprensión pidiendo que repita el paso más importante con sus palabras.",
+        "Registre en el sistema cualquier ajuste comunicativo realizado para futuras consultas."
+      ]
+    },
+    adicciones: {
+      titulo: "Protocolo: Problema de Adicciones",
+      pasos: [
+        "Muestre una actitud de escucha empática, sin emitir juicios de valor sobre su situación.",
+        "Establezca límites claros y respetuosos sobre el tiempo y alcance de la consulta.",
+        "Utilice un tono de voz firme pero calmado, especialmente en situaciones de crisis.",
+        "Priorice la resolución de la duda jurídica inmediata antes de indagar en otros aspectos.",
+        "Evite tecnicismos que puedan interpretarse como una barrera o desprecio.",
+        "Informe sobre el derecho a la confidencialidad de los datos sensibles compartidos.",
+        "Tenga a mano contactos actualizados de centros de asistencia social y salud.",
+        "No prometa resultados procesales que dependan exclusivamente de terceros.",
+        "Si el ciudadano está alterado, ofrezca un breve intervalo de espera antes de continuar.",
+        "Documente con precisión los compromisos asumidos por la Defensoría y el usuario."
+      ]
+    },
+    discapacidad: {
+      titulo: "Protocolo: Personas con Discapacidad",
+      pasos: [
+        "Pregunte directamente si requiere algún apoyo o ajuste específico para la comunicación.",
+        "Si utiliza silla de ruedas, sitúese a su altura visual para evitar la condescendencia.",
+        "Para discapacidad auditiva: hable de frente, despacio y sin obstruir su boca.",
+        "Ofrezca siempre soporte por escrito de las fechas de audiencias o presentaciones.",
+        "Garantice que el espacio de atención esté libre de obstáculos físicos.",
+        "Si hay acompañante, diríjase siempre a la persona con discapacidad, no a su asistente.",
+        "Utilice herramientas de lectura de pantalla o contraste alto si el usuario lo solicita.",
+        "Sea paciente con los tiempos de desplazamiento o firma de documentación.",
+        "Identifíquese claramente y describa el rol de cada persona presente en la oficina.",
+        "Asegure la entrega de folletería en formatos accesibles o lectura fácil."
+      ]
+    },
+    mayores: {
+      titulo: "Protocolo: Persona Adulto Mayor",
+      pasos: [
+        "Llámelo por su nombre y mantenga un trato formal (Usted) y digno en todo momento.",
+        "Utilice un volumen de voz adecuado, evitando gritar pero asegurando claridad sonora.",
+        "Redacte las indicaciones con letra imprenta grande y legible en los formularios.",
+        "Explique el significado de términos como 'notificación', 'traslado' o 'sentencia'.",
+        "Asegúrese de que el consultante esté cómodamente sentado durante la entrevista.",
+        "Valide la identidad del ciudadano con calma, sin apresurar el manejo de documentos.",
+        "Resuma al final de la consulta: ¿Qué hicimos hoy? y ¿Qué falta hacer?",
+        "Consulte si desea que la información sea compartida con algún familiar de confianza.",
+        "Verifique que el ciudadano se retire con los turnos y direcciones anotados claramente.",
+        "Demuestre interés genuino; el adulto mayor valora el tiempo de escucha y respeto."
+      ]
+    }
+  };
+
+  function mostrarPasos(id) {
+    const data = protocolos[id];
+    const contenedor = document.getElementById('contenidoDerecho');
+    document.getElementById('tituloDerecho').innerText = data.titulo;
+    document.getElementById('subtituloDerecho').innerText = "Reglas y responsabilidades para una atención de calidad:";
+    
+    const htmlPasos = data.pasos.map(paso => `<li>${paso}</li>`).join('');
+    contenedor.innerHTML = `<ul class="lista-pasos">${htmlPasos}</ul>`;
+  }
+
+  // Detener la propagación para que los clics en elementos interactivos no activen el reset
+  function stopPropagation(e) {
+    e.stopPropagation();
+  }
+
+  // Detectar clic en "espacio vacío"
+  function checkClickVacio(e) {
+    // Si el clic es en el wrapper, el container o fuera de las tarjetas, vuelve a principios
+    mostrarPasos('principios');
+  }
+
+  function toggleModal(show) {
+    document.getElementById('modalInfo').style.display = show ? 'flex' : 'none';
+  }
+
+  // Al cargar el código, mostrar Principios Básicos por defecto
+  window.onload = function() {
+    mostrarPasos('principios');
+  };
+</script>
+
+</body>
+</html>

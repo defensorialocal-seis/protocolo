@@ -2,11 +2,17 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-    <title>Protocolo de Actuación Judicial | Defensoría Nº6</title>
-    <!-- Google Fonts: Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protocolo de Actuación | Defensoría 6</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+        :root {
+            --azul-oscuro: #0f172a;
+            --azul-claro: #475569;
+            --bg-color: #f8fafc;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -15,627 +21,106 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(145deg, #f5f9ff 0%, #eef2f8 100%);
-            min-height: 100vh;
+            background-color: var(--bg-color);
+            height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 16px;
+            padding: 20px;
+            overflow: hidden;
         }
 
-        /* Contenedor principal responsive */
-        .app-layout {
-            width: 100%;
-            max-width: 1400px;
-            height: auto;
-            min-height: calc(100vh - 32px);
-            background: transparent;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            border-radius: 2rem;
-            transition: gap 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-        }
-
-        /* COLUMNA IZQUIERDA: animación de plegado */
-        .brand-column {
-            flex: 1.2;
-            min-width: 260px;
-            background: #ffffff;
-            border-radius: 28px;
-            box-shadow: 0 20px 35px -12px rgba(0, 20, 40, 0.12);
-            padding: 2rem 1.5rem;
-            border-top: 5px solid #6bc2e8;
-            border-bottom: 5px solid #6bc2e8;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            overflow-x: hidden;
-            transform-origin: left center;
-        }
-
-        /* Estado colapsado: ancho 0, oculto */
-        .brand-column.collapsed {
-            flex: 0 0 0;
-            min-width: 0;
-            padding: 0;
-            margin: 0;
-            opacity: 0;
-            visibility: hidden;
-            border-width: 0;
-            transform: scaleX(0);
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        /* COLUMNA DERECHA: se expande cuando la izquierda colapsa */
-        .access-column {
-            flex: 0.9;
-            min-width: 300px;
-            background: #ffffff;
-            border-radius: 32px;
-            box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.2);
-            border: 2px solid #1f6392;
-            display: flex;
-            flex-direction: column;
-            transition: flex 0.5s cubic-bezier(0.4, 0, 0.2, 1), min-width 0.4s ease;
-        }
-
-        /* Cuando la izquierda colapsa, la derecha ocupa todo el espacio */
-        .brand-column.collapsed + .access-column,
-        .app-layout:has(.brand-column.collapsed) .access-column {
-            flex: 2;
-            min-width: 65%;
-        }
-
-        .card-content {
-            padding: 2rem 1.5rem;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        /* ---- ESTILOS DEL BOTÓN DE INGRESO (sin iconos, con resplandor al clic) ---- */
-        .welcome-container {
+        /* Contenedor principal interactivo */
+        .protocolo-card {
             text-align: center;
-        }
-        .welcome-container h2 {
-            font-size: 1.8rem;
-            font-weight: 600;
-            color: #0a2a44;
-            margin-bottom: 0.8rem;
-        }
-        .welcome-container p {
-            color: #4a627a;
-            font-size: 0.95rem;
-            margin-bottom: 2rem;
-        }
-        .btn-ingreso-directo {
-            background: #0f3b5c;
-            border: none;
-            padding: 16px 28px;
-            font-weight: 700;
-            font-size: 1.1rem;
-            color: white;
-            border-radius: 60px;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            max-width: 700px;
             width: 100%;
-            max-width: 280px;
-            box-shadow: 0 8px 18px rgba(15, 59, 92, 0.3);
-            font-family: 'Inter', sans-serif;
+            padding: clamp(2rem, 8vw, 4rem);
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(15, 23, 42, 0.05);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
         }
-        .btn-ingreso-directo:hover {
-            background: #1f6392;
-            transform: scale(1.02);
+
+        /* Efecto hover sutil para indicar que es clickeable */
+        .protocolo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            border-color: rgba(15, 23, 42, 0.1);
         }
-        /* Resplandor celeste al hacer clic */
-        .btn-ingreso-directo:active {
-            animation: glowPulse 0.3s ease-out;
+
+        .protocolo-card:active {
             transform: scale(0.98);
         }
-        @keyframes glowPulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(107, 194, 232, 0.7);
-            }
-            50% {
-                box-shadow: 0 0 0 12px rgba(107, 194, 232, 0.3);
-            }
-            100% {
-                box-shadow: 0 0 0 0 rgba(107, 194, 232, 0);
-            }
-        }
 
-        /* ---- ESTILOS DEL DASHBOARD ---- */
-        .dashboard-full {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            background: transparent;
-        }
-
-        /* panel superior botones - reorganizado en grid 5 columnas */
-        .top-actions {
-            background: white;
-            padding: 1.5rem 1.2rem 1.2rem 1.2rem;
-            border-bottom: 4px solid #6bc2e8;
-            border-radius: 28px 28px 0 0;
-        }
-
-        .section-label {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 700;
-            color: #1f6392;
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-
-        /* Grid de botones: 5 columnas en escritorio, centrado */
-        .button-grid {
-            display: grid;
-            grid-template-columns: repeat(5, minmax(0, auto));
-            gap: 0.8rem;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .action-btn {
-            background: #0f3b5c;
-            border: none;
-            padding: 0.7rem 1rem;
-            border-radius: 60px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: white;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            font-family: 'Inter', sans-serif;
-            white-space: nowrap;
-            text-align: center;
-        }
-
-        /* Responsive: en tablets y móviles, que se ajuste a menos columnas */
-        @media (max-width: 900px) {
-            .button-grid {
-                grid-template-columns: repeat(3, minmax(0, auto));
-                gap: 0.7rem;
-            }
-            .action-btn {
-                white-space: normal;
-                font-size: 0.8rem;
-                padding: 0.6rem 0.9rem;
-            }
-        }
-
-        @media (max-width: 640px) {
-            .button-grid {
-                grid-template-columns: repeat(2, minmax(0, auto));
-                gap: 0.6rem;
-            }
-            .action-btn {
-                font-size: 0.75rem;
-                padding: 0.55rem 0.8rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .button-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .action-btn {
-                font-size: 0.7rem;
-                padding: 0.5rem 0.6rem;
-            }
-        }
-
-        .action-btn:hover {
-            background: #1f6392;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 14px -6px rgba(31, 99, 146, 0.4);
-        }
-
-        .action-btn.active {
-            background: #1f6392;
-            box-shadow: 0 4px 10px rgba(31, 99, 146, 0.3);
-        }
-
-        /* panel central dinámico */
-        .info-panel {
-            background: #fefefe;
-            padding: 1.5rem 1.2rem 1rem 1.2rem;
-            flex: 1;
-        }
-
-        .dynamic-content {
-            background: #fafdff;
-            border-radius: 24px;
-            padding: 1.4rem 1.5rem;
-            border-left: 5px solid #6bc2e8;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
-            transition: 0.15s;
-        }
-
-        .dynamic-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #0a2a44;
-            margin-bottom: 0.7rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .dynamic-description {
-            color: #2c4c6e;
-            font-weight: 500;
-            line-height: 1.45;
-            font-size: 0.95rem;
-            margin-top: 5px;
-        }
-
-        .extra-info {
-            margin-top: 1rem;
-            font-size: 0.8rem;
-            color: #1f5e83;
-            background: #eef4fc;
-            padding: 8px 14px;
-            border-radius: 40px;
-            display: inline-block;
-        }
-
-        /* footer con título centrado */
-        .footer-protocol {
-            background: #ffffff;
-            padding: 1.2rem 1rem 1.5rem 1rem;
-            text-align: center;
-            border-top: 2px solid rgba(107, 194, 232, 0.5);
-            margin-top: auto;
-            border-radius: 0 0 28px 28px;
-        }
-
-        .protocol-main-title {
-            font-size: clamp(1rem, 4vw, 1.6rem);
+        h1 {
+            font-size: clamp(1.8rem, 5vw, 2.8rem);
             font-weight: 800;
-            color: #0a2a44;
-            letter-spacing: -0.2px;
-            line-height: 1.3;
-            max-width: 95%;
+            color: var(--azul-oscuro);
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: 12px;
+        }
+
+        h2 {
+            font-size: clamp(1rem, 3vw, 1.25rem);
+            font-weight: 600;
+            color: var(--azul-claro);
+            margin-bottom: 30px;
+            letter-spacing: -0.01em;
+        }
+
+        .decorator-line {
+            height: 4px;
+            width: 60px;
+            background-color: var(--azul-oscuro);
             margin: 0 auto;
+            border-radius: 2px;
+            transition: width 0.3s ease;
         }
 
-        .protocol-sub {
-            margin-top: 0.5rem;
-            font-weight: 500;
-            color: #2e5a7f;
-            font-size: 0.75rem;
-            border-top: 1px dashed #cde0ec;
-            display: inline-block;
-            padding-top: 6px;
+        /* Al pasar el mouse, la línea se expande un poco */
+        .protocolo-card:hover .decorator-line {
+            width: 100px;
         }
 
-        .logout-dashboard-btn {
-            background: transparent;
-            border: 2px solid #1f6392;
-            padding: 8px 20px;
-            font-weight: 700;
-            border-radius: 40px;
-            color: #1f6392;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-top: 16px;
-            font-family: 'Inter', sans-serif;
-            width: auto;
-            display: inline-block;
+        .hint-text {
+            margin-top: 40px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #94a3b8;
+            font-weight: 600;
         }
 
-        .logout-dashboard-btn:hover {
-            background: #1f6392;
-            color: white;
+        /* Animación de entrada */
+        .protocolo-card {
+            animation: slideUp 0.8s ease-out;
         }
 
-        /* Responsive general */
-        @media (max-width: 780px) {
-            body {
-                padding: 12px;
-            }
-            .app-layout {
-                flex-direction: column;
-                gap: 16px;
-                min-height: auto;
-            }
-            .brand-column {
-                text-align: center;
-                padding: 1.8rem 1.2rem;
-            }
-            .brand-column .sub-title {
-                border-left: none;
-                border-top: 3px solid #6bc2e8;
-                padding-top: 10px;
-                padding-left: 0;
-                text-align: center;
-            }
-            .brand-column.collapsed {
-                display: none;
-            }
-            .access-column {
-                min-width: auto;
-            }
-            .card-content {
-                padding: 1.2rem;
-            }
-            .info-panel {
-                padding: 1rem;
-            }
-            .dynamic-content {
-                padding: 1rem;
-            }
-            .dynamic-title {
-                font-size: 1.2rem;
-            }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
 
-<div class="app-layout" id="appRoot">
-    <!-- COLUMNA IZQUIERDA: texto institucional sin iconos -->
-    <div class="brand-column" id="brandColumn">
-        <div class="main-title" style="font-weight: 800; font-size: clamp(1.8rem, 6vw, 3.2rem); color: #0a2a44; letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 1rem;">
-            Protocolo de Actuación Judicial
-        </div>
-        <div class="sub-title" style="font-weight: 500; font-size: clamp(1rem, 4vw, 1.6rem); color: #0a2a44; line-height: 1.3; border-left: 4px solid #6bc2e8; padding-left: 1rem;">
-            Defensoria Civil y Comercial 6
-        </div>
-    </div>
+    <main class="protocolo-card" id="mainContainer">
+        <h1>Protocolo de Actuación</h1>
+        <h2>Defensoría Oficial Civil y Comercial 6</h2>
+        <div class="decorator-line"></div>
+        <p class="hint-text">Toca para ingresar</p>
+    </main>
 
-    <!-- COLUMNA DERECHA: contenedor dinámico -->
-    <div class="access-column" id="dynamicContainer">
-        <div id="renderArea" class="card-content">
-            <!-- El contenido dinámico se inyecta aquí: inicialmente botón de ingreso -->
-        </div>
-    </div>
-</div>
-
-<script>
-    // ---------- ESTADO GLOBAL ----------
-    let isLoggedIn = false;
-    const brandColumn = document.getElementById("brandColumn");
-    const renderArea = document.getElementById("renderArea");
-
-    // ---------- FUNCIONES DE ANIMACIÓN Y RENDER ----------
-    
-    // Pantalla de bienvenida con botón de ingreso directo (sin iconos)
-    function renderWelcomeScreen() {
-        renderArea.innerHTML = `
-            <div class="welcome-container">
-                <h2>Acceso al Protocolo</h2>
-                <p>Sistema de actuación judicial para la Defensoría Civil y Comercial Nº6</p>
-                <button id="btnIngresoDirecto" class="btn-ingreso-directo">Ingresar al Protocolo</button>
-            </div>
-        `;
-        const btnIngreso = document.getElementById("btnIngresoDirecto");
-        if (btnIngreso) {
-            btnIngreso.addEventListener("click", () => {
-                collapseAndLoadDashboard();
-            });
-        }
-    }
-
-    // Colapsa columna izquierda con animación y carga dashboard
-    function collapseAndLoadDashboard() {
-        if (isLoggedIn) return;
-        brandColumn.classList.add("collapsed");
-        
-        const onTransitionEnd = () => {
-            brandColumn.removeEventListener("transitionend", onTransitionEnd);
-            loadFullDashboard();
-        };
-        brandColumn.addEventListener("transitionend", onTransitionEnd, { once: true });
-        setTimeout(() => {
-            brandColumn.removeEventListener("transitionend", onTransitionEnd);
-            loadFullDashboard();
-        }, 550);
-    }
-
-    // Carga el dashboard completo con 10 botones (2 filas de 5 en desktop) sin iconos
-    function loadFullDashboard() {
-        isLoggedIn = true;
-        renderArea.innerHTML = `
-            <div class="dashboard-full">
-                <div class="top-actions">
-                    <div class="section-label">Modulos de Gestion</div>
-                    <div class="button-grid" id="dashboardButtonGrid">
-                        <button class="action-btn" data-section="atencion">Atencion al Publico</button>
-                        <button class="action-btn" data-section="control">Control Previo</button>
-                        <button class="action-btn" data-section="judicial">Inicio Judicial</button>
-                        <button class="action-btn" data-section="seguimiento">Seguimiento</button>
-                        <button class="action-btn" data-section="pruebas">Pruebas</button>
-                        <button class="action-btn" data-section="urgentes">Medidas Urgentes</button>
-                        <button class="action-btn" data-section="subrogacion">Orden de Subrogacion</button>
-                        <button class="action-btn" data-section="modelos">Modelos Autorizados</button>
-                        <button class="action-btn" data-section="casos_especiales">Casos especiales</button>
-                        <button class="action-btn" data-section="normativa">Normativa de Aplicacion</button>
-                    </div>
-                </div>
-                <div class="info-panel" id="dynamicInfoPanel">
-                    <div class="dynamic-content" id="contentRenderDashboard">
-                        <div class="dynamic-title">
-                            Bienvenido al Protocolo
-                        </div>
-                        <div class="dynamic-description">
-                            Seleccione cualquiera de los modulos superiores para acceder a la guia detallada de procedimientos, normativa aplicable y modelos de actuacion de la Defensoria Civil y Comercial Nº6.
-                        </div>
-                        <div class="extra-info">
-                            Defensoria activa – herramientas para la gestion judicial y administrativa
-                        </div>
-                    </div>
-                </div>
-                <div class="footer-protocol">
-                    <div class="protocol-main-title">
-                        Protocolo de Actuacion Judicial de la Defensoria Civil y Comercial 6
-                    </div>
-                    <div class="protocol-sub">
-                        Justicia agil · Defensa tecnica · Transparencia institucional
-                    </div>
-                    <button id="logoutFromDashboard" class="logout-dashboard-btn">Cerrar sesion / Salir</button>
-                </div>
-            </div>
-        `;
-
-        // Datos completos sin iconos
-        const sectionsData = {
-            atencion: {
-                title: "Atencion al Publico",
-                description: "Protocolo de recepcion de consultas, derivacion a areas correspondientes y turnos. Garantiza accesibilidad, trato cordial y orientacion legal inicial. Incluye formatos de registro de asistidos y plazos de respuesta.",
-                extra: "Horario continuado: 8:00 a 14:00 hs. Prioridad a grupos vulnerables."
-            },
-            control: {
-                title: "Control Previo",
-                description: "Modulo de verificacion de requisitos formales de presentaciones, admisibilidad de escritos, control de plazos y analisis de competencia. Se aplica el filtro de legalidad antes de la derivacion judicial.",
-                extra: "Documentacion necesaria: DNI, poder especial, cedulas de notificacion, y formulario de control previo (Anexo I)."
-            },
-            judicial: {
-                title: "Inicio Judicial",
-                description: "Procedimiento para iniciar demandas civiles y comerciales, redaccion de demanda, medidas preparatorias y asignacion de juzgado. Incluye instructivo para el adecuado impulso procesal.",
-                extra: "Sistema de gestion Lex100 + integracion con mesa de entradas virtual."
-            },
-            seguimiento: {
-                title: "Seguimiento",
-                description: "Monitoreo de expedientes, notificaciones, estados procesales y alertas de vencimientos. Herramientas para el control de plazos judiciales y seguimiento de audiencias.",
-                extra: "Actualizacion diaria de movimientos. Vista de expedientes por caratula."
-            },
-            pruebas: {
-                title: "Pruebas",
-                description: "Guia de ofrecimiento, produccion y valoracion de medios probatorios: documental, pericial, testimonial e informativa. Formatos estandarizados para acompanar la carga probatoria.",
-                extra: "Modelos de ofrecimiento de prueba y plazos preclusivos (art. 365 CCCN)."
-            },
-            urgentes: {
-                title: "Medidas Urgentes",
-                description: "Procedimiento para medidas cautelares, tutela anticipada, proteccion de derechos en situacion de riesgo. Incluye requisitos de verosimilitud del derecho y peligro en la demora.",
-                extra: "Respuesta en maximo 48 horas. Prioridad a violencia familiar, amparos de salud."
-            },
-            subrogacion: {
-                title: "Orden de Subrogacion",
-                description: "Tramite y requisitos para la solicitud de orden de subrogacion en materia previsional y civil. Incluye documentacion respaldatoria, dictamen del cuerpo medico forense y plazos de resolucion.",
-                extra: "Subrogacion de cobertura: obras sociales, medicamentos de alto costo y tratamientos especiales. Instructivo actualizado."
-            },
-            modelos: {
-                title: "Modelos Autorizados",
-                description: "Repositorio de modelos de escritos judiciales y administrativos aprobados por la Defensoria. Incluye: demandas, recursos de apelacion, incidentes, informes periciales y solicitudes varias.",
-                extra: "Formatos en Word y PDF – actualizacion mensual segun jurisprudencia vigente."
-            },
-            casos_especiales: {
-                title: "Casos especiales",
-                description: "Protocolo para situaciones de vulnerabilidad extrema, personas con discapacidad, violencia institucional, migracion y proteccion de derechos humanos. Actuacion interdisciplinaria.",
-                extra: "Derivacion inmediata a equipos tecnicos. Seguimiento personalizado y confidencialidad garantizada."
-            },
-            normativa: {
-                title: "Normativa de Aplicacion",
-                description: "Compilacion de leyes, codigos, decretos y resoluciones aplicables a la actuacion de la Defensoria Civil y Comercial Nº6. Incluye: Codigo Civil y Comercial, leyes de procedimiento, normativa de derechos humanos y tratados internacionales.",
-                extra: "Actualizacion trimestral. Enlaces a textos completos y jurisprudencia destacada del STJ."
-            }
-        };
-
-        const contentRenderDashboard = document.getElementById("contentRenderDashboard");
-        const buttons = document.querySelectorAll(".action-btn");
-        
-        function updateDashboardContent(sectionKey, activeBtn) {
-            const data = sectionsData[sectionKey];
-            if (!data) return;
-            
-            buttons.forEach(btn => {
-                btn.classList.remove("active");
-                btn.style.background = "#0f3b5c";
-            });
-            if (activeBtn) {
-                activeBtn.classList.add("active");
-                activeBtn.style.background = "#1f6392";
-            }
-            
-            contentRenderDashboard.style.opacity = "0";
-            setTimeout(() => {
-                contentRenderDashboard.innerHTML = `
-                    <div class="dynamic-title">
-                        ${data.title}
-                    </div>
-                    <div class="dynamic-description">
-                        ${data.description}
-                    </div>
-                    <div class="extra-info">
-                        ${data.extra}
-                    </div>
-                `;
-                contentRenderDashboard.style.opacity = "1";
-            }, 50);
-            contentRenderDashboard.style.transition = "opacity 0.15s ease";
-            contentRenderDashboard.style.opacity = "1";
-        }
-
-        buttons.forEach(btn => {
-            btn.addEventListener("click", (e) => {
-                const section = btn.getAttribute("data-section");
-                if (section && sectionsData[section]) {
-                    updateDashboardContent(section, btn);
-                } else {
-                    contentRenderDashboard.innerHTML = `
-                        <div class="dynamic-title">Seccion en desarrollo</div>
-                        <div class="dynamic-description">Proximamente disponible. Consulte con el equipo tecnico.</div>
-                    `;
-                }
-            });
+    <script>
+        document.getElementById('mainContainer').addEventListener('click', () => {
+            window.location.href = 'app.html';
         });
+    </script>
 
-        const logoutBtn = document.getElementById("logoutFromDashboard");
-        if (logoutBtn) {
-            logoutBtn.addEventListener("click", () => {
-                expandAndGoToWelcome();
-            });
-        }
-        
-        contentRenderDashboard.style.opacity = "1";
-        buttons.forEach(btn => {
-            btn.classList.remove("active");
-            btn.style.background = "#0f3b5c";
-        });
-    }
-
-    function expandAndGoToWelcome() {
-        brandColumn.classList.remove("collapsed");
-        
-        const onExpandEnd = () => {
-            brandColumn.removeEventListener("transitionend", onExpandEnd);
-            isLoggedIn = false;
-            renderWelcomeScreen();
-        };
-        brandColumn.addEventListener("transitionend", onExpandEnd, { once: true });
-        setTimeout(() => {
-            brandColumn.removeEventListener("transitionend", onExpandEnd);
-            isLoggedIn = false;
-            renderWelcomeScreen();
-        }, 550);
-        
-        renderArea.innerHTML = `<div style="display:flex; justify-content:center; align-items:center; height:100%;"></div>`;
-    }
-
-    function init() {
-        isLoggedIn = false;
-        renderWelcomeScreen();
-        brandColumn.classList.remove("collapsed");
-    }
-
-    init();
-</script>
 </body>
 </html>
