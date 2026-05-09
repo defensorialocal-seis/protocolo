@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>Modos de Intervención | Gestión de Defensoría</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; width: 100%; overflow-x: hidden; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f4f7fc;
+            color: #0a2b3e;
+            line-height: 1.4;
+        }
+
+        .app-wrapper {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1.3fr;
+            gap: 2rem;
+            padding: 2rem;
+            width: 100%;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .columna-izquierda {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .titulo-principal {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #1e4a6b;
+            text-transform: uppercase;
+            border-bottom: 4px solid #ff9800;
+            padding-bottom: 12px;
+            margin-bottom: 1.5rem;
+        }
+
+        .buscador-contenedor {
+            position: relative;
+            margin-bottom: 1.2rem;
+        }
+
+        .buscador-input {
+            width: 100%;
+            padding: 14px 15px 14px 45px;
+            border-radius: 12px;
+            border: 1px solid #dce9f0;
+            font-family: inherit;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .buscador-input:focus {
+            border-color: #2c7da0;
+            box-shadow: 0 0 0 4px rgba(44, 125, 160, 0.1);
+        }
+
+        .buscador-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+        }
+
+        .scroll-modos {
+            height: calc(100vh - 280px);
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        .scroll-modos::-webkit-scrollbar { width: 6px; }
+        .scroll-modos::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+        .tarjeta-modo {
+            background: white;
+            border-radius: 15px;
+            padding: 1.2rem;
+            margin-bottom: 0.8rem;
+            border: 1px solid #dce9f0;
+            border-left: 6px solid #1e4a6b;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tarjeta-modo:hover {
+            background: #f8fbff;
+            transform: translateX(5px);
+            border-left-color: #ff9800;
+        }
+
+        .tarjeta-modo.active {
+            background: #eef2ff;
+            border-left-color: #ff9800;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+        }
+
+        .modo-titulo {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #1e4a6b;
+        }
+
+        .columna-derecha {
+            background: #ffffff;
+            border-radius: 25px;
+            padding: 2.5rem;
+            border: 1px solid #dce9f0;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.04);
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+            min-height: 550px;
+        }
+
+        .detalle-header {
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #f8fafc;
+            padding-bottom: 1.5rem;
+        }
+
+        .detalle-titulo {
+            color: #1e4a6b;
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            line-height: 1.1;
+        }
+
+        .detalle-subtitulo {
+            color: #64748b;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .seccion-cuadro {
+            background: #f8fbff;
+            border-radius: 14px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #eef2f7;
+        }
+
+        .seccion-cuadro h4 {
+            color: #1e4a6b;
+            font-weight: 800;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .badge-normativa {
+            display: inline-block;
+            background: #f1f5f9;
+            color: #475569;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 8px;
+            margin-right: 8px;
+            margin-top: 10px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .lista-items {
+            list-style: none;
+            padding: 0;
+        }
+
+        .lista-items li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+        }
+
+        .lista-items li::before {
+            content: "•";
+            position: absolute;
+            left: 10px;
+            color: #ff9800;
+            font-weight: 900;
+        }
+
+        .fade-in { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 1000px) {
+            .container { grid-template-columns: 1fr; padding: 1rem; }
+            .columna-derecha { position: relative; top: 0; min-height: auto; }
+            .scroll-modos { height: auto; max-height: 350px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-wrapper">
+    <div class="container">
+        <div class="columna-izquierda">
+            <h1 class="titulo-principal">Modos de intervención</h1>
+            <div class="buscador-contenedor">
+                <i data-lucide="search" class="buscador-icon" style="width:20px; height:20px;"></i>
+                <input type="text" id="filtroBusqueda" class="buscador-input" placeholder="Filtrar intervención...">
+            </div>
+            <div id="modesList" class="scroll-modos"></div>
+        </div>
+
+        <div class="columna-derecha">
+            <div class="detalle-header">
+                <h2 id="tituloDetalle" class="detalle-titulo">Panel Informativo</h2>
+                <p id="subtituloDetalle" class="detalle-subtitulo">Seleccione un modo del listado</p>
+            </div>
+            <div id="contenedorCentral" class="fade-in"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const MODOS_ORDENADOS = [
+        "Defensor Oficial",
+        "Ministerio Principal",
+        "Ministerio Complementario",
+        "Patrocinante Actor",
+        "Patrocinante Demandado",
+        "Patrocinante Tercero",
+        "Defensor de Ausente",
+        "Patrocinante presunto incapaz",
+        "Asesor Letrado",
+        "Ministerio Público del incapaz",
+        "Ministerio Público en turno Abril",
+        "Ministerio Público en turno Agosto",
+        "Ministerio Público en turno Diciembre",
+        "Asistencia Letrada del incapaz",
+        "Tutor Ad Litem",
+        "Defensor Oficial Art 329 CPCC",
+        "Defensor Oficial Art 626 CPCC"
+    ];
+
+    let currentSelection = null;
+
+    const contentData = {
+        "Defensor Oficial": `
+            <div class="seccion-cuadro" style="border-left: 6px solid #1e4a6b;">
+                <h4><i data-lucide="scale"></i> Defensa y Asistencia Integral</h4>
+                <p>Intervención para garantizar el acceso a la justicia de personas en situación de vulnerabilidad económica o jurídica.</p>
+            </div>
+            <div class="seccion-cuadro">
+                <h4><i data-lucide="list"></i> 10 Puntos Clave</h4>
+                <ul class="lista-items">
+                    <li>Acreditación de insuficiencia de recursos (Ley IV-15).</li>
+                    <li>Asesoramiento legal gratuito y previo.</li>
+                    <li>Asunción del patrocinio jurídico obligatorio en familia.</li>
+                    <li>Promoción del Beneficio de Litigar sin Gastos (Ley XII-27).</li>
+                    <li>Deber de secreto profesional y confidencialidad.</li>
+                    <li>Intervención en procesos de violencia familiar (Ley XIV-6).</li>
+                    <li>Facultad de peticionar medidas urgentes de protección.</li>
+                    <li>Impulso de soluciones autocompositivas (Mediación).</li>
+                    <li>Articulación con organismos de salud y niñez.</li>
+                    <li>Defensa técnica en todas las etapas procesales.</li>
+                </ul>
+            </div>
+            <span class="badge-normativa">Ley IV - Nº 15 | Ley XII - Nº 27</span>
+        `,
+        "Ministerio Principal": `
+            <div class="seccion-cuadro" style="border-left: 6px solid #2c3e50;">
+                <h4><i data-lucide="user-x"></i> Representación Autónoma</h4>
+                <p>El Ministerio asume la representación directa por falta o inacción de los representantes legales naturales.</p>
+            </div>
+            <div class="seccion-cuadro">
+                <h4><i data-lucide="list"></i> 10 Puntos Clave</h4>
+                <ul class="lista-items">
+                    <li>Asunción directa por falta de tutores/padres (Art. 103 CCCN).</li>
+                    <li>Intervención ante conflicto de intereses con el representante.</li>
+                    <li>Promoción autónoma de acciones de alimentos y filiación.</li>
+                    <li>Salvaguarda del patrimonio de la persona menor de edad.</li>
+                    <li>Solicitud de medidas de abrigo excepcional.</li>
+                    <li>Impulso de procesos de restricción a la capacidad.</li>
+                    <li>Recurrir resoluciones que afecten al representado.</li>
+                    <li>Petición de designación de apoyos o curadores.</li>
+                    <li>Control de condiciones de salud y educación.</li>
+                    <li>Finalización por cese de la causal de suplencia.</li>
+                </ul>
+            </div>
+            <span class="badge-normativa">Art. 103 inc. a) CCCN</span>
+        `,
+        "Ministerio Complementario": `
+            <div class="seccion-cuadro" style="border-left: 6px solid #27ae60;">
+                <h4><i data-lucide="shield-check"></i> Control de Legalidad</h4>
+                <p>Intervención obligatoria junto a los representantes legales bajo pena de nulidad de todo lo actuado.</p>
+            </div>
+            <div class="seccion-cuadro">
+                <h4><i data-lucide="list"></i> 10 Puntos Clave</h4>
+                <ul class="lista-items">
+                    <li>Intervención inexcusable en procesos con NNA o incapaces.</li>
+                    <li>Sanción de nulidad ante la falta de notificación (Art. 103 CCCN).</li>
+                    <li>Dictamen previo obligatorio antes de toda sentencia.</li>
+                    <li>Verificación del Interés Superior en convenios de partes.</li>
+                    <li>Oposición a actos de disposición de bienes perjudiciales.</li>
+                    <li>Asistencia a audiencias para velar por los derechos del protegido.</li>
+                    <li>Monitoreo de la cuenta judicial de fondos del menor.</li>
+                    <li>Facultad de apelar aunque el representante no lo haga.</li>
+                    <li>Control de legalidad de las peritajes interdisciplinarios.</li>
+                    <li>Garantizar que la voz del menor sea oída efectivamente.</li>
+                </ul>
+            </div>
+            <span class="badge-normativa">Art. 103 inc. b) CCCN</span>
+        `,
+        "Patrocinante Actor": `
+            <div class="seccion-cuadro" style="border-left: 6px solid #3498db;">
+                <h4><i data-lucide="arrow-up-right"></i> Impulso del Derecho Acción</h4>
+            </div>
+            <div class="seccion-cuadro">
+                <h4><i data-lucide="list"></i> 10 Puntos Clave</h4>
+                <ul class="lista-items">
+                    <li>Redacción de demanda según requisitos (Art. 333 Ley XII-27).</li>
+                    <li>Constitución de domicilio procesal y electrónico (Art. 40).</li>
+                    <li>Aporte y ofrecimiento de toda la prueba instrumental.</li>
+                    <li>Control del traslado y notificación de la demanda.</li>
+                    <li>Asistencia a la Audiencia Preliminar (Art. 364).</li>
+                    <li>Impulso procesal permanente para evitar caducidad.</li>
+                    <li>Control de la producción de prueba testimonial y pericial.</li>
+                    <li>Presentación de alegatos sobre el mérito de la prueba.</li>
+                    <li>Interposición de recursos contra resoluciones adversas.</li>
+                    <li>Ejecución de sentencia y liquidación (Art. 504).</li>
+                </ul>
+            </div>
+            <span class="badge-normativa">Ley XII - Nº 27</span>
+        `,
+        "Patrocinante Demandado": `
+            <div class="seccion-cuadro" style="border-left: 6px solid #e74c3c;">
+                <h4><i data-lucide="shield"></i> Ejercicio de la Defensa en Juicio</h4>
+            </div>
+            <div class="seccion-cuadro">
+                <h4><i data-lucide="list"></i> 10 Puntos Clave</h4>
+                <ul class="lista-items">
+                    <li>Contestación de demanda en plazos perentorios (Art. 359).</li>
+                    <li>Negativa categórica de hechos y documentos.</li>
+                    <li>Planteo de excepciones previas si corresponde (Art. 348).</li>
+                    <li>Ofrecimiento de prueba de descargo pertinente.</li>
+                    <li>Participación activa en la audiencia preliminar.</li>
+                    <li>Impugnación de pericias o liquidaciones de la actora.</li>
+                    <li>Reclamo de caducidad si la actora abandona el proceso.</li>
+                    <li>Exposición de defensas de fondo en alegatos finales.</li>
+                    <li>Control de legalidad de la prueba del actor.</li>
+                    <li>Apelación de sentencias arbitrarias o gravosas.</li>
+                </ul>
+            </div>
+            <span class="badge-normativa">Ley XII - Nº 27</span>
+        `,
+        "Patrocinante Tercero": `
+            <div class="seccion-cuadro">
+                <h4><i data-lucide="users"></i> Intervención de Terceros</h4>
+                <p>Actuación de quien demuestra un interés legítimo en un pleito ajeno.</p>
+            </div>
+            <div class="seccion-cuadro">
+                <h4><i data-lucide="list"></i> 10 Puntos Clave</h4>
+                <ul class="lista-items">
+                    <li>Acreditación de interés jurídico directo o coadyuvante.</li>
+                    <li>Intervención solicitada o de oficio (Art. 90-96).</li>
+                    <li>Sujeción al estado del proceso al momento del ingreso.</li>
+                    <li>Facultad de ofrecer prueba propia sobre su interés.</li>
+                    <li>Control de que la sentencia no afecte sus derechos.</li>
+                    <li>Responsabilidad por costas según su actuación.</li>
+                    <li>Independencia o subordinación según el tipo de tercero.</li>
+                    <li>Derecho a recurrir resoluciones que le causen agravio.</li>
+                    <li>Aportación de hechos nuevos que aclaren la litis.</li>
+                    <li>Evitar el fraude procesal entre las partes originales.</li>
+                </ul>
+            </div>
+            <span class="badge-normativa">Art. 90-96 Ley XII - Nº 27</span>
+        `,
+        "Defensor de Ausente": `
+            <div class="seccion-cuadro" style="border-left: 6px solid #95a5a6;">
+                <h4><i data-lucide="user-minus"></i> Representación por Incomparecencia</h4>
+                <p>Intervención obligatoria para defender a quien, citado por edictos, no comparece al proceso.</p>
+            </div>
+            <div class="seccion-cuadro">
+                <h4><i data-lucide="list"></i> 10 Puntos Clave</h4>
+                <ul class="lista-items">
+                    <li>Agotamiento previo de la búsqueda de domicilio.</li>
+                    <li>Designación automática tras vencer plazo de edictos (Art. 343).</li>
+                    <li>Contestación de demanda en términos generales.</li>
+                    <li>Exigencia de prueba plena a la parte actora.</li>
+                    <li>Resguardo de los derechos patrimoniales del ausente.</li>
+                    <li>Prohibición de cobrar honorarios al ejecutado (Art. 343).</li>
+                    <li>Solicitud de oficios para dar con el paradero real.</li>
+                    <li>Apelación de sentencias que afecten al ausente.</li>
+                    <li>Vigilancia de la legalidad de las notificaciones edictales.</li>
+                    <li>Cese inmediato al presentarse el interesado o apoderado.</li>
+                </ul>
+            </div>
+            <span class="badge-normativa">Art. 343 Ley XII - Nº 27</span>
+        `,
+        "Patrocinante presunto incapaz": `
+            <div class="seccion-cuadro">
+                <h4><i data-lucide="brain-circuit"></i> Procesos de Capacidad</h4>
+            </div>
+            <div class="seccion-cuadro">
+                <h4><i data-lucide="list"></i> 10 Puntos Clave</h4>
+                <ul class="lista-items">
+                    <li>Defensa técnica obligatoria (Art. 36 CCCN).</li>
+                    <li>Entrevista personal previa a cualquier medida.</li>
+                    <li>Propuesta de sistemas de apoyos y salvaguardas.</li>
+                    <li>Control de la evaluación interdisciplinaria obligatoria.</li>
+                    <li>Asistencia a la audiencia con el Juez (Art. 35 CCCN).</li>
+                    <li>Impugnación de restricciones excesivas a la libertad.</li>
+                    <li>Vigilancia de la administración provisional de bienes.</li>
+                    <li>Derecho a la revisión de sentencia periódica.</li>
+                    <li>Fomento de la autonomía personal del causante.</li>
+                    <li>Recurrir el dictamen de incapacidad si es improcedente.</li>
+                </ul>
+            </div>
+            <span class="badge-normativa">Art. 31-50 CCCN | Ley XII - Nº 27</span>
+        `,
+        "Asesor Letrado": `
+            <div class="seccion-cuadro">
+                <h4><i data-lucide="message-square"></i> Orientación y Consulta</h4>
+            </div>
+            <div class="seccion-cuadro">
+                <h4><i data-lucide="list"></i> 10 Puntos Clave</h4>
+                <ul class="lista-items">
+                    <li>Atención de consultas jurídicas primarias.</li>
+                    <li>Asistencia en la redacción de notas administrativas.</li>
+                    <li>Mediación comunitaria para evitar la judicialización.</li>
+                    <li>Derivación responsable a otros organismos del Estado.</li>
+                    <li>Control de legalidad en trámites de Registro Civil.</li>
+                    <li>Orientación en amparos de salud y previsionales.</li>
+                    <li>Atención en programas de itinerancia en el interior.</li>
+                    <li>Información sobre derechos fundamentales.</li>
+                    <li>Filtro de viabilidad para el patrocinio oficial.</li>
+                    <li>Colaboración en la rectificación de partidas.</li>
+                </ul>
+            </div>
+            <span class="badge-normativa">Ley IV - Nº 15</span>
+        `,
+        "Ministerio Público del incapaz": `
+            <div class="seccion-cuadro">
+                <h4><i data-lucide="gavel"></i> Tutela Institucional</h4>
+            </div>
+            <div class="seccion-cuadro">
+                <h4><i data-lucide="list"></i> 10 Puntos Clave</h4>
+                <ul class="lista-items">
+                    <li>Control de internaciones involuntarias (Ley 26.657).</li>
+                    <li>Intervención en sucesiones con herederos incapaces.</li>
+                    <li>Fiscalización de las cuentas de tutores y curadores.</li>
+                    <li>Vigilancia de residencias de larga estadía.</li>
+                    <li>Dictamen en autorizaciones de venta de bienes.</li>
+                    <li>Promoción de acciones de protección de personas.</li>
+                    <li>Intervención en procesos de adopción y guarda.</li>
+                    <li>Defensa de derechos previsionales de incapaces.</li>
+                    <li>Acciones de impugnación de paternidad.</li>
+                    <li>Recursos ante el STJ por interés general.</li>
+                </ul>
+            </div>
+            <span class="badge-normativa">Ley XII - Nº 27 | Ley IV - Nº 15</span>
+        `,
+        "Ministerio Público en turno Abril": `
+            <div class="seccion-cuadro">
+                <h4><i data-lucide="calendar"></i> Guardia Jurisdiccional</h4>
+            </div>
+            <div class="seccion-cuadro">
+                <h4><i data-lucide="list"></i> 10 Puntos Clave</h4>
+                <ul class="lista-items">
+                    <li>Atención de causas urgentes del mes de Abril.</li>
+                    <li>Guardia para medidas de exclusión del hogar.</li>
+                    <li>Intervención en crisis agudas de salud mental.</li>
+                    <li>Recepción de oficios policiales de urgencia 24hs.</li>
+                    <li>Control de traslados de menores en riesgo.</li>
+                    <li>Amparos por riesgo de vida inmediato.</li>
+                    <li>Asistencia a audiencias fijadas por el turno.</li>
+                    <li>Coordinación con jueces de paz de turno.</li>
+                    <li>Mantenimiento de la continuidad del servicio.</li>
+                    <li>Gestión de la feria corta si correspondiere.</li>
+                </ul>
+            </div>
+        `,
+        "Ministerio Público en turno Agosto": `
+            <div class="seccion-cuadro">
+                <h4><i data-lucide="calendar"></i> Guardia Jurisdiccional</h4>
+            </div>
+            <div class="seccion-cuadro">
+                <h4><i data-lucide="list"></i> 10 Puntos Clave</h4>
+                <ul class="lista-items">
+                    <li>Gestión de causas del mes de Agosto.</li>
+                    <li>Protección urgente ante violencia familiar.</li>
+                    <li>Intervención en restituciones internacionales.</li>
+                    <li>Atención de denuncias por maltrato infantil.</li>
+                    <li>Control de condiciones de NNA detenidos.</li>
+                    <li>Tramitación de cautelares de alimentos urgentes.</li>
+                    <li>Articulación con comisarías de la mujer.</li>
+                    <li>Asistencia a víctimas en crisis inmediata.</li>
+                    <li>Vigilancia de traslados sanitarios judiciales.</li>
+                    <li>Reporte de incidencias al Ministerio Público Fiscal.</li>
+                </ul>
+            </div>
+        `,
+        "Ministerio Público en turno Diciembre": `
+            <div class="seccion-cuadro">
+                <h4><i data-lucide="calendar-check"></i> Turno de Feria y Cierre</h4>
+            </div>
+            <div class="seccion-cuadro">
+                <h4><i data-lucide="list"></i> 10 Puntos Clave</h4>
+                <ul class="lista-items">
+                    <li>Habilitación de feria para casos de extrema gravedad.</li>
+                    <li>Control de instituciones durante las festividades.</li>
+                    <li>Gestión de permisos de viaje urgentes de NNA.</li>
+                    <li>Resolución de conflictos de régimen de contacto festivo.</li>
+                    <li>Atención de amparos de salud impostergables.</li>
+                    <li>Asignación de personal de guardia de feria.</li>
+                    <li>Criterio restrictivo de urgencia procesal.</li>
+                    <li>Reporte de incidencias mayores al STJ.</li>
+                    <li>Traspaso de causas a defensores naturales en febrero.</li>
+                    <li>Protección de personas en situación de calle por clima.</li>
+                </ul>
+            </div>
+        `,
+        "Asistencia Letrada del incapaz": `
+            <div class="seccion-cuadro" style="border-left: 6px solid #d35400;">
+                <h4><i data-lucide="mic"></i> Abogado del Niño</h4>
+                <p>Defensa técnica de los intereses personales y la opinión de la persona menor de edad.</p>
+            </div>
+            <div class="seccion-cuadro">
+                <h4><i data-lucide="list"></i> 10 Puntos Clave</h4>
+                <ul class="lista-items">
+                    <li>Defensa de la voluntad del niño (distinta al Min. Público).</li>
+                    <li>Respeto a la Autonomía Progresiva (Art. 26 CCCN).</li>
+                    <li>Entrevistas periódicas en ambiente amigable.</li>
+                    <li>Traducción de términos jurídicos a lenguaje sencillo.</li>
+                    <li>Aporte de pruebas basadas en el deseo del menor.</li>
+                    <li>Acompañamiento en la Escucha del Juez.</li>
+                    <li>Control para evitar la revictimización procesal.</li>
+                    <li>Intervención en juicios de guarda y adopción.</li>
+                    <li>Recurrir decisiones que ignoren la opinión del niño.</li>
+                    <li>Asegurar el Interés Superior del Niño concreto.</li>
+                </ul>
+            </div>
+            <span class="badge-normativa">Ley 26.061 | Art. 26 CCCN</span>
+        `,
+        "Tutor Ad Litem": `
+            <div class="seccion-cuadro">
+                <h4><i data-lucide="user-check"></i> Representación para el Pleito</h4>
+            </div>
+            <div class="seccion-cuadro">
+                <h4><i data-lucide="list"></i> 10 Puntos Clave</h4>
+                <ul class="lista-items">
+                    <li>Designación por conflicto de intereses (Art. 109 CCCN).</li>
+                    <li>Intervención limitada exclusivamente al juicio.</li>
+                    <li>Independencia total frente a los progenitores.</li>
+                    <li>Promoción de la mejor solución para el pupilo.</li>
+                    <li>Control de transacciones o acuerdos propuestos.</li>
+                    <li>Sustitución de la voluntad de los padres en el pleito.</li>
+                    <li>Participación en peritajes psicológicos.</li>
+                    <li>Rendición de cuentas ante el tribunal.</li>
+                    <li>Neutralidad absoluta ante las partes en conflicto.</li>
+                    <li>Cese al finalizar el expediente o la causa de conflicto.</li>
+                </ul>
+            </div>
+            <span class="badge-normativa">Art. 109 CCCN</span>
+        `,
+        "Defensor Oficial Art 329 CPCC": `
+            <div class="seccion-cuadro" style="border-left: 6px solid #5d6d7e;">
+                <h4><i data-lucide="file-search"></i> Diligencias Preliminares</h4>
+                <p>Intervención técnica para preparar un juicio, determinar la legitimación de las partes o asegurar pruebas de producción urgente.</p>
+            </div>
+            <div class="seccion-cuadro">
+                <h4><i data-lucide="list"></i> 10 Puntos Clave</h4>
+                <ul class="lista-items">
+                    <li><b>Encuadre Legal:</b> Verificación de los supuestos taxativos de la Ley XII-27.</li>
+                    <li><b>Legitimación:</b> Conocer la personalidad o carácter de los futuros demandados.</li>
+                    <li><b>Exhibición de Cosas:</b> Control en la muestra de objetos muebles materia del pleito.</li>
+                    <li><b>Testamentos:</b> Gestión de exhibición para herederos o legatarios.</li>
+                    <li><b>Prueba Anticipada:</b> Declaración de testigos de avanzada edad o próximos a ausentarse.</li>
+                    <li><b>Constatación:</b> Verificación del estado de inmuebles y carácter de ocupación.</li>
+                    <li><b>Capacidad:</b> Nombramiento de tutor o curador especial para el pleito.</li>
+                    <li><b>Libros de Comercio:</b> Control en la exhibición de registros societarios.</li>
+                    <li><b>Protección de Derechos:</b> Vigilancia para no causar perjuicios innecesarios al requerido.</li>
+                    <li><b>Control de Caducidad:</b> Vigilar que la demanda inicie en los 30 días posteriores.</li>
+                </ul>
+            </div>
+            <span class="badge-normativa">Art. 329 Ley XII-27</span>
+        `,
+        "Defensor Oficial Art 626 CPCC": `
+            <div class="seccion-cuadro" style="border-left: 6px solid #c0392b;">
+                <h4><i data-lucide="home"></i> Desalojo: Reconocimiento Judicial</h4>
+                <p>Intervención obligatoria en el reconocimiento judicial previo al traslado de la demanda en causales específicas.</p>
+            </div>
+            <div class="seccion-cuadro">
+                <h4><i data-lucide="list"></i> 10 Puntos Clave</h4>
+                <ul class="lista-items">
+                    <li><b>Fundamento:</b> Deterioro, intrusión, cambio de destino o uso abusivo.</li>
+                    <li><b>Acto Obligatorio:</b> Reconocimiento judicial antes del traslado de la demanda.</li>
+                    <li><b>Plazo:</b> Realización dentro de los 5 días de la primera providencia.</li>
+                    <li><b>Asistencia:</b> Presencia inexcusable del Defensor Oficial en el acto.</li>
+                    <li><b>Constatación:</b> Verificación del estado del inmueble y de sus ocupantes.</li>
+                    <li><b>Determinación de Calidad:</b> Indagar si son intrusos, tenedores o poseedores.</li>
+                    <li><b>Protección de Menores:</b> Dar intervención si hay NNA en situación de riesgo.</li>
+                    <li><b>Prevención de Abandono:</b> Entrega de tenencia provisoria si hay abandono (Art. 627).</li>
+                    <li><b>Documentación:</b> Control del acta de constatación para que sea fiel a lo visto.</li>
+                    <li><b>Garantía:</b> Asegurar el derecho de defensa de ocupantes ausentes.</li>
+                </ul>
+            </div>
+            <span class="badge-normativa">Art. 626 Ley XII-27</span>
+        `
+    };
+
+    function renderList(filtro = "") {
+        const list = document.getElementById('modesList');
+        const filtrados = MODOS_ORDENADOS.filter(m => m.toLowerCase().includes(filtro.toLowerCase()));
+        
+        list.innerHTML = filtrados.map(m => `
+            <div class="tarjeta-modo ${m === currentSelection ? 'active' : ''}" onclick="selectItem('${m}')">
+                <div class="modo-titulo">${m}</div>
+            </div>
+        `).join('');
+
+        if (filtrados.length === 0) {
+            list.innerHTML = '<p style="padding:2rem; color:#94a3b8; font-style:italic;">No se encontraron resultados...</p>';
+        }
+    }
+
+    window.selectItem = function(name) {
+        currentSelection = name;
+        renderList(document.getElementById('filtroBusqueda').value);
+        
+        const title = document.getElementById('tituloDetalle');
+        const subtitle = document.getElementById('subtituloDetalle');
+        const content = document.getElementById('contenedorCentral');
+
+        title.innerText = name;
+        subtitle.innerText = "Información Legal y Técnica Verificada";
+        
+        content.innerHTML = contentData[name] || `
+            <div class="seccion-cuadro">
+                <h4><i data-lucide="info"></i> Descripción de Actuación</h4>
+                <p>Este modo corresponde a la intervención conforme la <b>Ley IV-N.15</b> y el <b>CPC XII-27</b>.</p>
+            </div>
+        `;
+        
+        if (window.lucide) lucide.createIcons();
+    };
+
+    document.getElementById('filtroBusqueda').addEventListener('input', (e) => {
+        renderList(e.target.value);
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        renderList();
+        document.getElementById('contenedorCentral').innerHTML = `
+            <div style="text-align:center; padding-top:6rem; color:#94a3b8;">
+                <i data-lucide="file-check-2" style="width:50px; height:50px; margin-bottom:1rem; opacity:0.3;"></i>
+                <p>Seleccione un modo del listado para visualizar la normativa completa.</p>
+            </div>
+        `;
+        if (window.lucide) lucide.createIcons();
+    });
+</script>
+
+</body>
+</html>
