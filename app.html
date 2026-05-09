@@ -541,6 +541,12 @@
         <button class="menu-item" data-key="situaciones_especiales">Situaciones especiales</button>
         <button class="menu-item" data-key="plazos_vencimientos">Plazos y Vencimientos</button>
         <button class="menu-item" data-key="modelos_usar">Modelos para usar</button>
+        <button class="menu-item" data-key="modos_intervenir">Modos de Intervenir</button>
+        <button class="menu-item" data-key="mapa_defensorias">Mapa de Defensorías</button>
+        <!-- Nuevos items solicitados -->
+        <button class="menu-item" data-key="firma_digital_stamper">Firma Digital y Stamper</button>
+        <button class="menu-item" data-key="meui">MEUI</button>
+        <button class="menu-item" data-key="cejume">CEJUME</button>
       </nav>
     </div>
     <button class="logout-btn" id="btnLogout">Salir</button>
@@ -581,7 +587,12 @@
       leyes_utiles: "",
       situaciones_especiales: "",
       plazos_vencimientos: "",
-      modelos_usar: ""
+      modelos_usar: "",
+      modos_intervenir: "",
+      mapa_defensorias: "",
+      firma_digital_stamper: "",    // Nuevo: Firma Digital y Stamper
+      meui: "",                     // Nuevo: MEUI
+      cejume: ""                    // Nuevo: CEJUME
     };
 
     const mainContent = document.getElementById('mainContent');
@@ -631,7 +642,7 @@
       }
     }
 
-    // Construye el grid de tarjetas (sin filtro aplicado todavía)
+    // Construye el grid de tarjetas (incluye los nuevos temas)
     function rebuildGrid() {
       const gridHtml = `
         <div class="content-grid" id="contentGrid">
@@ -664,6 +675,22 @@
           </article>
           <article class="content-card" data-key="modelos_usar" data-keywords="modelos formatos plantillas ejemplos documentos escritos redacción">
             <h3>Modelos para usar</h3>
+          </article>
+          <article class="content-card" data-key="modos_intervenir" data-keywords="modos intervenir estrategias abordaje intervención herramientas acompañamiento">
+            <h3>Modos de Intervenir</h3>
+          </article>
+          <article class="content-card" data-key="mapa_defensorias" data-keywords="mapa defensorías ubicaciones contactos georreferencia sedes territoriales">
+            <h3>Mapa de Defensorías</h3>
+          </article>
+          <!-- NUEVAS TARJETAS: Firma Digital y Stamper, MEUI, CEJUME -->
+          <article class="content-card" data-key="firma_digital_stamper" data-keywords="firma digital stamper certificado electrónico firmar documentos validación jurídica">
+            <h3>Firma Digital y Stamper</h3>
+          </article>
+          <article class="content-card" data-key="meui" data-keywords="meui expediente electrónico gestión judicial sistema informático tramites digitales">
+            <h3>MEUI</h3>
+          </article>
+          <article class="content-card" data-key="cejume" data-keywords="cejume centro judicial mediación justicia restaurativa resolución alterna">
+            <h3>CEJUME</h3>
           </article>
         </div>
       `;
