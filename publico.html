@@ -2,32 +2,36 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Atencion al publico Defensoría</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+  <title>Atención al público - Defensoría</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     html, body {
       height: 100%;
+      width: 100%;
+      overflow-x: hidden;
     }
+
     body {
       font-family: 'Inter', sans-serif;
       background: #f4f7fc;
       color: #0a2b3e;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
+      line-height: 1.4;
     }
 
-    /* Fondo general para detectar clics en el "vacio" */
+    /* Contenedor principal: en escritorio usa grid de dos columnas */
     .app-wrapper {
-      flex: 1;
       display: flex;
       width: 100%;
-      height: 100%;
-      min-height: 0;  /* importante para el scroll interno */
+      min-height: 100vh;
     }
 
     .container {
@@ -36,15 +40,14 @@
       gap: 2rem;
       padding: 2rem;
       width: 100%;
-      height: 100%;
-      overflow: hidden;
+      max-width: 1600px;
+      margin: 0 auto;
     }
 
-    /* COLUMNA IZQUIERDA */
+    /* COLUMNA IZQUIERDA (módulos) */
     .columna-izquierda {
-      overflow-y: auto;
+      overflow-y: visible;
       padding-right: 1rem;
-      min-height: 0;
     }
 
     .titulo-principal {
@@ -65,12 +68,13 @@
       margin-bottom: 1.2rem;
       border: 1px solid #dce9f0;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    .tarjeta-perfil:hover {
-      transform: scale(1.02);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    .tarjeta-perfil:active {
+      transform: scale(0.99);
+      background: #fefefe;
     }
 
     .perfil-titulo {
@@ -87,18 +91,16 @@
     .color-3 { color: #27ae60; border-left: 6px solid #27ae60; padding-left: 12px; }
     .color-4 { color: #d35400; border-left: 6px solid #d35400; padding-left: 12px; }
 
-    /* COLUMNA DERECHA */
+    /* COLUMNA DERECHA (detalles dinámicos) */
     .columna-derecha {
+      position: relative;
       display: flex;
       flex-direction: column;
-      height: 100%;
-      position: relative;
       background: #ffffff;
       border-radius: 20px;
       padding: 2rem;
       border: 1px solid #dce9f0;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-      min-height: 0;   /* permite que los hijos se contraigan */
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
     }
 
     .btn-recordar {
@@ -114,20 +116,27 @@
       font-weight: 800;
       cursor: pointer;
       z-index: 10;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-recordar:active {
+      background: #e68900;
+      transform: scale(0.97);
     }
 
     .principios-scroll {
       flex: 1;
       overflow-y: auto;
       margin-top: 1rem;
-      min-height: 0;
+      max-height: 60vh;
     }
 
     /* Lista numerada de pasos */
     .lista-pasos {
       list-style: none;
       counter-reset: paso-counter;
-      animation: fadeIn 0.5s ease;
+      animation: fadeIn 0.4s ease;
     }
 
     .lista-pasos li {
@@ -140,6 +149,7 @@
       font-size: 0.95rem;
       line-height: 1.4;
       border: 1px solid #eef2f7;
+      word-break: break-word;
     }
 
     .lista-pasos li::before {
@@ -168,64 +178,191 @@
     /* MODAL */
     .modal-overlay {
       position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       background: rgba(10, 43, 62, 0.85);
       display: none;
       justify-content: center;
       align-items: center;
       z-index: 1000;
+      backdrop-filter: blur(2px);
     }
 
     .modal-content {
       background: white;
-      padding: 2.5rem;
+      padding: 2rem 1.8rem;
       border-radius: 25px;
       max-width: 550px;
       width: 90%;
       position: relative;
+      margin: 1rem;
+      max-height: 90vh;
+      overflow-y: auto;
     }
 
+    /* ========== RESPONSIVE MÓVIL: VISIBILIDAD TOTAL ========== */
     @media (max-width: 800px) {
-      .container { grid-template-columns: 1fr; overflow-y: auto; }
-      .columna-derecha { min-height: 500px; }
+      .container {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        padding: 1rem;
+        overflow: visible;
+      }
+
+      .columna-izquierda {
+        padding-right: 0;
+        overflow: visible;
+        width: 100%;
+      }
+
+      .columna-derecha {
+        width: 100%;
+        padding: 1.5rem 1rem;
+        padding-top: 3.2rem; /* espacio para el botón flotante */
+        margin-bottom: 0.5rem;
+      }
+
+      .btn-recordar {
+        top: 12px;
+        right: 12px;
+        padding: 6px 12px;
+        font-size: 0.7rem;
+      }
+
+      .titulo-principal {
+        font-size: 1.4rem;
+        margin-bottom: 1.2rem;
+      }
+
+      .tarjeta-perfil {
+        padding: 1rem;
+        margin-bottom: 0.9rem;
+      }
+
+      .perfil-titulo {
+        font-size: 1.1rem;
+      }
+
+      .tarjeta-perfil p {
+        font-size: 0.8rem;
+      }
+
+      #tituloDerecho {
+        font-size: 1.25rem;
+        line-height: 1.3;
+        padding-right: 10px;
+      }
+
+      #subtituloDerecho {
+        font-size: 0.8rem;
+        margin-bottom: 10px;
+      }
+
+      .lista-pasos li {
+        font-size: 0.85rem;
+        padding: 10px 12px 10px 45px;
+        margin-bottom: 8px;
+      }
+
+      .lista-pasos li::before {
+        width: 26px;
+        height: 26px;
+        font-size: 0.75rem;
+        left: 10px;
+      }
+
+      .principios-scroll {
+        max-height: none;
+        overflow-y: visible;
+      }
+    }
+
+    /* Ajuste para pantallas muy pequeñas */
+    @media (max-width: 480px) {
+      .container {
+        padding: 0.75rem;
+        gap: 1rem;
+      }
+
+      .columna-derecha {
+        padding: 1.2rem 0.8rem;
+        padding-top: 3rem;
+      }
+
+      .btn-recordar {
+        top: 8px;
+        right: 8px;
+        padding: 5px 10px;
+        font-size: 0.65rem;
+      }
+
+      .titulo-principal {
+        font-size: 1.25rem;
+      }
+
+      .perfil-titulo {
+        font-size: 1rem;
+      }
+
+      .lista-pasos li {
+        font-size: 0.8rem;
+        padding: 8px 10px 8px 40px;
+      }
+
+      .lista-pasos li::before {
+        width: 24px;
+        height: 24px;
+        font-size: 0.7rem;
+        left: 8px;
+      }
+    }
+
+    /* Utilidades */
+    .scroll-smooth {
+      scroll-behavior: smooth;
     }
   </style>
 </head>
-<body onclick="checkClickVacio(event)">
+<body>
 
 <div class="app-wrapper">
   <div class="container" id="mainContainer">
+    <!-- COLUMNA IZQUIERDA: TODOS LOS MÓDULOS VISIBLES EN MÓVIL Y ESCRITORIO -->
     <div class="columna-izquierda">
       <h1 class="titulo-principal">Reglas a seguir en la atención al público</h1>
       
-      <div class="tarjeta-perfil" onclick="stopPropagation(event); mostrarPasos('principios')">
+      <div class="tarjeta-perfil" data-protocolo="principios">
         <span class="perfil-titulo color-principios">Principios Básicos</span>
-        <p style="font-size: 0.85rem; color: #5a7184;">Normas fundamentales de ética y responsabilidad judicial.</p>
+        <p>Normas fundamentales de ética y responsabilidad judicial.</p>
       </div>
 
-      <div class="tarjeta-perfil" onclick="stopPropagation(event); mostrarPasos('atencion')">
+      <div class="tarjeta-perfil" data-protocolo="atencion">
         <span class="perfil-titulo color-1">Trastorno de Atención / Autismo</span>
-        <p style="font-size: 0.85rem; color: #5a7184;">Fomentar la predictibilidad y claridad en el proceso legal.</p>
+        <p>Fomentar la predictibilidad y claridad en el proceso legal.</p>
       </div>
 
-      <div class="tarjeta-perfil" onclick="stopPropagation(event); mostrarPasos('adicciones')">
+      <div class="tarjeta-perfil" data-protocolo="adicciones">
         <span class="perfil-titulo color-2">Problema de Adicciones</span>
-        <p style="font-size: 0.85rem; color: #5a7184;">Atención libre de estigmas con enfoque en derechos humanos.</p>
+        <p>Atención libre de estigmas con enfoque en derechos humanos.</p>
       </div>
 
-      <div class="tarjeta-perfil" onclick="stopPropagation(event); mostrarPasos('discapacidad')">
+      <div class="tarjeta-perfil" data-protocolo="discapacidad">
         <span class="perfil-titulo color-3">Personas con Discapacidad</span>
-        <p style="font-size: 0.85rem; color: #5a7184;">Garantizar accesibilidad universal y ajustes razonables.</p>
+        <p>Garantizar accesibilidad universal y ajustes razonables.</p>
       </div>
 
-      <div class="tarjeta-perfil" onclick="stopPropagation(event); mostrarPasos('mayores')">
+      <div class="tarjeta-perfil" data-protocolo="mayores">
         <span class="perfil-titulo color-4">Persona Adulto Mayor</span>
-        <p style="font-size: 0.85rem; color: #5a7184;">Prioridad de paso y comunicación adaptada a sus tiempos.</p>
+        <p>Prioridad de paso y comunicación adaptada a sus tiempos.</p>
       </div>
     </div>
 
-    <div class="columna-derecha" onclick="stopPropagation(event)">
-      <button class="btn-recordar" onclick="toggleModal(true)">RECORDÁ ESTO</button>
+    <!-- COLUMNA DERECHA: DETALLES -->
+    <div class="columna-derecha" id="columnaDetalles">
+      <button class="btn-recordar" id="btnRecordar">RECORDÁ ESTO</button>
       
       <div id="headerDinamico">
         <h2 id="tituloDerecho" style="color: #1e4a6b; font-size: 1.4rem; margin-bottom: 5px;">Cargando...</h2>
@@ -233,14 +370,15 @@
       </div>
 
       <div class="principios-scroll" id="contenidoDerecho">
-        </div>
+        <!-- Contenido dinámico -->
+      </div>
     </div>
   </div>
 </div>
 
 <div class="modal-overlay" id="modalInfo" onclick="toggleModal(false)">
   <div class="modal-content" onclick="stopPropagation(event)">
-    <button style="position:absolute; top:15px; right:20px; background:none; border:none; font-size:1.8rem; cursor:pointer; color:#95a5a6;" onclick="toggleModal(false)">&times;</button>
+    <button style="position:absolute; top:12px; right:16px; background:none; border:none; font-size:1.8rem; cursor:pointer; color:#95a5a6; line-height:1;" onclick="toggleModal(false)">&times;</button>
     <div style="background:#eef4fa; border-left:5px solid #1e6f5c; padding:1.2rem; margin-bottom:1.5rem; border-radius:12px;">
       <h4 style="color:#1a5d6c; margin-bottom:8px;">Excelencia Técnica</h4>
       <p style="font-size:0.9rem; line-height:1.5;">Su asesoramiento es una herramienta de justicia. Una palabra mal empleada puede afectar el derecho a la defensa de un ciudadano.</p>
@@ -253,6 +391,7 @@
 </div>
 
 <script>
+  // Datos de protocolos
   const protocolos = {
     principios: {
       titulo: "10 Principios Básicos de Atención",
@@ -331,8 +470,10 @@
     }
   };
 
+  // Mostrar los pasos según el ID del protocolo
   function mostrarPasos(id) {
     const data = protocolos[id];
+    if (!data) return;
     const contenedor = document.getElementById('contenidoDerecho');
     document.getElementById('tituloDerecho').innerText = data.titulo;
     document.getElementById('subtituloDerecho').innerText = "Reglas y responsabilidades para una atención de calidad:";
@@ -341,26 +482,64 @@
     contenedor.innerHTML = `<ul class="lista-pasos">${htmlPasos}</ul>`;
   }
 
-  // Detener la propagación para que los clics en elementos interactivos no activen el reset
+  // Manejar clic en tarjeta (módulo de la izquierda)
+  function handlePerfilClick(event, tarjeta) {
+    event.stopPropagation();
+    const protocoloId = tarjeta.getAttribute('data-protocolo');
+    if (protocoloId && protocolos[protocoloId]) {
+      mostrarPasos(protocoloId);
+      // En móvil, opcionalmente podríamos hacer scroll suave a los detalles, pero NO obligatorio
+      // para no ocultar la izquierda. Dejamos que el usuario vea ambos.
+    }
+  }
+
+  // Prevenir propagación en elementos internos
   function stopPropagation(e) {
     e.stopPropagation();
   }
 
-  // Detectar clic en "espacio vacío"
-  function checkClickVacio(e) {
-    // Si el clic es en el wrapper, el container o fuera de las tarjetas, vuelve a principios
-    mostrarPasos('principios');
-  }
-
+  // Control del modal
   function toggleModal(show) {
-    document.getElementById('modalInfo').style.display = show ? 'flex' : 'none';
+    const modal = document.getElementById('modalInfo');
+    modal.style.display = show ? 'flex' : 'none';
   }
 
-  // Al cargar el código, mostrar Principios Básicos por defecto
+  // Inicializar eventos en las tarjetas
+  function inicializarTarjetas() {
+    const tarjetas = document.querySelectorAll('.tarjeta-perfil');
+    tarjetas.forEach(tarjeta => {
+      // Limpiar eventos previos por si acaso
+      tarjeta.removeEventListener('click', tarjeta._listener);
+      tarjeta.removeEventListener('touchstart', tarjeta._touchListener);
+      
+      const clickHandler = (e) => handlePerfilClick(e, tarjeta);
+      const touchHandler = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        handlePerfilClick(e, tarjeta);
+      };
+      
+      tarjeta.addEventListener('click', clickHandler);
+      tarjeta.addEventListener('touchstart', touchHandler, { passive: false });
+      
+      tarjeta._listener = clickHandler;
+      tarjeta._touchListener = touchHandler;
+    });
+  }
+
+  // Cargar inicial: mostrar principios básicos por defecto
   window.onload = function() {
+    inicializarTarjetas();
     mostrarPasos('principios');
+    
+    const btnRecordar = document.getElementById('btnRecordar');
+    if (btnRecordar) {
+      btnRecordar.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleModal(true);
+      });
+    }
   };
 </script>
-
 </body>
 </html>
