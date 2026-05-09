@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+  <title>Requisitos previos Defensoría</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f4f7fc;
+      color: #0a2b3e;
+      line-height: 1.4;
+    }
+
+    .app-wrapper {
+      display: flex;
+      width: 100%;
+      min-height: 100vh;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 2rem;
+      padding: 2rem;
+      width: 100%;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    /* COLUMNA IZQUIERDA */
+    .columna-izquierda {
+      overflow-y: visible;
+      padding-right: 1rem;
+    }
+
+    .titulo-principal {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #1e4a6b;
+      margin-bottom: 2rem;
+      text-transform: uppercase;
+      line-height: 1.2;
+      border-bottom: 3px solid #ff9800;
+      padding-bottom: 10px;
+    }
+
+    .tarjeta-perfil {
+      background: white;
+      border-radius: 15px;
+      padding: 1.5rem;
+      margin-bottom: 1.2rem;
+      border: 1px solid #dce9f0;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .tarjeta-perfil:active {
+      transform: scale(0.99);
+      background: #fefefe;
+    }
+
+    .perfil-titulo {
+      font-size: 1.2rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    /* Colores destacados (paleta similar) */
+    .color-1 { color: #1e4a6b; border-left: 6px solid #1e4a6b; padding-left: 12px; }
+    .color-2 { color: #2c7da0; border-left: 6px solid #2c7da0; padding-left: 12px; }
+    .color-3 { color: #8e44ad; border-left: 6px solid #8e44ad; padding-left: 12px; }
+    .color-4 { color: #27ae60; border-left: 6px solid #27ae60; padding-left: 12px; }
+    .color-5 { color: #d35400; border-left: 6px solid #d35400; padding-left: 12px; }
+
+    /* COLUMNA DERECHA */
+    .columna-derecha {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 2rem;
+      border: 1px solid #dce9f0;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    }
+
+    .btn-recordar {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #ff9800;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      cursor: pointer;
+      z-index: 10;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-recordar:active {
+      background: #e68900;
+      transform: scale(0.97);
+    }
+
+    .principios-scroll {
+      flex: 1;
+      overflow-y: auto;
+      margin-top: 1rem;
+      max-height: 60vh;
+    }
+
+    /* Lista numerada de pasos */
+    .lista-pasos {
+      list-style: none;
+      counter-reset: paso-counter;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .lista-pasos li {
+      counter-increment: paso-counter;
+      background: #f8fbff;
+      margin-bottom: 10px;
+      padding: 12px 15px 12px 50px;
+      border-radius: 10px;
+      position: relative;
+      font-size: 0.95rem;
+      line-height: 1.4;
+      border: 1px solid #eef2f7;
+      word-break: break-word;
+    }
+
+    .lista-pasos li::before {
+      content: counter(paso-counter);
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #2c7da0;
+      color: white;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(10, 43, 62, 0.85);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      backdrop-filter: blur(2px);
+    }
+
+    .modal-content {
+      background: white;
+      padding: 2rem 1.8rem;
+      border-radius: 25px;
+      max-width: 550px;
+      width: 90%;
+      position: relative;
+      margin: 1rem;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    /* ========== RESPONSIVE MÓVIL ========== */
+    @media (max-width: 800px) {
+      .container {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        padding: 1rem;
+        overflow: visible;
+      }
+
+      .columna-izquierda {
+        padding-right: 0;
+        overflow: visible;
+        width: 100%;
+      }
+
+      .columna-derecha {
+        width: 100%;
+        padding: 1.5rem 1rem;
+        padding-top: 3.2rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .btn-recordar {
+        top: 12px;
+        right: 12px;
+        padding: 6px 12px;
+        font-size: 0.7rem;
+      }
+
+      .titulo-principal {
+        font-size: 1.4rem;
+        margin-bottom: 1.2rem;
+      }
+
+      .tarjeta-perfil {
+        padding: 1rem;
+        margin-bottom: 0.9rem;
+      }
+
+      .perfil-titulo {
+        font-size: 1.1rem;
+      }
+
+      #tituloDerecho {
+        font-size: 1.25rem;
+        line-height: 1.3;
+        padding-right: 10px;
+      }
+
+      #subtituloDerecho {
+        font-size: 0.8rem;
+        margin-bottom: 10px;
+      }
+
+      .lista-pasos li {
+        font-size: 0.85rem;
+        padding: 10px 12px 10px 45px;
+        margin-bottom: 8px;
+      }
+
+      .lista-pasos li::before {
+        width: 26px;
+        height: 26px;
+        font-size: 0.75rem;
+        left: 10px;
+      }
+
+      .principios-scroll {
+        max-height: none;
+        overflow-y: visible;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 0.75rem;
+        gap: 1rem;
+      }
+
+      .columna-derecha {
+        padding: 1.2rem 0.8rem;
+        padding-top: 3rem;
+      }
+
+      .btn-recordar {
+        top: 8px;
+        right: 8px;
+        padding: 5px 10px;
+        font-size: 0.65rem;
+      }
+
+      .titulo-principal {
+        font-size: 1.25rem;
+      }
+
+      .perfil-titulo {
+        font-size: 1rem;
+      }
+
+      .lista-pasos li {
+        font-size: 0.8rem;
+        padding: 8px 10px 8px 40px;
+      }
+
+      .lista-pasos li::before {
+        width: 24px;
+        height: 24px;
+        font-size: 0.7rem;
+        left: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-wrapper">
+  <div class="container" id="mainContainer">
+    <!-- COLUMNA IZQUIERDA: Módulos enumerados -->
+    <div class="columna-izquierda">
+      <h1 class="titulo-principal">Previo a iniciar el trámite judicial</h1>
+      
+      <div class="tarjeta-perfil" data-protocolo="deut">
+        <span class="perfil-titulo color-1">1. Comprobar envío del Legajo DEUT</span>
+        <p>Validación de admisibilidad, identidad y recursos. Paso obligatorio para asumir la representación.</p>
+      </div>
+
+      <div class="tarjeta-perfil" data-protocolo="asignacion">
+        <span class="perfil-titulo color-2">2. Asignación por operador</span>
+        <p>Confirmación del profesional a cargo y registro en Mesa de Entradas para evitar duplicidades.</p>
+      </div>
+
+      <div class="tarjeta-perfil" data-protocolo="entrevista">
+        <span class="perfil-titulo color-3">3. Primera entrevista con el cliente</span>
+        <p>Relevar hechos, recolectar prueba y generar estrategia de defensa.</p>
+      </div>
+
+      <div class="tarjeta-perfil" data-protocolo="redaccion">
+        <span class="perfil-titulo color-4">4. Redacción de la presentación</span>
+        <p>Elaborar la demanda o contestación, control interno y firma digital.</p>
+      </div>
+
+      <div class="tarjeta-perfil" data-protocolo="seguimiento">
+        <span class="perfil-titulo color-5">5. Seguimiento de la causa</span>
+        <p>Carga en SIGED, vinculación de patrocinio y comunicación con el cliente.</p>
+      </div>
+    </div>
+
+    <!-- COLUMNA DERECHA: DETALLES DINÁMICOS -->
+    <div class="columna-derecha" id="columnaDetalles">
+      <button class="btn-recordar" id="btnRecordar">RECORDÁ ESTO</button>
+      
+      <div id="headerDinamico">
+        <h2 id="tituloDerecho" style="color: #1e4a6b; font-size: 1.4rem; margin-bottom: 5px;">Cargando...</h2>
+        <p id="subtituloDerecho" style="color: #7f8c8d; font-size: 0.9rem; margin-bottom: 15px;"></p>
+      </div>
+
+      <div class="principios-scroll" id="contenidoDerecho">
+        <!-- Contenido dinámico según el módulo -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL "RECORDÁ ESTO" -->
+<div class="modal-overlay" id="modalInfo" onclick="toggleModal(false)">
+  <div class="modal-content" onclick="stopPropagation(event)">
+    <button style="position:absolute; top:12px; right:16px; background:none; border:none; font-size:1.8rem; cursor:pointer; color:#95a5a6; line-height:1;" onclick="toggleModal(false)">&times;</button>
+    <div style="background:#eef4fa; border-left:5px solid #1e6f5c; padding:1.2rem; margin-bottom:1.5rem; border-radius:12px;">
+      <h4 style="color:#1a5d6c; margin-bottom:8px;">Excelencia Técnica</h4>
+      <p style="font-size:0.9rem; line-height:1.5;">El cumplimiento de cada requisito previo garantiza una adecuada defensa técnica y evita nulidades procesales.</p>
+    </div>
+    <div style="background:#fff4e5; border-left:5px solid #ff9800; padding:1.2rem; border-radius:12px;">
+      <h4 style="color:#a35200; margin-bottom:8px;">Trabajo en equipo</h4>
+      <p style="font-size:0.9rem; line-height:1.5;">Ante dudas sobre el legajo o la estrategia, consulte con el Defensor a cargo. La responsabilidad es compartida.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Protocolos con los textos detallados solicitados (agrupados lógicamente en los 5 módulos)
+  const protocolos = {
+    deut: {
+      titulo: "📋 Comprobar envío del Legajo DEUT",
+      pasos: [
+        "✔️ Validación DEUT: Verificar requisitos de admisibilidad (identidad, domicilio y escasos recursos). Es condición obligatoria para asumir la representación."
+      ]
+    },
+    asignacion: {
+      titulo: "👥 Asignación por operador",
+      pasos: [
+        "✔️ Asignación de Personal: Confirmar el profesional a cargo en Mesa de Entradas para evitar duplicidad de tareas o conflictos de interés."
+      ]
+    },
+    entrevista: {
+      titulo: "🎙️ Primera entrevista con el cliente",
+      pasos: [
+        "✔️ Primer Contacto y Citación: Coordinar la entrevista personal con el ciudadano para transformar el legajo en una estrategia de defensa.",
+        "✔️ Entrevista Jurídica: Relevar los hechos de manera presencial, filtrando la información con relevancia jurídica para el proceso.",
+        "✔️ Recolección de Prueba: Solicitar al cliente la documentación complementaria (títulos, partidas, recibos) necesaria para el escrito inicial."
+      ]
+    },
+    redaccion: {
+      titulo: "✍️ Redacción de la presentación",
+      pasos: [
+        "✔️ Encuadre Legal: Definir la pretensión jurídica y normativa aplicable antes de la carga en el sistema digital.",
+        "✔️ Redacción de Pieza Inicial: Elaborar la demanda o contestación de forma clara, técnica y fiel a las necesidades del defendido.",
+        "✔️ Control y Revisión: Someter el escrito a corrección del Secretario o Defensor Oficial.",
+        "✔️ Firma Digital (STAMPER): Gestionar la firma del ciudadano vía app STAMPER y la firma posterior del funcionario para habilitar el documento en SIGED."
+      ]
+    },
+    seguimiento: {
+      titulo: "📌 Seguimiento de la causa",
+      pasos: [
+        "✔️ Carga y Seguimiento en SIGED: Ingresar el expediente al sistema y activar la opción de 'destacado' para el control de novedades.",
+        "✔️ Vinculación de Patrocinio: Solicitar al Juzgado la vinculación del Defensor al expediente digital para asegurar la recepción de notificaciones automáticas.",
+        "✔️ Registro y Comunicación: Cargar el caso en la base interna y acordar con el cliente los canales de contacto para informar avances."
+      ]
+    }
+  };
+
+  // Función para mostrar los pasos del protocolo seleccionado
+  function mostrarPasos(id) {
+    const data = protocolos[id];
+    if (!data) return;
+    const contenedor = document.getElementById('contenidoDerecho');
+    document.getElementById('tituloDerecho').innerText = data.titulo;
+    document.getElementById('subtituloDerecho').innerText = "Pasos y responsabilidades clave:";
+    
+    const htmlPasos = data.pasos.map(paso => `<li>${paso}</li>`).join('');
+    contenedor.innerHTML = `<ul class="lista-pasos">${htmlPasos}</ul>`;
+  }
+
+  // Manejar clic en tarjeta (módulo izquierdo)
+  function handlePerfilClick(event, tarjeta) {
+    event.stopPropagation();
+    const protocoloId = tarjeta.getAttribute('data-protocolo');
+    if (protocoloId && protocolos[protocoloId]) {
+      mostrarPasos(protocoloId);
+    }
+  }
+
+  // Detener propagación en elementos internos (modal, botones)
+  function stopPropagation(e) {
+    e.stopPropagation();
+  }
+
+  // Control del modal
+  function toggleModal(show) {
+    const modal = document.getElementById('modalInfo');
+    modal.style.display = show ? 'flex' : 'none';
+  }
+
+  // Inicializar eventos en todas las tarjetas (compatible con táctil)
+  function inicializarTarjetas() {
+    const tarjetas = document.querySelectorAll('.tarjeta-perfil');
+    tarjetas.forEach(tarjeta => {
+      // Remover eventos previos para evitar duplicados (si los hubiera)
+      tarjeta.removeEventListener('click', tarjeta._listener);
+      tarjeta.removeEventListener('touchstart', tarjeta._touchListener);
+      
+      const clickHandler = (e) => handlePerfilClick(e, tarjeta);
+      const touchHandler = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        handlePerfilClick(e, tarjeta);
+      };
+      
+      tarjeta.addEventListener('click', clickHandler);
+      tarjeta.addEventListener('touchstart', touchHandler, { passive: false });
+      
+      tarjeta._listener = clickHandler;
+      tarjeta._touchListener = touchHandler;
+    });
+  }
+
+  // Cargar contenido inicial: mostrar el primer módulo (DEUT) por defecto
+  window.onload = function() {
+    inicializarTarjetas();
+    mostrarPasos('deut');   // Módulo 1 por defecto
+    
+    const btnRecordar = document.getElementById('btnRecordar');
+    if (btnRecordar) {
+      btnRecordar.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleModal(true);
+      });
+    }
+  };
+</script>
+
+</body>
+</html>
