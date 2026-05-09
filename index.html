@@ -2,16 +2,10 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Protocolo de Actuación | Defensoría 6</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
-
-        :root {
-            --azul-oscuro: #0f172a;
-            --azul-claro: #475569;
-            --bg-color: #f8fafc;
-        }
 
         * {
             margin: 0;
@@ -21,93 +15,211 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
+            background-color: #f1f5f9;  /* fondo neutro suave para resaltar el glass */
             height: 100vh;
+            width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
-            overflow: hidden;
+            overflow: hidden;           /* evita scrolls no deseados */
+            position: relative;
         }
 
-        /* Contenedor principal interactivo */
+        /* --- LÍNEAS DECORATIVAS GRISES (EXTREMO A EXTREMO) --- */
+        .linea-deco-superior,
+        .linea-deco-inferior {
+            position: fixed;
+            left: 0;
+            width: 100%;
+            height: 5px;                /* grosor mediano */
+            background-color: #9ca3af;  /* gris elegante */
+            z-index: 5;
+            pointer-events: none;       /* para que no interfieran con clics */
+            box-shadow: 0 0 2px rgba(0,0,0,0.05);
+        }
+
+        .linea-deco-superior {
+            top: 0;
+        }
+
+        .linea-deco-inferior {
+            bottom: 0;
+        }
+
+        /* Contenedor principal con efecto glass y borde azul animado */
         .protocolo-card {
             text-align: center;
             max-width: 700px;
             width: 100%;
             padding: clamp(2rem, 8vw, 4rem);
-            background: #ffffff;
-            border-radius: 24px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
-            border: 1px solid rgba(15, 23, 42, 0.05);
+            background: rgba(255, 255, 255, 0.85);   /* base transparente para efecto glass */
+            backdrop-filter: blur(4px);               /* sensación de vidrio esmerilado */
+            border-radius: 28px;
+            
+            /* === BORDE AZUL GLASS + ANIMACIÓN === */
+            border: 2px solid rgba(56, 189, 248, 0.6);    /* azul cielo translúcido */
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08), 
+                        0 0 0 2px rgba(56, 189, 248, 0.1) inset, 
+                        0 0 20px rgba(2, 132, 199, 0.3);   /* brillo azul base */
+            
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
             user-select: none;
+            position: relative;
+            z-index: 20;
+            
+            /* animación sutil del borde (glow y tono) */
+            animation: borderGlow 3s infinite alternate ease-in-out;
         }
 
-        /* Efecto hover sutil para indicar que es clickeable */
+        /* Animación principal del borde "glass azul" */
+        @keyframes borderGlow {
+            0% {
+                border-color: rgba(56, 189, 248, 0.5);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06),
+                            0 0 0 1px rgba(56, 189, 248, 0.2) inset,
+                            0 0 12px rgba(14, 165, 233, 0.4);
+                background: rgba(255, 255, 255, 0.82);
+            }
+            100% {
+                border-color: rgba(2, 136, 209, 0.85);
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1),
+                            0 0 0 3px rgba(2, 132, 199, 0.25) inset,
+                            0 0 28px rgba(2, 132, 199, 0.7);
+                background: rgba(255, 255, 255, 0.92);
+            }
+        }
+
+        /* Efecto hover: eleva y refuerza el glass azul */
         .protocolo-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
-            border-color: rgba(15, 23, 42, 0.1);
+            transform: translateY(-6px);
+            animation: borderGlowHover 1.2s infinite alternate;
+            backdrop-filter: blur(8px);
+            background: rgba(255, 255, 255, 0.88);
+        }
+        
+        @keyframes borderGlowHover {
+            0% {
+                border-color: rgba(56, 189, 248, 0.7);
+                box-shadow: 0 20px 38px rgba(0, 0, 0, 0.12),
+                            0 0 0 2px rgba(2, 132, 199, 0.3) inset,
+                            0 0 18px #38bdf8;
+            }
+            100% {
+                border-color: #0ea5e9;
+                box-shadow: 0 26px 48px rgba(0, 0, 0, 0.15),
+                            0 0 0 4px rgba(2, 132, 199, 0.4) inset,
+                            0 0 32px #0284c7;
+            }
         }
 
+        /* clic activo: feedback inmediato */
         .protocolo-card:active {
-            transform: scale(0.98);
+            transform: scale(0.97);
+            transition: 0.08s linear;
         }
 
+        /* Títulos y textos */
         h1 {
-            font-size: clamp(1.8rem, 5vw, 2.8rem);
+            font-size: clamp(1.8rem, 6vw, 3rem);
             font-weight: 800;
-            color: var(--azul-oscuro);
-            line-height: 1.1;
-            letter-spacing: -0.03em;
+            color: #0f172a;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
             margin-bottom: 12px;
+            text-shadow: 0 1px 1px rgba(255,255,255,0.5);
         }
 
         h2 {
-            font-size: clamp(1rem, 3vw, 1.25rem);
+            font-size: clamp(1rem, 3.5vw, 1.4rem);
             font-weight: 600;
-            color: var(--azul-claro);
-            margin-bottom: 30px;
+            color: #1e293b;
+            margin-bottom: 28px;
             letter-spacing: -0.01em;
+            opacity: 0.9;
         }
 
+        /* Línea decorativa interna (ya existente) ahora con ajuste sutil */
         .decorator-line {
             height: 4px;
-            width: 60px;
-            background-color: var(--azul-oscuro);
+            width: 65px;
+            background: linear-gradient(90deg, #1e3a8a, #38bdf8, #1e3a8a);
             margin: 0 auto;
-            border-radius: 2px;
+            border-radius: 4px;
             transition: width 0.3s ease;
         }
 
-        /* Al pasar el mouse, la línea se expande un poco */
         .protocolo-card:hover .decorator-line {
-            width: 100px;
+            width: 120px;
         }
 
         .hint-text {
             margin-top: 40px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: #94a3b8;
+            letter-spacing: 0.2em;
+            color: #5b6e8c;
             font-weight: 600;
+            background: rgba(255,255,240,0.3);
+            display: inline-block;
+            padding: 5px 16px;
+            border-radius: 40px;
+            backdrop-filter: blur(2px);
         }
 
-        /* Animación de entrada */
+        /* Animación de entrada refinada */
         .protocolo-card {
-            animation: slideUp 0.8s ease-out;
+            animation: slideUpFade 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1);
         }
 
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes slideUpFade {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Ajuste para móviles: las líneas decorativas siguen fijas, contenedor bien centrado */
+        @media (max-width: 640px) {
+            .protocolo-card {
+                margin: 0 16px;
+                padding: 2rem 1.5rem;
+                backdrop-filter: blur(6px);
+            }
+            .linea-deco-superior,
+            .linea-deco-inferior {
+                height: 4px;
+            }
+            .hint-text {
+                margin-top: 32px;
+                font-size: 0.7rem;
+            }
+        }
+        
+        /* Fondo con un toque de patrón sutil para resaltar glass */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle at 15% 30%, rgba(56, 189, 248, 0.03) 2%, transparent 2.5%);
+            background-size: 32px 32px;
+            pointer-events: none;
+            z-index: 0;
         }
     </style>
 </head>
 <body>
+
+    <!-- Líneas decorativas: arriba y abajo, extremo a extremo, color gris, grosor mediano -->
+    <div class="linea-deco-superior" aria-hidden="true"></div>
+    <div class="linea-deco-inferior" aria-hidden="true"></div>
 
     <main class="protocolo-card" id="mainContainer">
         <h1>Protocolo de Actuación</h1>
@@ -117,10 +229,14 @@
     </main>
 
     <script>
-        document.getElementById('mainContainer').addEventListener('click', () => {
-            window.location.href = 'app.html';
-        });
+        // Redirección al hacer clic (exactamente igual a la funcionalidad original, pero con efecto glass)
+        const container = document.getElementById('mainContainer');
+        if (container) {
+            container.addEventListener('click', (e) => {
+                // Pequeño retardo opcional para sentir la animación, pero redirección inmediata
+                window.location.href = 'app.html';
+            });
+        }
     </script>
-
 </body>
 </html>
