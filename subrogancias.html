@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+  <title>Subrogancias · Defensoría Nº 6</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f4f7fc;
+      color: #0a2b3e;
+      line-height: 1.4;
+    }
+
+    .app-wrapper {
+      display: flex;
+      width: 100%;
+      min-height: 100vh;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 2rem;
+      padding: 2rem;
+      width: 100%;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    /* COLUMNA IZQUIERDA */
+    .columna-izquierda {
+      overflow-y: visible;
+      padding-right: 1rem;
+    }
+
+    .titulo-principal {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #1e4a6b;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      line-height: 1.2;
+      border-bottom: 3px solid #ff9800;
+      padding-bottom: 10px;
+    }
+
+    .subtitulo-header {
+      font-size: 0.85rem;
+      color: #2c7da0;
+      margin-bottom: 2rem;
+      font-weight: 500;
+      letter-spacing: -0.2px;
+    }
+
+    .tarjeta-perfil {
+      background: white;
+      border-radius: 15px;
+      padding: 1.5rem;
+      margin-bottom: 1.2rem;
+      border: 1px solid #dce9f0;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .tarjeta-perfil:active {
+      transform: scale(0.99);
+      background: #fefefe;
+    }
+
+    .perfil-titulo {
+      font-size: 1.2rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .perfil-descripcion {
+      font-size: 0.85rem;
+      color: #4a627a;
+      line-height: 1.4;
+    }
+
+    /* Colores de borde izquierdo (paleta Defensoría) */
+    .color-1 { color: #1e4a6b; border-left: 6px solid #1e4a6b; padding-left: 12px; }
+    .color-2 { color: #2c7da0; border-left: 6px solid #2c7da0; padding-left: 12px; }
+    .color-3 { color: #8e44ad; border-left: 6px solid #8e44ad; padding-left: 12px; }
+    .color-4 { color: #27ae60; border-left: 6px solid #27ae60; padding-left: 12px; }
+    .color-5 { color: #d35400; border-left: 6px solid #d35400; padding-left: 12px; }
+    .color-6 { color: #e67e22; border-left: 6px solid #e67e22; padding-left: 12px; }
+    .color-7 { color: #2980b9; border-left: 6px solid #2980b9; padding-left: 12px; }
+    .color-8 { color: #16a085; border-left: 6px solid #16a085; padding-left: 12px; }
+
+    /* COLUMNA DERECHA */
+    .columna-derecha {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 2rem;
+      border: 1px solid #dce9f0;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    }
+
+    .btn-recordar {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #ff9800;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      cursor: pointer;
+      z-index: 10;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-recordar:active {
+      background: #e68900;
+      transform: scale(0.97);
+    }
+
+    .principios-scroll {
+      flex: 1;
+      overflow-y: auto;
+      margin-top: 1rem;
+      max-height: 65vh;
+      padding-right: 6px;
+    }
+
+    /* Estilos de contenido dinámico (bloques estilo pasos o explicaciones) */
+    .bloque-contenido {
+      animation: fadeIn 0.3s ease;
+    }
+
+    .bloque-contenido p {
+      font-size: 0.95rem;
+      line-height: 1.55;
+      margin-bottom: 1rem;
+      color: #1e2f3e;
+    }
+
+    .bloque-contenido h4 {
+      font-weight: 800;
+      font-size: 1.05rem;
+      margin: 1.2rem 0 0.5rem 0;
+      color: #1e4a6b;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .bloque-contenido ul, .bloque-contenido ol {
+      margin-left: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .bloque-contenido li {
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .tarjeta-destacada {
+      background: #f0f7ff;
+      border-left: 5px solid #1e4a6b;
+      padding: 1rem;
+      border-radius: 12px;
+      margin: 1rem 0;
+    }
+
+    .grid-meses {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .mes-card {
+      background: #eef2fa;
+      text-align: center;
+      padding: 0.8rem;
+      border-radius: 16px;
+      font-weight: 800;
+      font-size: 1.3rem;
+      color: #1e4a6b;
+    }
+
+    .graficos-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .grafico-card {
+      background: #fafcff;
+      border: 1px solid #e2edf7;
+      border-radius: 20px;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .grafico-card canvas {
+      max-width: 100%;
+      height: auto;
+      background: transparent;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(10, 43, 62, 0.85);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      backdrop-filter: blur(2px);
+    }
+
+    .modal-content {
+      background: white;
+      padding: 2rem 1.8rem;
+      border-radius: 25px;
+      max-width: 550px;
+      width: 90%;
+      position: relative;
+      margin: 1rem;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 800px) {
+      .container {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        padding: 1rem;
+        overflow: visible;
+      }
+
+      .columna-izquierda {
+        padding-right: 0;
+        width: 100%;
+      }
+
+      .columna-derecha {
+        width: 100%;
+        padding: 1.5rem 1rem;
+        padding-top: 3.2rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .btn-recordar {
+        top: 12px;
+        right: 12px;
+        padding: 6px 12px;
+        font-size: 0.7rem;
+      }
+
+      .titulo-principal {
+        font-size: 1.4rem;
+      }
+
+      .perfil-titulo {
+        font-size: 1rem;
+      }
+
+      .graficos-wrapper {
+        grid-template-columns: 1fr;
+        gap: 1.2rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 0.75rem;
+        gap: 1rem;
+      }
+      .columna-derecha {
+        padding: 1.2rem 0.8rem;
+        padding-top: 3rem;
+      }
+      .btn-recordar {
+        top: 8px;
+        right: 8px;
+        padding: 5px 10px;
+      }
+      .bloque-contenido p, .bloque-contenido li {
+        font-size: 0.85rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-wrapper">
+  <div class="container" id="mainContainer">
+    <!-- COLUMNA IZQUIERDA: Tarjetas temáticas -->
+    <div class="columna-izquierda">
+      <h1 class="titulo-principal">Orden de Subrogación</h1>
+      <div class="subtitulo-header">Defensoría Civil y Comercial Nº 6 · Guía para el personal</div>
+      
+      <div class="tarjeta-perfil" data-tema="pasiva">
+        <span class="perfil-titulo color-1">1. ¿Quién nos cubre si no estamos? (Pasiva)</span>
+        <div class="perfil-descripcion">Reemplazo automático cuando el Defensor N° 6 está ausente o de licencia.</div>
+      </div>
+
+      <div class="tarjeta-perfil" data-tema="activa">
+        <span class="perfil-titulo color-2">2. ¿A quién debemos cubrir nosotros? (Activa)</span>
+        <div class="perfil-descripcion">Nuestro rol como subrogantes de la Defensoría N° 7.</div>
+      </div>
+
+      <div class="tarjeta-perfil" data-tema="turnos">
+        <span class="perfil-titulo color-3">3. Calendario de Turnos: Meses de la N° 6</span>
+        <div class="perfil-descripcion">Abril · Agosto · Diciembre — meses de recepción de causas nuevas.</div>
+      </div>
+
+      <div class="tarjeta-perfil" data-tema="permanente">
+        <span class="perfil-titulo color-4">4. Defensorías con Turno Permanente</span>
+        <div class="perfil-descripcion">N° 7 (Villa Cabello), N° 8 (Garupá), N° 9 (Itaembé Miní).</div>
+      </div>
+
+      <div class="tarjeta-perfil" data-tema="legal">
+        <span class="perfil-titulo color-5">5. Reglas y Leyes (Base Legal)</span>
+        <div class="perfil-descripcion">Art. 121 quinquies RPJ, Acordadas STJ y subrogancia automática.</div>
+      </div>
+
+      <div class="tarjeta-perfil" data-tema="pasos">
+        <span class="perfil-titulo color-6">6. Cómo se hace el trámite (Paso a paso)</span>
+        <div class="perfil-descripcion">Actuación administrativa: aviso, asunción, firma, cese.</div>
+      </div>
+
+      <div class="tarjeta-perfil" data-tema="ejemplos">
+        <span class="perfil-titulo color-7">7. Ejemplos prácticos para el día a día</span>
+        <div class="perfil-descripcion">Casos de vacaciones, enfermedad y diferencia con inhibición.</div>
+      </div>
+
+      <div class="tarjeta-perfil" data-tema="graficos">
+        <span class="perfil-titulo color-8">8. Mapa Visual de Subrogantes</span>
+        <div class="perfil-descripcion">Esquema circular de subrogancias (quién cubre a quién).</div>
+      </div>
+    </div>
+
+    <!-- COLUMNA DERECHA: DETALLE DINÁMICO -->
+    <div class="columna-derecha" id="columnaDetalles">
+      <button class="btn-recordar" id="btnRecordar">RECORDÁ ESTO</button>
+      
+      <div id="headerDinamico">
+        <h2 id="tituloDerecho" style="color: #1e4a6b; font-size: 1.4rem; margin-bottom: 5px;">Cargando...</h2>
+        <p id="subtituloDerecho" style="color: #7f8c8d; font-size: 0.85rem; margin-bottom: 12px; border-left: 3px solid #ff9800; padding-left: 10px;"></p>
+      </div>
+
+      <div class="principios-scroll" id="contenidoDerecho">
+        <!-- contenido dinámico según el tema -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL "RECORDÁ ESTO" (contenido adaptado a subrogaciones) -->
+<div class="modal-overlay" id="modalInfo" onclick="toggleModal(false)">
+  <div class="modal-content" onclick="stopPropagation(event)">
+    <button style="position:absolute; top:12px; right:16px; background:none; border:none; font-size:1.8rem; cursor:pointer; color:#95a5a6; line-height:1;" onclick="toggleModal(false)">&times;</button>
+    <div style="background:#eef4fa; border-left:5px solid #1e6f5c; padding:1.2rem; margin-bottom:1.5rem; border-radius:12px;">
+      <h4 style="color:#1a5d6c; margin-bottom:8px;">⚖️ Diferencia clave</h4>
+      <p style="font-size:0.9rem; line-height:1.5;">La <strong>Subrogancia</strong> es automática por ausencia o licencia. La <strong>Inhibición</strong> requiere trámite aparte (motivo legal). Nunca dejar sin cobertura a la Defensoría.</p>
+    </div>
+    <div style="background:#fff4e5; border-left:5px solid #ff9800; padding:1.2rem; border-radius:12px;">
+      <h4 style="color:#a35200; margin-bottom:8px;">📌 Cadena de respaldo</h4>
+      <p style="font-size:0.9rem; line-height:1.5;">Si la N° 5 también está ausente, se retrocede a la N° 4, luego N° 3, etc. Siempre hay un subrogante. El orden está fijado por el reglamento.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ---------- CONTENIDOS DE CADA TEMA ----------
+  const temasData = {
+    pasiva: {
+      titulo: "🗂️ ¿Quién nos cubre si no estamos? (Pasiva)",
+      subtitulo: "Subrogancia automática · Defensoría Nº 6",
+      contenido: `
+        <div class="bloque-contenido">
+          <div class="tarjeta-destacada">
+            <p><strong>✔️ Regla general:</strong> La Defensoría N° 5 es el respaldo inmediato de la N° 6 cuando el titular se ausenta (licencia, vacaciones, enfermedad).</p>
+          </div>
+          <p>De acuerdo con el <strong>Art. 130 RPJ</strong>, la subrogancia es <strong>automática</strong> — no se necesita intervención del Juez ni trámite especial. El defensor subrogante asume la atención de los expedientes y la facultad de firma.</p>
+          <h4>🔁 ¿Y si la N° 5 también está ausente?</h4>
+          <p>Se sigue retrocediendo en el orden numérico: N° 4, luego N° 3, y así sucesivamente. La cobertura nunca debe quedar interrumpida.</p>
+          <div style="background:#f9f9fc; border-radius: 16px; padding: 1rem; text-align: center; margin-top: 1rem;">
+            </div>
+        </div>
+      `
+    },
+    activa: {
+      titulo: "🤝 ¿A quién debemos cubrir nosotros? (Activa)",
+      subtitulo: "La N° 6 como subrogante de la N° 7",
+      contenido: `
+        <div class="bloque-contenido">
+          <p>Así como la Defensoría N° 5 nos cubre a nosotros, la <strong>N° 6 es el respaldo natural de la N° 7</strong>. Cuando el titular de la N° 7 se ausenta (licencia, enfermedad o cualquier causal legal), los expedientes pasan a nuestro Defensor para su firma y resolución.</p>
+          <div class="tarjeta-destacada">
+            <p><strong>✔️ Flujo activo:</strong> Defensoría N° 6  ➔  cubre a Defensoría N° 7.</p>
+            <p style="margin-top: 6px;"><strong>Importante:</strong> Si la N° 7 también tiene impedimento, se continúa con la N° 8, pero el orden primario es el inmediato siguiente.</p>
+          </div>
+          <h4>📌 Registro interno</h4>
+          <p>Cuando actúe como subrogante, el personal debe cargar una nota en el sistema indicando el reemplazo y el plazo estimado, pero no requiere autorización previa del juzgado.</p>
+        </div>
+      `
+    },
+    turnos: {
+      titulo: "📆 Calendario de Turnos: Meses de la N° 6",
+      subtitulo: "Rotación mensual con las Defensorías 3, 4 y 5",
+      contenido: `
+        <div class="bloque-contenido">
+          <p>La Defensoría N° 6 recibe las <strong>causas nuevas</strong> (turno ordinario) exclusivamente durante los siguientes meses del año:</p>
+          <div class="grid-meses">
+            <div class="mes-card">ABRIL</div>
+            <div class="mes-card">AGOSTO</div>
+            <div class="mes-card">DICIEMBRE</div>
+          </div>
+          <p>El resto del año, el turno corresponde a otras Defensorías del circuito (N° 3, N° 4 y N° 5 rotan). Esta distribución está definida por Acordadas STJ (80/12, 158/15, 81/22).</p>
+          <div class="tarjeta-destacada">
+            <p><strong>⚠️ Durante los meses de turno:</strong> si el defensor titular está de licencia, el subrogante (N° 5) atiende las nuevas causas entrantes igualmente, porque el turno sigue activo.</p>
+          </div>
+        </div>
+      `
+    },
+    permanente: {
+      titulo: "📍 Defensorías con Turno Permanente",
+      subtitulo: "Zonas sin rotación mensual",
+      contenido: `
+        <div class="bloque-contenido">
+          <p>Estas defensorías tienen asignación territorial fija y <strong>turno todo el año</strong> (no participan del sistema rotatorio con la N° 6).</p>
+          <ul>
+            <li><strong>Defensoría N° 7:</strong> Villa Cabello</li>
+            <li><strong>Defensoría N° 8:</strong> Garupá</li>
+            <li><strong>Defensoría N° 9:</strong> Itaembé Miní</li>
+          </ul>
+          <p>En la práctica, esto significa que nunca recibimos por turno causas de esas zonas, salvo que actúemos como subrogantes de la N° 7 (por ausencia de su titular).</p>
+        </div>
+      `
+    },
+    legal: {
+      titulo: "⚖️ Reglas y Leyes (Base Legal)",
+      subtitulo: "Reglamento del Poder Judicial y Acordadas",
+      contenido: `
+        <div class="bloque-contenido">
+          <div class="tarjeta-destacada">
+            <p><strong>📘 Art. 121 quinquies RPJ:</strong> Establece el orden del círculo de subrogancias (3➔4➔5➔6➔7...).</p>
+            <p><strong>📘 Art. 130 RPJ:</strong> La subrogancia es automática, no requiere delegación expresa del juez.</p>
+          </div>
+          <p><strong>Acordadas del Superior Tribunal de Justicia:</strong> N° 80/12, 158/15 y 81/22 definen el cronograma de turnos mensuales y las defensorías con competencia territorial permanente.</p>
+          <h4>📌 Inhibición vs Subrogancia</h4>
+          <p>La <strong>inhibición</strong> (causa de recusación o impedimento legal) sigue el mismo orden de reemplazo, pero requiere acta y comunicación formal al juzgado.</p>
+        </div>
+      `
+    },
+    pasos: {
+      titulo: "📋 Cómo se hace el trámite (Paso a paso)",
+      subtitulo: "Procedimiento administrativo interno",
+      contenido: `
+        <div class="bloque-contenido">
+          <ol style="list-style-type: decimal; font-weight: 500;">
+            <li><strong>Aviso:</strong> El Defensor titular comunica por nota o correo interno su ausencia (licencia, capacitación, etc.).</li>
+            <li><strong>Asunción automática:</strong> El subrogante (N° 5 cuando es nuestra ausencia) queda a cargo sin necesidad de declaración jurada.</li>
+            <li><strong>Firma y gestión:</strong> Los escritos urgentes se llevan a la oficina del subrogante; se utiliza firma digital con la aclaración "por subrogancia".</li>
+            <li><strong>Registro en SIGED:</strong> Se carga la subrogancia en el sistema para que las notificaciones lleguen correctamente.</li>
+            <li><strong>Cese:</strong> Cuando el titular se reincorpora, finaliza el reemplazo de forma inmediata, sin trámite adicional.</li>
+          </ol>
+          <div class="tarjeta-destacada" style="margin-top: 1rem;">
+            <p><strong>✔️ Recomendación:</strong> siempre dejar constancia en el legajo de las fechas de inicio y fin de la subrogancia.</p>
+          </div>
+        </div>
+      `
+    },
+    ejemplos: {
+      titulo: "💼 Ejemplos prácticos para el día a día",
+      subtitulo: "Casos frecuentes",
+      contenido: `
+        <div class="bloque-contenido">
+          <div class="tarjeta-destacada">
+            <p><strong>📌 Vacaciones del Defensor N°6:</strong> el abogado de la N° 5 debe firmar los escritos urgentes. Las notificaciones se remiten a la oficina subrogante.</p>
+          </div>
+          <div class="tarjeta-destacada">
+            <p><strong>📌 Turno de ABRIL (N°6 de turno):</strong> el Defensor se enferma. La N° 5 atiende las nuevas demandas y además resuelve los expedientes internos.</p>
+          </div>
+          <div style="background:#fff0e8; border-left: 5px solid #d35400; padding: 1rem; border-radius: 12px; margin: 1rem 0;">
+            <p><strong>⚠️ No confundir con inhibición:</strong> Si el Defensor es pariente de una parte, debe apartarse. El trámite de inhibición requiere proveído judicial y designación formal del subrogante, no es automático.</p>
+          </div>
+          <p><strong>Ejemplo extra:</strong> La N° 7 se queda sin titular por licencia prolongada. La N° 6 asume como subrogante activa: debe atender los expedientes de Villa Cabello hasta el regreso.</p>
+        </div>
+      `
+    },
+    graficos: {
+      titulo: "🗺️ Mapa Visual de las Flechas",
+      subtitulo: "Esquema circular de subrogancias",
+      contenido: `
+        <div class="bloque-contenido">
+          <p>El orden de reemplazo sigue la numeración: la Defensoría anterior cubre a la siguiente. En caso de ausencia múltiple, se retrocede en el círculo.</p>
+          <div class="graficos-wrapper">
+            <div class="grafico-card">
+              <p style="font-weight:800; margin-bottom:12px; color:#d35400;">🔁 ¿QUIÉN REEMPLAZA A QUIÉN?<br>(sentido inverso)</p>
+              <canvas id="canvasInverso" width="300" height="300" style="width:100%; max-width:280px; height:auto; margin:0 auto;"></canvas>
+              <p class="texto-chico" style="font-size:0.7rem; margin-top:8px;">Ejemplo: La N° 5 reemplaza a la N° 6</p>
+            </div>
+            <div class="grafico-card">
+              <p style="font-weight:800; margin-bottom:12px; color:#1e4a6b;">➡️ ORDEN PROGRESIVO</p>
+              <canvas id="canvasProgresivo" width="300" height="300" style="width:100%; max-width:280px; height:auto; margin:0 auto;"></canvas>
+              <p class="texto-chico" style="font-size:0.7rem; margin-top:8px;">La N° 6 cubre a la N° 7</p>
+            </div>
+          </div>
+        </div>
+      `
+    }
+  };
+
+  // Funciones de dibujo de canvas (adaptadas del original)
+  function dibujarGrafico(canvasId, isReverse) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    const size = 300;
+    canvas.width = size;
+    canvas.height = size;
+    const center = size / 2;
+    const radius = 100;
+    const nodes = ["3", "4", "5", "6", "7", "8", "9"];
+    const n = nodes.length;
+    const angles = nodes.map((_, i) => i * (Math.PI * 2 / n) - Math.PI / 2);
+    const points = angles.map(a => ({ x: center + radius * Math.cos(a), y: center + radius * Math.sin(a) }));
+
+    ctx.clearRect(0, 0, size, size);
+    ctx.lineWidth = 2.5;
+    ctx.strokeStyle = isReverse ? "#d35400" : "#2c7da0";
+    ctx.fillStyle = isReverse ? "#d35400" : "#2c7da0";
+
+    for (let i = 0; i < n; i++) {
+      const from = points[i];
+      const toIdx = isReverse ? (i - 1 + n) % n : (i + 1) % n;
+      const to = points[toIdx];
+      const midAngle = (angles[i] + angles[toIdx]) / 2 + (Math.abs(angles[i]-angles[toIdx]) > Math.PI ? Math.PI : 0);
+      const cpX = center + (radius + 22) * Math.cos(midAngle);
+      const cpY = center + (radius + 22) * Math.sin(midAngle);
+      const angleToTarget = Math.atan2(to.y - cpY, to.x - cpX);
+      const edgeX = to.x - 28 * Math.cos(angleToTarget);
+      const edgeY = to.y - 28 * Math.sin(angleToTarget);
+
+      ctx.beginPath();
+      ctx.moveTo(from.x, from.y);
+      ctx.quadraticCurveTo(cpX, cpY, edgeX, edgeY);
+      ctx.stroke();
+
+      const arrowSize = 11;
+      ctx.beginPath();
+      ctx.moveTo(edgeX, edgeY);
+      ctx.lineTo(edgeX - arrowSize * Math.cos(angleToTarget - 0.45), edgeY - arrowSize * Math.sin(angleToTarget - 0.45));
+      ctx.lineTo(edgeX - arrowSize * Math.cos(angleToTarget + 0.45), edgeY - arrowSize * Math.sin(angleToTarget + 0.45));
+      ctx.fill();
+    }
+
+    nodes.forEach((label, i) => {
+      ctx.beginPath();
+      ctx.arc(points[i].x, points[i].y, 22, 0, Math.PI * 2);
+      ctx.fillStyle = label === "6" ? "#ff9800" : "white";
+      ctx.fill();
+      ctx.strokeStyle = "#1e4a6b";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.fillStyle = "#0a2b3e";
+      ctx.font = "bold 14px 'Inter', sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(label, points[i].x, points[i].y);
+    });
+  }
+
+  function activarGraficos() {
+    setTimeout(() => {
+      dibujarGrafico("canvasInverso", true);
+      dibujarGrafico("canvasProgresivo", false);
+    }, 60);
+  }
+
+  // Mostrar tema seleccionado
+  function mostrarTema(temaId) {
+    const data = temasData[temaId];
+    if (!data) return;
+    document.getElementById('tituloDerecho').innerHTML = data.titulo;
+    document.getElementById('subtituloDerecho').innerText = data.subtitulo;
+    document.getElementById('contenidoDerecho').innerHTML = data.contenido;
+    
+    // Si el tema contiene gráficos, redibujamos los canvas
+    if (temaId === "graficos") {
+      activarGraficos();
+    }
+  }
+
+  // Eventos de tarjetas (estilo previos)
+  function handleTarjetaClick(event, tarjeta) {
+    event.stopPropagation();
+    const tema = tarjeta.getAttribute('data-tema');
+    if (tema && temasData[tema]) {
+      mostrarTema(tema);
+    }
+  }
+
+  function inicializarTarjetas() {
+    const tarjetas = document.querySelectorAll('.tarjeta-perfil');
+    tarjetas.forEach(tarjeta => {
+      tarjeta.removeEventListener('click', tarjeta._listener);
+      tarjeta.removeEventListener('touchstart', tarjeta._touchListener);
+      
+      const clickHandler = (e) => handleTarjetaClick(e, tarjeta);
+      const touchHandler = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        handleTarjetaClick(e, tarjeta);
+      };
+      
+      tarjeta.addEventListener('click', clickHandler);
+      tarjeta.addEventListener('touchstart', touchHandler, { passive: false });
+      
+      tarjeta._listener = clickHandler;
+      tarjeta._touchListener = touchHandler;
+    });
+  }
+
+  // Modal
+  function toggleModal(show) {
+    const modal = document.getElementById('modalInfo');
+    modal.style.display = show ? 'flex' : 'none';
+  }
+  function stopPropagation(e) {
+    e.stopPropagation();
+  }
+
+  // Inicialización
+  window.onload = () => {
+    inicializarTarjetas();
+    // Tema por defecto: "Pasiva"
+    mostrarTema('pasiva');
+    
+    const btnRecordar = document.getElementById('btnRecordar');
+    if (btnRecordar) {
+      btnRecordar.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleModal(true);
+      });
+    }
+  };
+</script>
+</body>
+</html>
