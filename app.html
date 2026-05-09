@@ -407,7 +407,7 @@
       background: #16304d;
     }
 
-    /* Mejoras táctiles en móvil */
+    /* Mejoras táctiles en móvil + OCULTAR MENÚ COMPLETO EN MÓVIL */
     @media (max-width: 768px) {
       .chat-filter {
         padding: 6px 8px;
@@ -421,9 +421,10 @@
         padding: 10px 20px;
         font-size: 0.85rem;
       }
-      .menu-btn, .logout-btn {
-        padding: 8px 14px;
-        font-size: 0.8rem;
+      /* Ocultar botón de menú y el desplegable en móviles */
+      .menu-btn,
+      .menu-dropdown {
+        display: none;
       }
       .back-btn {
         padding: 8px 16px;
@@ -447,13 +448,10 @@
       .header-title {
         display: none;
       }
+      /* Reforzar ocultamiento del menú */
+      .menu-btn,
       .menu-dropdown {
-        width: calc(100vw - 24px);
-        left: 50%;
-        transform: translateX(-50%) translateY(-8px);
-      }
-      .menu-dropdown.open {
-        transform: translateX(-50%) translateY(0);
+        display: none;
       }
       .menu-item {
         padding: 12px 14px;
@@ -575,7 +573,7 @@
     // ========== URLs (EDITABLE) ==========
     const externalUrls = {
       atencion_publico: "publico.html",
-      documentos_previos: "",
+      documentos_previos: "previos.html",
       subrogacion: "",
       antes_tramitar: "",
       escribir_documentos: "",
@@ -823,12 +821,15 @@
       filterInput.addEventListener('input', handleFilterAndClose);
       filterBtn.addEventListener('click', handleFilterAndClose);
       
-      menuBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        menuDropdown.classList.toggle('open');
-      });
+      // Solo si existe el botón de menú (en escritorio existe, en móvil está oculto pero no causa error)
+      if (menuBtn) {
+        menuBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          menuDropdown.classList.toggle('open');
+        });
+      }
       document.addEventListener('click', (e) => {
-        if (!menuDropdown.contains(e.target) && e.target !== menuBtn) {
+        if (menuDropdown && !menuDropdown.contains(e.target) && e.target !== menuBtn) {
           menuDropdown.classList.remove('open');
         }
       });
@@ -852,7 +853,7 @@
             }
           }
           logoutModal.classList.remove('open');
-          menuDropdown.classList.remove('open');
+          if (menuDropdown) menuDropdown.classList.remove('open');
         }
       });
     }
