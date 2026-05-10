@@ -94,7 +94,7 @@
       margin-top: 4px;
     }
 
-    /* Colores distintivos por categoría (similar paleta previa) */
+    /* Colores distintivos por categoría */
     .cat-procesal { border-left: 6px solid #1e4a6b; padding-left: 14px; }
     .cat-procesal .categoria-titulo { color: #1e4a6b; }
     .cat-proteccion { border-left: 6px solid #2c7da0; padding-left: 14px; }
@@ -198,35 +198,10 @@
     .ley-descripcion {
       font-size: 0.85rem;
       color: #3f5c6e;
-      margin-bottom: 12px;
       line-height: 1.45;
     }
 
-    .enlace-ley {
-      display: inline-flex;
-      align-items: center;
-      background: transparent;
-      color: #2c7da0;
-      font-weight: 600;
-      font-size: 0.75rem;
-      text-decoration: none;
-      border: 1px solid #cde3ec;
-      padding: 6px 14px;
-      border-radius: 40px;
-      transition: 0.2s;
-      font-family: 'Inter', monospace;
-      letter-spacing: 0.2px;
-    }
-
-    .enlace-ley:hover {
-      background: #eef4fa;
-      border-color: #8fb9ce;
-      color: #145c7a;
-    }
-
-    .enlace-ley:active {
-      transform: scale(0.97);
-    }
+    /* ya no existe .enlace-ley */
 
     @keyframes fadeSlide {
       from { opacity: 0; transform: translateX(12px); }
@@ -393,7 +368,6 @@
       </div>
 
       <div class="leyes-scroll" id="contenidoLeyes">
-        <!-- Aquí se inyectará dinámicamente el listado de leyes -->
         <ul class="lista-leyes" id="listaNormativa"></ul>
       </div>
     </div>
@@ -417,8 +391,7 @@
 
 <script>
   // --------------------------------------------------------------
-  // BASE DE DATOS DE NORMATIVA (estructura por categorías)
-  // siguiendo las leyes proporcionadas
+  // BASE DE DATOS DE NORMATIVA (sin URLs, sin botones)
   // --------------------------------------------------------------
   const normativaDB = {
     procesal: {
@@ -427,13 +400,11 @@
       leyes: [
         {
           nombre: "Ley XII N.º 27 – Código Procesal Civil, Comercial, de Familia y Violencia Familiar",
-          descripcion: "Establece el procedimiento para familia, violencia familiar, aspectos civiles y comerciales. Actualización procesal clave.",
-          url: "https://digestomisiones.gob.ar/archivospdf/1688596715_LEY%20XII%20-%20N%2027.pdf"
+          descripcion: "Establece el procedimiento para familia, violencia familiar, aspectos civiles y comerciales. Actualización procesal clave."
         },
         {
           nombre: "Ley XII N.º 6 (ex Ley 2335) – Código Procesal Civil y Comercial",
-          descripcion: "Normativa procesal tradicional de Misiones, aplicable en procesos civiles y comerciales. Vigencia concurrente.",
-          url: "https://digestomisiones.gob.ar/archivospdf/1688593934_LEY%20XII%20-%20N%206.pdf"
+          descripcion: "Normativa procesal tradicional de Misiones, aplicable en procesos civiles y comerciales. Vigencia concurrente."
         }
       ]
     },
@@ -443,23 +414,19 @@
       leyes: [
         {
           nombre: "Ley Provincial XVII-102 – Salud Mental (adhesión a Ley Nacional N° 26.657)",
-          descripcion: "Adhiere a la Ley Nacional de Salud Mental y su decreto reglamentario. Garantiza enfoque comunitario y derechos humanos.",
-          url: "https://www.mpd.gov.ar/uploads/documentos/Ley%2026657.pdf"
+          descripcion: "Adhiere a la Ley Nacional de Salud Mental y su decreto reglamentario. Garantiza enfoque comunitario y derechos humanos."
         },
         {
           nombre: "Ley II – N.° 36 – Sistema de Acogimiento Familiar Alternativo",
-          descripcion: "Regula el acogimiento familiar como medida excepcional de protección de derechos de niños, niñas y adolescentes.",
-          url: "https://digestomisiones.gob.ar/archivospdf/1688569298_Ley%20II%20-%20N%2036%20Texto%20definitivo.pdf"
+          descripcion: "Regula el acogimiento familiar como medida excepcional de protección de derechos de niños, niñas y adolescentes."
         },
         {
           nombre: "Ley II – N.° 16 (ex Ley 3820) – Protección Integral de Niños, Niñas y Adolescentes",
-          descripcion: "Reconoce derechos sustanciales y procesales para personas menores de edad, marco integral de promoción y protección.",
-          url: "https://digestomisiones.gob.ar/archivospdf/1688565006_Ley%20II%20-%20N%2016%20(Antes%20Ley%203820).pdf"
+          descripcion: "Reconoce derechos sustanciales y procesales para personas menores de edad, marco integral de promoción y protección."
         },
         {
           nombre: "Ley XIX – N.° 41 (ex Ley 3920) – Derechos de las Personas Mayores",
-          descripcion: "Protección, promoción y defensa de derechos de adultos mayores; instituciones y políticas específicas.",
-          url: "https://digestomisiones.gob.ar/archivospdf/1688591505_Ley%20XIX%20-%20N%2041%20(Antes%20Ley%203920)%20Texto%20definitivo.pdf"
+          descripcion: "Protección, promoción y defensa de derechos de adultos mayores; instituciones y políticas específicas."
         }
       ]
     },
@@ -469,13 +436,11 @@
       leyes: [
         {
           nombre: "Ley XVII – N.º 37 (ex Ley 4013) – Protección Integral a Víctimas",
-          descripcion: "Establece atención médica, psicológica, social y jurídica para víctimas de delitos contra la integridad sexual. Evita revictimización.",
-          url: "https://digestomisiones.gob.ar/archivospdf/1688585445_LEY%20XVII%20-%20N%2037%20(Antes%20Ley%204013).pdf"
+          descripcion: "Establece atención médica, psicológica, social y jurídica para víctimas de delitos contra la integridad sexual. Evita revictimización."
         },
         {
           nombre: "Ley XIX N.º 51 – Pensión graciable para menores víctimas",
-          descripcion: "Crea pensión especial mensual equivalente al 70% del salario mínimo vital y móvil para menores víctimas de delitos sexuales y su grupo conviviente.",
-          url: "https://digestomisiones.gob.ar/archivospdf/1688592925_LEY%20XIX%20-%20N%2051.pdf"
+          descripcion: "Crea pensión especial mensual equivalente al 70% del salario mínimo vital y móvil para menores víctimas de delitos sexuales y su grupo conviviente."
         }
       ]
     },
@@ -485,8 +450,7 @@
       leyes: [
         {
           nombre: "Ley XII – N.° 4 (ex Ley 607) – Honorarios de Abogados y Procuradores",
-          descripcion: "Regula la percepción de honorarios profesionales, pautas arancelarias y normas de ética en el cobro de servicios legales.",
-          url: "https://digestomisiones.gob.ar/archivospdf/1688593528_LEY%20XII%20-%20N%204.pdf"
+          descripcion: "Regula la percepción de honorarios profesionales, pautas arancelarias y normas de ética en el cobro de servicios legales."
         }
       ]
     }
@@ -497,28 +461,25 @@
   const categoriaTituloElem = document.getElementById("categoriaDinamicaTitulo");
   const categoriaSubtituloElem = document.getElementById("categoriaDinamicaSubtitulo");
 
-  // Función principal para renderizar leyes según categoría
+  // Función principal para renderizar leyes según categoría (sin ningún enlace)
   function renderizarNormativa(categoriaKey) {
     const data = normativaDB[categoriaKey];
     if (!data) return;
 
-    // Actualizar header
     categoriaTituloElem.innerText = data.titulo;
     categoriaSubtituloElem.innerText = data.subtitulo;
 
-    // Generar HTML de leyes (sin íconos, solo texto y enlaces)
     const leyesHtml = data.leyes.map(ley => `
       <li class="ley-item">
         <span class="ley-titulo">📄 ${ley.nombre}</span>
         <div class="ley-descripcion">${ley.descripcion}</div>
-        <a href="${ley.url}" target="_blank" rel="noopener noreferrer" class="enlace-ley">Abrir normativa →</a>
       </li>
     `).join('');
 
     listaElement.innerHTML = `<ul class="lista-leyes">${leyesHtml}</ul>`;
   }
 
-  // Manejador de clic en tarjetas de categorías (izquierda)
+  // Manejador de clic en tarjetas de categorías
   function setupCategorias() {
     const tarjetas = document.querySelectorAll('.tarjeta-categoria');
     tarjetas.forEach(tarjeta => {
@@ -527,12 +488,10 @@
         const categoria = tarjeta.getAttribute('data-categoria');
         if (categoria && normativaDB[categoria]) {
           renderizarNormativa(categoria);
-          // pequeño feedback visual (no afecta rendimiento)
           tarjeta.style.transform = "scale(0.99)";
           setTimeout(() => { tarjeta.style.transform = ""; }, 120);
         }
       };
-      // Eventos táctiles y mouse
       tarjeta.addEventListener('click', clickHandler);
       tarjeta.addEventListener('touchstart', (e) => {
         e.preventDefault();
@@ -541,19 +500,16 @@
     });
   }
 
-  // Modal flotante: recordatorio / información legal
+  // Modal de información legal
   const modalLegal = document.getElementById("modalLegal");
   function toggleModalLegal(show) {
     modalLegal.style.display = show ? "flex" : "none";
   }
 
-  // Inicializar página y eventos
   function init() {
-    // Mostrar por defecto 'Legislación procesal' (primer módulo)
     renderizarNormativa('procesal');
     setupCategorias();
     
-    // Botón de información estratégica (modal)
     const btnInfo = document.getElementById("infoEstrategicaBtn");
     if (btnInfo) {
       btnInfo.addEventListener('click', (e) => {
@@ -561,10 +517,8 @@
         toggleModalLegal(true);
       });
     }
-    // Cerrar modal si se hace clic fuera (ya manejado por onclick del overlay)
   }
 
-  // Ejecutar después de carga completa
   window.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
