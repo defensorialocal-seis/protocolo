@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+  <title>Firma Digital y Stamper | Poder Judicial de Misiones</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f0f2f5;
+      color: #1e293b;
+      line-height: 1.45;
+    }
+
+    .app-container {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 1.8rem 1.5rem;
+    }
+
+    /* GRID PRINCIPAL */
+    .firma-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.35fr;
+      gap: 2rem;
+    }
+
+    /* COLUMNA IZQUIERDA – TEMARIO FIRMA DIGITAL */
+    .col-tematico {
+      background: transparent;
+    }
+
+    .seccion-titulo {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #0c4a6e;
+      margin-bottom: 1.8rem;
+      border-bottom: 3px solid #2563eb;
+      padding-bottom: 0.65rem;
+      display: inline-block;
+      letter-spacing: -0.3px;
+    }
+
+    .firma-card {
+      background: white;
+      border-radius: 1.5rem;
+      padding: 1.3rem 1.4rem;
+      margin-bottom: 1.2rem;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    }
+
+    .firma-card:hover {
+      transform: translateY(-3px);
+      border-color: #b9d0f0;
+      background: #ffffff;
+      box-shadow: 0 16px 24px -12px rgba(0, 0, 0, 0.12);
+    }
+
+    .firma-card:active {
+      transform: scale(0.98);
+    }
+
+    .card-header {
+      font-size: 1.2rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-badge {
+      background: #eef2ff;
+      border-radius: 30px;
+      padding: 0.2rem 0.7rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #1e40af;
+    }
+
+    .card-desc {
+      font-size: 0.85rem;
+      color: #475569;
+      line-height: 1.4;
+    }
+
+    /* BORDES DE COLOR (identidad visual coherente) */
+    .borde-blue { border-left: 6px solid #2563eb; }
+    .borde-green { border-left: 6px solid #0e9f6e; }
+    .borde-amber { border-left: 6px solid #d97706; }
+    .borde-purple { border-left: 6px solid #7c3aed; }
+    .borde-rose { border-left: 6px solid #db2777; }
+    .borde-cyan { border-left: 6px solid #0891b2; }
+
+    /* PANEL DERECHO (DETALLE DINÁMICO) */
+    .panel-info {
+      background: #ffffff;
+      border-radius: 1.8rem;
+      border: 1px solid #e2edf5;
+      box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.08);
+      padding: 1.6rem 1.8rem;
+      position: relative;
+    }
+
+    .btn-remember {
+      position: absolute;
+      top: 1.2rem;
+      right: 1.5rem;
+      background: #2563eb;
+      color: white;
+      border: none;
+      font-weight: 700;
+      font-size: 0.75rem;
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: 0.2s;
+      z-index: 5;
+    }
+
+    .btn-remember:active {
+      background: #1d4ed8;
+      transform: scale(0.96);
+    }
+
+    .detalle-encabezado {
+      margin-bottom: 1.5rem;
+      padding-right: 5rem;
+    }
+
+    .detalle-titulo-principal {
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: #0c4a6e;
+      margin-bottom: 0.25rem;
+      line-height: 1.2;
+    }
+
+    .detalle-subtitulo {
+      font-size: 0.85rem;
+      color: #5b6e8c;
+      border-left: 3px solid #2563eb;
+      padding-left: 0.7rem;
+      margin-top: 0.3rem;
+    }
+
+    .contenido-desplazable {
+      overflow-y: auto;
+      max-height: 62vh;
+      padding-right: 0.3rem;
+    }
+
+    /* ESTILOS DE CONTENIDO */
+    .step-list, .norm-list {
+      list-style: none;
+      padding-left: 0;
+    }
+    .step-list li, .norm-list li {
+      margin-bottom: 0.75rem;
+      padding-left: 1.5rem;
+      position: relative;
+      font-size: 0.9rem;
+    }
+    .step-list li::before, .norm-list li::before {
+      content: "▹";
+      color: #2563eb;
+      font-weight: bold;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+    .ordered-list {
+      list-style: none;
+      counter-reset: firma-counter;
+      padding-left: 0;
+    }
+    .ordered-list li {
+      counter-increment: firma-counter;
+      margin-bottom: 0.9rem;
+      padding-left: 2rem;
+      position: relative;
+    }
+    .ordered-list li::before {
+      content: counter(firma-counter) ".";
+      color: #2563eb;
+      font-weight: 800;
+      font-size: 0.9rem;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+    .badge-norma {
+      background: #e0e7ff;
+      color: #1e3a8a;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.2rem 0.7rem;
+      border-radius: 20px;
+      display: inline-block;
+    }
+    .info-caja {
+      background: #f8fafc;
+      border-radius: 1rem;
+      padding: 1rem;
+      border-left: 4px solid;
+      margin: 1rem 0;
+    }
+    .info-caja.azul-claro { border-left-color: #3b82f6; background: #eff6ff; }
+    .info-caja.amber-claro { border-left-color: #f59e0b; background: #fffbeb; }
+    .info-caja.verde-claro { border-left-color: #10b981; background: #ecfdf5; }
+    .info-caja.rojo-claro { border-left-color: #ef4444; background: #fef2f2; }
+    .info-caja.purple-claro { border-left-color: #8b5cf6; background: #f5f3ff; }
+    .grid-dos-columnas {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .table-stamper {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.85rem;
+    }
+    .table-stamper th, .table-stamper td {
+      border: 1px solid #e2e8f0;
+      padding: 0.7rem;
+      text-align: left;
+      vertical-align: top;
+    }
+    .table-stamper th {
+      background: #f1f5f9;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    @media (max-width: 700px) {
+      .grid-dos-columnas {
+        grid-template-columns: 1fr;
+      }
+      .table-stamper th, .table-stamper td {
+        padding: 0.5rem;
+      }
+    }
+    .text-mono {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+    }
+
+    /* MODAL RECORDATORIO */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(12, 74, 110, 0.88);
+      backdrop-filter: blur(4px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1200;
+    }
+    .modal-card {
+      background: white;
+      border-radius: 2rem;
+      max-width: 540px;
+      width: 90%;
+      padding: 2rem 1.8rem;
+      position: relative;
+      box-shadow: 0 30px 40px rgba(0,0,0,0.25);
+    }
+    .close-modal-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1.2rem;
+      font-size: 1.8rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #8098aa;
+    }
+
+    @media (max-width: 880px) {
+      .app-container {
+        padding: 1rem;
+      }
+      .firma-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      .panel-info {
+        padding: 1.2rem;
+        padding-top: 2.8rem;
+      }
+      .detalle-titulo-principal {
+        font-size: 1.35rem;
+      }
+      .contenido-desplazable {
+        max-height: 55vh;
+      }
+    }
+    .fade-in {
+      animation: fadeSlideIn 0.22s ease-out;
+    }
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateX(10px);}
+      to { opacity: 1; transform: translateX(0);}
+    }
+    hr {
+      margin: 1rem 0;
+      border: 0;
+      height: 1px;
+      background: #e2e8f0;
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <div class="firma-grid">
+    <!-- COLUMNA IZQUIERDA: Módulos Firma Digital y Stamper -->
+    <div class="col-tematico">
+      <h1 class="seccion-titulo">✍️ Firma Digital & Stamper<br><span style="font-size:0.9rem; font-weight:500;">Poder Judicial de Misiones · STJ · Acordada N° 180/2022</span></h1>
+      
+      <div class="firma-card borde-blue" data-modulo="que_es_firma">
+        <div class="card-header"><span>🔐 ¿Qué es la Firma Digital?</span><span class="card-badge">Ley 25.506</span></div>
+        <div class="card-desc">Definición, equivalencia funcional y valor jurídico. La firma digital tiene la misma validez que la firma ológrafa en el ámbito judicial.</div>
+      </div>
+      <div class="firma-card borde-green" data-modulo="token_remota">
+        <div class="card-header"><span>💻 Token vs Firma Remota</span><span class="card-badge">Modalidades</span></div>
+        <div class="card-desc">Dispositivo físico (token) o firma remota en la nube. Ambas válidas en el sistema SIGED y ante los tribunales.</div>
+      </div>
+      <div class="firma-card borde-amber" data-modulo="stamper_intro">
+        <div class="card-header"><span>📱 Stamper – Estampador Digital</span><span class="card-badge">Firma electrónica ciudadana</span></div>
+        <div class="card-desc">Herramienta del Poder Judicial que permite a ciudadanos firmar documentos digitales generados por SIGED, sin necesidad de papel.</div>
+      </div>
+      <div class="firma-card borde-purple" data-modulo="stamper_beneficios">
+        <div class="card-header"><span>⚡ Beneficios del Stamper</span><span class="card-badge">Agilidad + Sustentabilidad</span></div>
+        <div class="card-desc">Protocolización de resoluciones, eliminación del papel, firma inmediata desde dispositivos móviles Android/iOS.</div>
+      </div>
+      <div class="firma-card borde-rose" data-modulo="normativa_aplicable">
+        <div class="card-header"><span>📜 Normativa clave</span><span class="card-badge">Acordada N° 180/2022</span></div>
+        <div class="card-desc">Reglamento del Expediente Electrónico, leyes provinciales y nacionales que regulan la firma digital y el uso del Stamper.</div>
+      </div>
+      <div class="firma-card borde-cyan" data-modulo="preguntas_frecuentes">
+        <div class="card-header"><span>❓ Preguntas Frecuentes (FAQ)</span><span class="card-badge">STI Misiones</span></div>
+        <div class="card-desc">Respuestas sobre validez, requisitos técnicos, y uso del estampador en el Poder Judicial de Misiones.</div>
+      </div>
+    </div>
+
+    <!-- COLUMNA DERECHA: PANEL DINÁMICO -->
+    <div class="panel-info" id="panelInfoFirma">
+      <button class="btn-remember" id="abrirModalRecordatorio">📌 NORMAS CLAVE</button>
+      <div class="detalle-encabezado">
+        <div class="detalle-titulo-principal" id="firmaTituloDinamico">Firma Digital y Stamper</div>
+        <div class="detalle-subtitulo" id="firmaSubtituloDinamico">Tecnología criptográfica · Equivalencia funcional · Estampador SIGED</div>
+      </div>
+      <div class="contenido-desplazable" id="contenidoPrincipalFirma">
+        <div style="background:#f0f9ff; border-radius:1.2rem; padding:1.5rem; text-align:center;">
+          <span style="font-size:2.2rem;">🔏🗂️</span>
+          <p style="margin-top:0.8rem; color:#1e4b6e;">Seleccione un módulo para conocer el régimen de Firma Digital, Stamper y la integración con el Expediente Electrónico según la normativa del STJ Misiones.</p>
+          <div class="badge-norma" style="margin-top:1rem;">Ley 25.506 · Decreto 2628/2022 · Acordada 180/2022</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL RECORDATORIO (normas y resumen) -->
+<div class="modal-backdrop" id="modalRecordatorioGeneral" onclick="cerrarModalGlobal()">
+  <div class="modal-card" onclick="event.stopPropagation()">
+    <button class="close-modal-btn" onclick="cerrarModalGlobal()">&times;</button>
+    <div style="background:#eef4ff; border-left:5px solid #2563eb; padding:1rem; border-radius:1rem; margin-bottom:1.5rem;">
+      <h4 style="color:#1e3a8a; margin-bottom:6px;">📌 Recordatorio · Validez Jurídica</h4>
+      <p style="font-size:0.85rem;">La firma digital (Ley Nacional Nº 25.506) tiene la misma eficacia probatoria que la firma ológrafa. Documento firmado digitalmente <strong>pierde validez si se imprime en papel</strong>. El estampador digital (Stamper) permite a ciudadanos firmar documentos emitidos por SIGED de manera ágil y legal.</p>
+    </div>
+    <div style="background:#fff4e5; border-left:5px solid #f59e0b; padding:1rem; border-radius:1rem;">
+      <h4 style="color:#b45309; margin-bottom:6px;">⚡ Puntos esenciales – STJ Misiones</h4>
+      <ul style="font-size:0.85rem; margin-left:1.2rem; list-style:disc;">
+        <li>Obligatorio para Magistrados y Funcionarios; altamente recomendado para abogados.</li>
+        <li>Token o Firma Remota: ambas válidas en el Sistema SIGED.</li>
+        <li>Stamper disponible en Android desde septiembre 2024 (próximamente iOS).</li>
+        <li>Protocolización de resoluciones, dictámenes y sentencias mediante firmas electrónicas.</li>
+        <li>Acordada N° 180/2022: Reglamento del Expediente Electrónico en Misiones.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ===================== CONTENIDOS OFICIALES SEGÚN FUENTES STI MISIONES =====================
+  const contenidoQueEsFirma = `
+    <div class="fade-in">
+      <div class="info-caja azul-claro">
+        <span class="badge-norma">🔐 Ley 25.506 y Decreto 2628/2022</span>
+        <p class="mt-2"><strong>Firma Digital:</strong> es un conjunto de datos asociados a un mensaje electrónico que permite identificar al firmante, garantizar la integridad del documento y el no repudio. En el Poder Judicial de Misiones, mediante la adhesión a la ley nacional (Ley II Nº 20 y Ley IV Nº 55), tiene la misma validez jurídica que la firma ológrafa.</p>
+      </div>
+      <div class="grid-dos-columnas mt-2">
+        <div class="info-caja verde-claro">
+          <i data-lucide="shield-check" class="w-5 h-5 inline"></i> <strong>✔️ Equivalencia funcional:</strong> La firma digital cumple los mismos efectos que la firma manuscrita en todos los actos procesales.
+        </div>
+        <div class="info-caja amber-claro">
+          <i data-lucide="scale" class="w-5 h-5 inline"></i> <strong>⚖️ No repudio e integridad:</strong> Garantía criptográfica de que el documento no fue alterado y el firmante no puede negar su autoría.
+        </div>
+      </div>
+      <div class="info-caja azul-claro mt-2">
+        <p><strong>📌 Importante:</strong> Un documento firmado digitalmente pierde su valor jurídico si es impreso en papel, ya que la firma digital es inherente al soporte electrónico.</p>
+      </div>
+      <hr>
+      <div class="text-sm mt-2">
+        <span class="badge-norma">🔒 Infraestructura de clave pública (PKI)</span>
+        <p class="mt-2">La firma digital se basa en un par de claves: una privada (personal e intransferible) y una pública (para verificación). El Poder Judicial de Misiones utiliza este estándar para garantizar la seguridad jurídica del expediente electrónico.</p>
+      </div>
+    </div>
+  `;
+
+  const contenidoTokenRemota = `
+    <div class="fade-in">
+      <div class="info-caja azul-claro">
+        <strong>🖥️ Modalidades de Firma Digital en el STJ Misiones</strong>
+        <p class="text-sm mt-1">El profesional puede optar por firma con <strong>token criptográfico</strong> (dispositivo físico) o <strong>firma remota</strong> (servicio en la nube). Ambas están plenamente integradas al sistema SIGED y son aceptadas por la Acordada N° 180/2022.</p>
+      </div>
+      <div class="grid-dos-columnas">
+        <div class="info-caja verde-claro">
+          <i data-lucide="usb" class="w-5 h-5 inline"></i> <strong>🔑 Token (dispositivo físico)</strong>
+          <ul class="step-list mt-1" style="list-style:none; padding-left:0;">
+            <li>· Requiere lector de tarjetas inteligentes.</li>
+            <li>· Almacena la clave privada de forma offline, alta seguridad.</li>
+            <li>· Usado tradicionalmente por magistrados y funcionarios.</li>
+          </ul>
+        </div>
+        <div class="info-caja purple-claro">
+          <i data-lucide="cloud" class="w-5 h-5 inline"></i> <strong>☁️ Firma Remota</strong>
+          <ul class="step-list mt-1" style="list-style:none; padding-left:0;">
+            <li>· Firma desde cualquier lugar sin token físico.</li>
+            <li>· Autenticación biométrica o por OTP.</li>
+            <li>· Comodidad y rapidez para abogados y funcionarios.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="bg-slate-50 p-3 rounded-lg mt-3">
+        <p class="text-xs"><i data-lucide="info" class="w-3 h-3 inline"></i> Ambos métodos garantizan la misma validez legal y son interoperables con el expediente electrónico SIGED.</p>
+      </div>
+    </div>
+  `;
+
+  const contenidoStamperIntro = `
+    <div class="fade-in">
+      <div class="info-caja azul-claro">
+        <span class="badge-norma">📲 Estampador Digital – SIGED</span>
+        <p class="mt-2"><strong>Stamper</strong> es la solución tecnológica del Poder Judicial de Misiones que permite a los ciudadanos (partes, abogados, auxiliares) <strong>estampar su firma electrónica</strong> en documentos judiciales generados por el sistema, sin necesidad de imprimir, escanear o trasladarse físicamente al tribunal.</p>
+        <p class="text-sm mt-2">La herramienta está disponible como aplicación móvil y también integrada en el ecosistema del STJ. Desde el 16 de septiembre de 2024 está operativa en dispositivos Android para la Primera Circunscripción Judicial, con desarrollo continuo para iOS.</p>
+      </div>
+      <ul class="ordered-list mt-2">
+        <li>Permite firmar digitalmente cualquier documento generado por SIGED (cédulas, notificaciones, proveídos).</li>
+        <li>Integración con el sistema de gestión judicial: luego de firmado, el documento queda incorporado al expediente electrónico con total validez.</li>
+        <li>Reemplaza el proceso de impresión + firma ológrafa + escaneo, reduciendo tiempos y costos.</li>
+      </ul>
+    </div>
+  `;
+
+  const contenidoStamperBeneficios = `
+    <div class="fade-in">
+      <div class="info-caja azul-claro">
+        <strong>✅ Ventajas del Estampador Digital (Stamper)</strong>
+      </div>
+      <table class="table-stamper">
+        <thead>
+          <tr><th>Beneficio</th><th>Descripción</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Agilidad procesal</strong></td><td>Firma inmediata de documentos emitidos por el tribunal, sin demoras por traslados o impresión.</td></tr>
+          <tr><td><strong>Cero papel</strong></td><td>Se elimina la necesidad de imprimir, firmar a mano y reescanear, contribuyendo a la sustentabilidad.</td></tr>
+          <tr><td><strong>Seguridad jurídica plena</strong></td><td>Cumple con estándares del Reglamento del Expediente Electrónico (Acordada 180/2022).</td></tr>
+          <tr><td><strong>Protocolización</strong></td><td>Ya está habilitada la protocolización de resoluciones, sentencias y dictámenes mediante Stamper.</td></tr>
+          <tr><td><strong>Implementación móvil</strong></td><td>Disponible en Android (desde septiembre 2024), en desarrollo para iOS.</td></tr>
+        </tbody>
+      </table>
+      <div class="info-caja verde-claro mt-2">
+        <p><i data-lucide="award" class="w-4 h-4 inline"></i> El Stamper se alinea con el principio de desmaterialización del expediente judicial, ahorrando recursos y mejorando el acceso a la justicia.</p>
+      </div>
+    </div>
+  `;
+
+  const contenidoNormativa = `
+    <div class="fade-in">
+      <div class="info-caja azul-claro">
+        <h4><i data-lucide="book-open"></i> Normativa aplicable – Firma Digital y Stamper</h4>
+      </div>
+      <ul class="norm-list mt-1">
+        <li><strong>Ley Nacional N° 25.506</strong> – Ley de Firma Digital (y Decreto Reglamentario 2628/2022).</li>
+        <li><strong>Ley II N° 20 y Ley IV N° 55</strong> – Adhesión de la Provincia de Misiones a la Ley Nacional de Firma Digital.</li>
+        <li><strong>Acordada N° 180/2022</strong> – Superior Tribunal de Justicia de Misiones: Aprueba el Reglamento del Expediente Electrónico, donde se incorpora el uso de firma digital y el estampador electrónico.</li>
+        <li><strong>Acordada STJ complementarias</strong> – regulan la interoperabilidad de SIGED y la implementación progresiva de la firma remota y Stamper.</li>
+      </ul>
+      <div class="bg-indigo-50 p-3 rounded-lg mt-3">
+        <p class="text-xs font-mono">🔖 Acordada 180/2022: "Art. 31 – Los escritos y documentos presentados electrónicamente con firma digital tendrán la misma fuerza probatoria que sus equivalentes en soporte papel con firma ológrafa".</p>
+      </div>
+    </div>
+  `;
+
+  const contenidoPreguntasFrecuentes = `
+    <div class="fade-in">
+      <div class="info-caja purple-claro">
+        <strong>❓ Preguntas Frecuentes – STI Misiones (sti.jusmisiones.gov.ar)</strong>
+      </div>
+      <ul class="step-list mt-2">
+        <li><strong>¿La firma digital tiene validez ante el Poder Judicial de Misiones?</strong> Sí, plena validez en virtud de las leyes de adhesión y Acordada 180/2022.</li>
+        <li><strong>¿Puedo usar firma remota en lugar de token?</strong> Sí, ambas modalidades son aceptadas y conviven en SIGED.</li>
+        <li><strong>¿Qué es Stamper y quién puede usarlo?</strong> Es el estampador digital. Pueden usarlo ciudadanos que sean parte en un expediente, abogados y auxiliares, con identificación biométrica o credenciales.</li>
+        <li><strong>¿El documento firmado con Stamper se imprime?</strong> No, su validez es exclusivamente electrónica. Imprimirlo no genera efectos jurídicos.</li>
+        <li><strong>¿Dónde obtengo más información?</strong> En el portal STI (Sistemas Tecnológicos Informáticos) del Poder Judicial de Misiones.</li>
+      </ul>
+      <div class="info-caja amber-claro mt-3">
+        <i data-lucide="smartphone"></i> <strong>Implementación:</strong> A partir del 16 de septiembre de 2024, Stamper está completamente activo en Android en la Primera Circunscripción Judicial, y se espera su expansión a iOS y otras circunscripciones.
+      </div>
+    </div>
+  `;
+
+  const mapaModulos = {
+    que_es_firma: {
+      titulo: "🔐 Firma Digital: marco legal y equivalencia",
+      subtitulo: "Ley 25.506 · Validez jurídica · Criptografía asimétrica",
+      html: contenidoQueEsFirma
+    },
+    token_remota: {
+      titulo: "💻 Token vs Firma Remota",
+      subtitulo: "Modalidades de firma ante el STJ Misiones · SIGED",
+      html: contenidoTokenRemota
+    },
+    stamper_intro: {
+      titulo: "📱 Stamper – Estampador Digital del Poder Judicial",
+      subtitulo: "Firma electrónica ciudadana · Integración con SIGED",
+      html: contenidoStamperIntro
+    },
+    stamper_beneficios: {
+      titulo: "⚡ Beneficios y funcionalidades del Stamper",
+      subtitulo: "Protocolización, agilidad, sustentabilidad, Android/iOS",
+      html: contenidoStamperBeneficios
+    },
+    normativa_aplicable: {
+      titulo: "📜 Normativa aplicable (Nacional y Provincial)",
+      subtitulo: "Acordada N° 180/2022 · Leyes de adhesión",
+      html: contenidoNormativa
+    },
+    preguntas_frecuentes: {
+      titulo: "❓ Preguntas Frecuentes – STI Misiones",
+      subtitulo: "Respuestas a dudas sobre firma digital y Stamper",
+      html: contenidoPreguntasFrecuentes
+    }
+  };
+
+  function cargarModulo(moduloId) {
+    const dataModulo = mapaModulos[moduloId];
+    if (!dataModulo) return;
+    const tituloElem = document.getElementById("firmaTituloDinamico");
+    const subtituloElem = document.getElementById("firmaSubtituloDinamico");
+    const contenedor = document.getElementById("contenidoPrincipalFirma");
+    tituloElem.innerText = dataModulo.titulo;
+    subtituloElem.innerText = dataModulo.subtitulo;
+    contenedor.innerHTML = `<div class="fade-in">${dataModulo.html}</div>`;
+    if (window.lucide) lucide.createIcons();
+  }
+
+  function inicializarCards() {
+    const cards = document.querySelectorAll('.firma-card');
+    cards.forEach(card => {
+      const modulo = card.getAttribute('data-modulo');
+      if (!modulo) return;
+      card.addEventListener('click', () => cargarModulo(modulo));
+      card.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        cargarModulo(modulo);
+      });
+    });
+  }
+
+  const modalRef = document.getElementById('modalRecordatorioGeneral');
+  function abrirModalGlobal() { if (modalRef) modalRef.style.display = 'flex'; }
+  function cerrarModalGlobal() { if (modalRef) modalRef.style.display = 'none'; }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    inicializarCards();
+    cargarModulo('que_es_firma');
+    const btnModal = document.getElementById('abrirModalRecordatorio');
+    if (btnModal) btnModal.addEventListener('click', (e) => { e.stopPropagation(); abrirModalGlobal(); });
+    window.addEventListener('keydown', (e) => { if (e.key === 'Escape') cerrarModalGlobal(); });
+    if (window.lucide) lucide.createIcons();
+  });
+</script>
+</body>
+</html>
