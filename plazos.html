@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+  <title>Plazos y Vencimientos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #eef2f7;
+      color: #0a2b3e;
+      line-height: 1.45;
+    }
+
+    .app-wrapper {
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      padding: 2rem 1.5rem;
+    }
+
+    /* contenedor principal dos columnas */
+    .dashboard {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 2rem;
+      max-width: 1500px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* COLUMNA IZQUIERDA (módulos) */
+    .modulos-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .titulo-seccion {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #1e4a6b;
+      letter-spacing: -0.2px;
+      border-left: 5px solid #ff9800;
+      padding-left: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .tarjeta-modulo {
+      background: white;
+      border-radius: 1.5rem;
+      padding: 1.5rem 1.2rem;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      border: 1px solid #e2edf2;
+      box-shadow: 0 6px 12px -8px rgba(0, 0, 0, 0.05);
+    }
+
+    .tarjeta-modulo:active {
+      transform: scale(0.98);
+      background-color: #fefeff;
+    }
+
+    .tarjeta-modulo.activo {
+      border-left: 6px solid #ff9800;
+      background: linear-gradient(105deg, #ffffff 0%, #fef9ef 100%);
+      box-shadow: 0 12px 20px -12px rgba(0, 0, 0, 0.12);
+    }
+
+    .modulo-icono {
+      font-size: 2.2rem;
+      display: inline-block;
+      margin-bottom: 8px;
+    }
+
+    .modulo-titulo {
+      font-size: 1.35rem;
+      font-weight: 800;
+      margin: 0.3rem 0 0.4rem 0;
+      color: #1e4663;
+    }
+
+    .modulo-desc {
+      font-size: 0.85rem;
+      color: #5f7f9c;
+      line-height: 1.4;
+    }
+
+    /* COLUMNA DERECHA (contenido dinámico) */
+    .contenedor-dinamico {
+      background: #ffffff;
+      border-radius: 1.8rem;
+      border: 1px solid #e0ecf3;
+      box-shadow: 0 12px 28px -10px rgba(0, 0, 0, 0.06);
+      padding: 1.8rem 2rem 2rem 2rem;
+      position: relative;
+      transition: all 0.2s;
+    }
+
+    .subtitulo-area {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: #ff8c42;
+      font-weight: 700;
+      margin-bottom: 0.45rem;
+    }
+
+    .titulo-dinamico {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: #1e4a6b;
+      border-bottom: 3px solid #ff9800;
+      display: inline-block;
+      padding-bottom: 6px;
+      margin-bottom: 1.4rem;
+    }
+
+    /* Estilos para recursos legales (tarjetas de ley) */
+    .recursos-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .recurso-card {
+      background: #f8fcff;
+      border-radius: 1.2rem;
+      padding: 1.2rem 1.4rem;
+      transition: all 0.2s;
+      border: 1px solid #dde9f0;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    .recurso-card:hover {
+      background: #ffffff;
+      border-color: #ffb347;
+      transform: translateX(6px);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.02);
+    }
+
+    .recurso-info h3 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #1b4e6e;
+      margin-bottom: 6px;
+    }
+
+    .recurso-info p {
+      font-size: 0.8rem;
+      color: #5f7f99;
+    }
+
+    .recurso-link {
+      background: #ff9800;
+      color: white;
+      padding: 6px 14px;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.75rem;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+
+    .recurso-link:hover {
+      background: #e68900;
+    }
+
+    /* Estilos para calculadora */
+    .calc-wrapper {
+      margin-top: 0.5rem;
+    }
+
+    .form-calc {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .input-group label {
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: #2c5a74;
+      letter-spacing: -0.2px;
+    }
+
+    .input-group input,
+    .input-group textarea {
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid #cbdde6;
+      font-family: 'Inter', monospace;
+      font-size: 0.9rem;
+      background: #fff;
+      transition: 0.2s;
+    }
+
+    .input-group input:focus {
+      border-color: #ff9800;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1);
+    }
+
+    .botones-accion {
+      display: flex;
+      gap: 1rem;
+      margin: 1rem 0 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: linear-gradient(95deg, #1e6f5c, #2c7da0);
+      border: none;
+      padding: 12px 22px;
+      border-radius: 40px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .btn-primary:active {
+      transform: scale(0.96);
+    }
+
+    .btn-secondary {
+      background: #f4f7fc;
+      border: 1px solid #cbdde6;
+      padding: 12px 22px;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #1e4a6b;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:active {
+      background: #e9eff5;
+    }
+
+    .resultado-card {
+      background: #f0f6fa;
+      border-radius: 1.2rem;
+      padding: 1.3rem;
+      margin-top: 1.2rem;
+      border-left: 5px solid #ff9800;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .resultado-card hr {
+      margin: 12px 0;
+      border: 0;
+      height: 1px;
+      background: #cedeE8;
+    }
+
+    .fecha-destacada {
+      font-weight: 800;
+      color: #1f6392;
+    }
+
+    /* tooltip / info extra (opcional) */
+    .info-extra {
+      margin-top: 1.8rem;
+      padding-top: 0.8rem;
+      font-size: 0.7rem;
+      color: #7c9ab3;
+      border-top: 1px dashed #d4e2ec;
+      text-align: center;
+    }
+
+    /* responsive celular */
+    @media (max-width: 800px) {
+      .app-wrapper {
+        padding: 1rem;
+      }
+      .dashboard {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      .contenedor-dinamico {
+        padding: 1.5rem;
+      }
+      .titulo-dinamico {
+        font-size: 1.4rem;
+      }
+      .recurso-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.7rem;
+      }
+      .recurso-link {
+        align-self: flex-start;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .tarjeta-modulo {
+        padding: 1rem;
+      }
+      .modulo-titulo {
+        font-size: 1.2rem;
+      }
+      .botones-accion {
+        flex-direction: column;
+      }
+      .btn-primary, .btn-secondary {
+        text-align: center;
+        justify-content: center;
+      }
+    }
+
+    /* animación sutil */
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .contenido-right {
+      animation: fadeSlide 0.3s ease-out;
+    }
+
+    /* sin selección molesta */
+    .tarjeta-modulo {
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+<div class="app-wrapper">
+  <div class="dashboard">
+    <!-- COLUMNA IZQUIERDA : dos módulos principales -->
+    <div class="modulos-panel">
+      <div class="titulo-seccion">Herramientas adicionales</div>
+      
+      <!-- Módulo 1: Plazos (códigos y leyes) -->
+      <div class="tarjeta-modulo" id="moduloPlazos" data-tipo="legislacion">
+        <div class="modulo-icono">⚖️</div>
+        <div class="modulo-titulo">1. Plazos · Legislación</div>
+        <div class="modulo-desc">Códigos y leyes esenciales: Civil, Comercial, Procesal y normativa provincial Misionera.</div>
+      </div>
+      
+      <!-- Módulo 2: Vencimientos (calculadora) -->
+      <div class="tarjeta-modulo" id="moduloVencimientos" data-tipo="calculadora">
+        <div class="modulo-icono">⚖️</div>
+        <div class="modulo-titulo">2. Vencimientos · Calculadora</div>
+        <div class="modulo-desc">Cómputo de plazos en días hábiles, plazo de gracia y registro de normativa.</div>
+      </div>
+    </div>
+
+    <!-- COLUMNA DERECHA: contenido dinámico según módulo -->
+    <div class="contenedor-dinamico" id="contenedorDinamico">
+      <!-- Aquí se inyectará el contenido (Legislación o Calculadora) -->
+      <div id="dynamicContent" class="contenido-right">
+        <!-- carga inicial: por defecto módulo Plazos -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ----------------------------------------------
+  // FUNCIONES PARA RENDERIZAR CADA MÓDULO
+  // ----------------------------------------------
+
+  // 1. Renderiza el módulo "Plazos" (códigos, leyes, igual que los enlaces del index original)
+  function renderModuloLegislacion() {
+    return `
+      <div class="subtitulo-area">Recursos de consulta forense</div>
+      <h2 class="titulo-dinamico">📌 Códigos y Leyes de Plazos</h2>
+      <p style="margin-bottom: 1rem; color: #2f5f7a; font-size: 0.9rem;">Acceso directo a normativa vigente para cómputo de plazos procesales y derecho sustancial.</p>
+      <div class="recursos-grid">
+        <!-- Código Civil y Comercial index style -->
+        <a class="recurso-card" href="https://admindefensoria6.github.io/CodigoCivilComercial/" target="_blank" rel="noopener noreferrer">
+          <div class="recurso-info">
+            <h3>⚖️ Código Civil y Comercial de la Nación</h3>
+            <p>Normas de fondo · plazos generales, prescripción, caducidad, responsabilidad civil.</p>
+          </div>
+          <span class="recurso-link">Consultar →</span>
+        </a>
+        <!-- Ley XII-27 Misiones (Familia y Violencia) -->
+        <a class="recurso-card" href="https://defensorialocal-seis.github.io/LEYmisiones/" target="_blank" rel="noopener noreferrer">
+          <div class="recurso-info">
+            <h3>⚖️ Ley XII-27 CCyCFVF · Misiones</h3>
+            <p>Código de Familia, Violencia Familiar, plazos procesales especiales en la provincia.</p>
+          </div>
+          <span class="recurso-link">Explorar →</span>
+        </a>
+        <!-- CPCCN (Código Procesal Civil y Comercial Nación) -->
+        <a class="recurso-card" href="https://defensorialocal-seis.github.io/CPCCN/" target="_blank" rel="noopener noreferrer">
+          <div class="recurso-info">
+            <h3>⚖️ C.P.C.C. de la Nación</h3>
+            <p>Procedimientos, términos judiciales, cómputo de plazos, apelaciones y recursos.</p>
+          </div>
+          <span class="recurso-link">Acceder →</span>
+        </a>
+      </div>
+      <div class="info-extra">
+        📌 Estos códigos contienen las bases para determinar plazos procesales según cada fuero. Consulte siempre la última reforma.
+      </div>
+    `;
+  }
+
+  // 2. Renderiza la calculadora de vencimientos (tomada de index original, similar funcionalidad)
+  // Se genera HTML y luego se asignan eventos
+  function renderModuloCalculadora() {
+    return `
+      <div class="subtitulo-area">Herramienta de cómputo judicial</div>
+      <h2 class="titulo-dinamico">📌 Calculadora de Vencimientos</h2>
+      <div class="calc-wrapper">
+        <div class="form-calc">
+          <div class="input-group">
+            <label>📅 Fecha de Notificación / Proveído:</label>
+            <input type="date" id="fechaNotificacionCalc" value="">
+          </div>
+          <div class="input-group">
+            <label>📅 Plazo en días hábiles:</label>
+            <input type="number" id="plazoDiasCalc" min="1" value="5" step="1">
+          </div>
+          <div class="input-group">
+            <label>📅 Tipo de Escrito / Resolución / Sentencia:</label>
+            <input type="text" id="tipoEscritoCalc" placeholder="Ej: Contestación demanda, Recurso de apelación, Excepción previa">
+          </div>
+          <div class="input-group">
+            <label>📅 Normativa de referencia aplicable:</label>
+            <input type="text" id="normativaCalc" placeholder="Ej: Art. 347 CPC Misiones, Art. 158 CPCCN">
+          </div>
+          <div class="botones-accion">
+            <button class="btn-primary" id="btnCalcularVencimiento">🔎 Calcular vencimiento</button>
+            <button class="btn-secondary" id="btnImprimirCalculo">🖨️ Imprimir resultado</button>
+          </div>
+          <div id="resultadoVencimiento" class="resultado-card">
+            <p style="color: #5c7f9c;">Complete los datos y presione "Calcular vencimiento".</p>
+          </div>
+        </div>
+      </div>
+      <div class="info-extra">
+        📆 El cómputo excluye sábados, domingos y feriados automáticos (base días hábiles). Plazo de gracia: día hábil siguiente hasta las 08:59 hs.
+      </div>
+    `;
+  }
+
+  // Función que ejecuta el cálculo de plazos (estilo index original, actualizado)
+  function calcularPlazoHandler() {
+    // obtener referencias de los campos dentro del contenedor dinámico
+    const fechaInput = document.getElementById('fechaNotificacionCalc');
+    const plazoInput = document.getElementById('plazoDiasCalc');
+    const tipoEscrito = document.getElementById('tipoEscritoCalc');
+    const normativa = document.getElementById('normativaCalc');
+    const resultadoDiv = document.getElementById('resultadoVencimiento');
+    
+    if (!fechaInput || !plazoInput) {
+      if(resultadoDiv) resultadoDiv.innerHTML = '<p class="error" style="color:#c0392b;">Error: no se encontraron campos de la calculadora.</p>';
+      return;
+    }
+    
+    const fechaStr = fechaInput.value;
+    const plazoDias = parseInt(plazoInput.value);
+    const tipoTexto = tipoEscrito ? tipoEscrito.value : '';
+    const normativaTexto = normativa ? normativa.value : '';
+    
+    if (!fechaStr || isNaN(plazoDias) || plazoDias <= 0) {
+      resultadoDiv.innerHTML = '<p style="color:#c0392b; font-weight:600;">📌 Complete fecha y plazo válido (mayor a 0).</p>';
+      return;
+    }
+    
+    // Lógica de cómputo días hábiles (excluye sábados/domingos) iniciando al día siguiente de la notificación.
+    let fecha = new Date(fechaStr + 'T00:00:00');
+    let diasRestantes = plazoDias;
+    
+    // avanzar al día siguiente (por notificación luego del día)
+    fecha.setDate(fecha.getDate() + 1);
+    
+    while (diasRestantes > 0) {
+      const diaSemana = fecha.getDay();
+      if (diaSemana !== 0 && diaSemana !== 6) {
+        diasRestantes--;
+      }
+      if (diasRestantes > 0) {
+        fecha.setDate(fecha.getDate() + 1);
+      }
+    }
+    
+    const fechaVencimiento = new Date(fecha);
+    // formato español
+    const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const fechaVencimientoStr = fechaVencimiento.toLocaleDateString('es-ES', opciones);
+    
+    // Cálculo del plazo de gracia: día hábil siguiente al vencimiento a las 08:59
+    let fechaGracia = new Date(fechaVencimiento);
+    fechaGracia.setDate(fechaGracia.getDate() + 1);
+    while (fechaGracia.getDay() === 0 || fechaGracia.getDay() === 6) {
+      fechaGracia.setDate(fechaGracia.getDate() + 1);
+    }
+    const fechaGraciaStr = fechaGracia.toLocaleDateString('es-ES', opciones);
+    
+    const horaVencimiento = '12:00 hs.';
+    const horaGracia = '08:59 hs.';
+    
+    let htmlResultado = '';
+    if (tipoTexto) htmlResultado += `<p><strong>📌 Tipo:</strong> ${tipoTexto}</p>`;
+    if (normativaTexto) htmlResultado += `<p><strong>📖 Normativa:</strong> ${normativaTexto}</p>`;
+    if (tipoTexto || normativaTexto) htmlResultado += `<hr>`;
+    
+    htmlResultado += `
+      <p>El plazo de <strong>${plazoDias}</strong> días hábiles vence el:</p>
+      <p><strong><span style="color:#1f6e43; font-size:1.05rem;">📆 ${fechaVencimientoStr}</span></strong> a las <strong><span style="color:#1f6e43;">${horaVencimiento}</span></strong></p>
+      <p style="margin-top: 12px;">⏳ Plazo de gracia (prórroga automática):</p>
+      <p><strong><span style="color:#d35400;">${fechaGraciaStr}</span></strong> a las <strong><span style="color:#d35400;">${horaGracia}</span></strong></p>
+      <hr>
+      <p style="font-size:0.8rem;">✅ Recuerde: el cómputo se realiza en días hábiles judiciales, sin considerar feriados automáticos. Siempre verifique feriados locales.</p>
+    `;
+    
+    resultadoDiv.innerHTML = htmlResultado;
+  }
+
+  // función de impresión: imprime solo el contenido destacado (o toda la vista)
+  function imprimirResultado() {
+    // capturamos el bloque resultado o bien mostramos una ventana de impresión de la calculadora.
+    const resultadoBloque = document.getElementById('resultadoVencimiento');
+    if (!resultadoBloque) {
+      window.print();
+      return;
+    }
+    // Estilo alternativo para impresión más limpia
+    const contenidoOriginal = document.body.innerHTML;
+    const printContent = resultadoBloque.cloneNode(true);
+    // También tomamos los datos principales de tipo y normativa para que tenga contexto
+    const tipoEscrito = document.getElementById('tipoEscritoCalc')?.value || '';
+    const normativaTexto = document.getElementById('normativaCalc')?.value || '';
+    const fechaNotif = document.getElementById('fechaNotificacionCalc')?.value || '';
+    const plazoValor = document.getElementById('plazoDiasCalc')?.value || '';
+    
+    const ventanaPrint = window.open('', '_blank');
+    ventanaPrint.document.write(`
+      <html>
+        <head><title>Vencimiento - Defensoría</title>
+        <style>
+          body { font-family: 'Inter', Arial, sans-serif; padding: 2rem; max-width: 700px; margin: 0 auto; }
+          h2 { color: #1e4a6b; border-bottom: 2px solid #ff9800; }
+          .card-result { background: #f9f9fb; padding: 1rem; border-radius: 16px; margin-top: 1rem; }
+          .fecha { font-weight: bold; color: #1f6e43; }
+        </style>
+        </head>
+        <body>
+          <h2>📄 Cálculo de vencimiento procesal</h2>
+          <p><strong>Fecha de notificación:</strong> ${fechaNotif || '—'}</p>
+          <p><strong>Plazo (días hábiles):</strong> ${plazoValor}</p>
+          ${tipoEscrito ? `<p><strong>Tipo de escrito:</strong> ${tipoEscrito}</p>` : ''}
+          ${normativaTexto ? `<p><strong>Normativa:</strong> ${normativaTexto}</p>` : ''}
+          <div class="card-result">
+            ${printContent.innerHTML}
+          </div>
+          <p style="margin-top: 2rem; font-size: 0.7rem;">Documento generado por Sistema de Plazos y Vencimientos - Defensoría Oficial</p>
+        </body>
+      </html>
+    `);
+    ventanaPrint.document.close();
+    ventanaPrint.print();
+    ventanaPrint.onafterprint = () => ventanaPrint.close();
+  }
+
+  // Adjuntar eventos a la calculadora después de inyectar el HTML
+  function attachCalculadoraEvents() {
+    const btnCalcular = document.getElementById('btnCalcularVencimiento');
+    const btnImprimir = document.getElementById('btnImprimirCalculo');
+    
+    if (btnCalcular) {
+      // remover eventos previos para evitar duplicados
+      const newBtn = btnCalcular.cloneNode(true);
+      btnCalcular.parentNode.replaceChild(newBtn, btnCalcular);
+      newBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        calcularPlazoHandler();
+      });
+    }
+    
+    if (btnImprimir) {
+      const newPrint = btnImprimir.cloneNode(true);
+      btnImprimir.parentNode.replaceChild(newPrint, btnImprimir);
+      newPrint.addEventListener('click', (e) => {
+        e.preventDefault();
+        imprimirResultado();
+      });
+    }
+    
+    // Si hay valores por defecto opcional: poner fecha actual para comodidad
+    const fechaField = document.getElementById('fechaNotificacionCalc');
+    if (fechaField && !fechaField.value) {
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const dd = String(today.getDate()).padStart(2, '0');
+      fechaField.value = `${yyyy}-${mm}-${dd}`;
+    }
+  }
+
+  // FUNCIÓN PRINCIPAL: cambiar contenido según módulo activo
+  let currentModule = 'legislacion';   // 'legislacion' o 'calculadora'
+
+  function setActiveModule(moduleType) {
+    currentModule = moduleType;
+    // Actualizar estilos visuales de las tarjetas izquierdas
+    const moduloLegis = document.getElementById('moduloPlazos');
+    const moduloCalc = document.getElementById('moduloVencimientos');
+    if (moduloLegis && moduloCalc) {
+      if (moduleType === 'legislacion') {
+        moduloLegis.classList.add('activo');
+        moduloCalc.classList.remove('activo');
+      } else {
+        moduloCalc.classList.add('activo');
+        moduloLegis.classList.remove('activo');
+      }
+    }
+    
+    const dynamicContainer = document.getElementById('dynamicContent');
+    if (!dynamicContainer) return;
+    
+    if (moduleType === 'legislacion') {
+      dynamicContainer.innerHTML = renderModuloLegislacion();
+    } else {
+      dynamicContainer.innerHTML = renderModuloCalculadora();
+      // Luego de renderizar, adjuntar eventos de la calculadora
+      attachCalculadoraEvents();
+    }
+  }
+
+  // Eventos de click en tarjetas laterales
+  function initEventos() {
+    const plazosCard = document.getElementById('moduloPlazos');
+    const vencimientosCard = document.getElementById('moduloVencimientos');
+    
+    if (plazosCard) {
+      plazosCard.addEventListener('click', (e) => {
+        e.stopPropagation();
+        setActiveModule('legislacion');
+      });
+      plazosCard.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        setActiveModule('legislacion');
+      }, { passive: false });
+    }
+    
+    if (vencimientosCard) {
+      vencimientosCard.addEventListener('click', (e) => {
+        e.stopPropagation();
+        setActiveModule('calculadora');
+      });
+      vencimientosCard.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        setActiveModule('calculadora');
+      }, { passive: false });
+    }
+  }
+
+  // Carga inicial: módulo Plazos (Legislación) activo por defecto
+  function inicio() {
+    initEventos();
+    // setear desde inicio legislación
+    setActiveModule('legislacion');
+  }
+  
+  inicio();
+</script>
+</body>
+</html>
