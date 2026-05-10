@@ -628,7 +628,7 @@
         const filtrados = MODOS_ORDENADOS.filter(m => m.toLowerCase().includes(filtro.toLowerCase()));
         
         list.innerHTML = filtrados.map(m => `
-            <div class="tarjeta-modo ${m === currentSelection ? 'active' : ''}" onclick="selectItem('${m}')">
+            <div class="tarjeta-modo ${m === currentSelection ? 'active' : ''}" onclick="selectItem('${m.replace(/'/g, "\\'")}')">
                 <div class="modo-titulo">${m}</div>
             </div>
         `).join('');
@@ -665,13 +665,8 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         renderList();
-        document.getElementById('contenedorCentral').innerHTML = `
-            <div style="text-align:center; padding-top:6rem; color:#94a3b8;">
-                <i data-lucide="file-check-2" style="width:50px; height:50px; margin-bottom:1rem; opacity:0.3;"></i>
-                <p>Seleccione un modo del listado para visualizar la normativa completa.</p>
-            </div>
-        `;
-        if (window.lucide) lucide.createIcons();
+        // Seleccionar automáticamente "Defensor Oficial" al cargar la página
+        selectItem("Defensor Oficial");
     });
 </script>
 
