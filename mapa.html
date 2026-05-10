@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+  <title>Mapa de Defensorías | Poder Judicial Misiones</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #eef3fa;
+      color: #0a2b3e;
+      line-height: 1.45;
+    }
+
+    .app-wrapper {
+      display: flex;
+      width: 100%;
+      min-height: 100vh;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 1fr 1.25fr;
+      gap: 2rem;
+      padding: 2rem;
+      width: 100%;
+      max-width: 1500px;
+      margin: 0 auto;
+    }
+
+    /* COLUMNA IZQUIERDA (LISTADO DE DEFENSORÍAS) */
+    .columna-izquierda {
+      overflow-y: visible;
+      padding-right: 0.5rem;
+    }
+
+    .titulo-principal {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: #1e4a6b;
+      margin-bottom: 1.8rem;
+      text-transform: uppercase;
+      letter-spacing: -0.3px;
+      border-bottom: 3px solid #ff9800;
+      padding-bottom: 12px;
+      display: inline-block;
+      width: 100%;
+    }
+
+    .tarjeta-defensoria {
+      background: white;
+      border-radius: 20px;
+      padding: 1.4rem;
+      margin-bottom: 1.2rem;
+      border: 1px solid #d9e5ef;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+      -webkit-tap-highlight-color: transparent;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    }
+
+    .tarjeta-defensoria:hover {
+      transform: translateY(-2px);
+      border-color: #cbdde9;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .tarjeta-defensoria:active {
+      transform: scale(0.99);
+      background: #fefefe;
+    }
+
+    .defensoria-titulo {
+      font-size: 1.2rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .defensoria-badge {
+      font-size: 1.25rem;
+    }
+
+    .defensoria-resumen {
+      font-size: 0.85rem;
+      color: #2c5a72;
+      line-height: 1.4;
+      margin-top: 6px;
+    }
+
+    /* colores de borde (identidad visual) */
+    .color-def-1 { border-left: 6px solid #1e4a6b; padding-left: 14px; }
+    .color-def-2 { border-left: 6px solid #2c7da0; padding-left: 14px; }
+    .color-def-3 { border-left: 6px solid #8e44ad; padding-left: 14px; }
+    .color-def-4 { border-left: 6px solid #27ae60; padding-left: 14px; }
+    .color-def-5 { border-left: 6px solid #d35400; padding-left: 14px; }
+
+    /* COLUMNA DERECHA (DETALLE DINÁMICO) */
+    .columna-derecha {
+      position: relative;
+      background: #ffffff;
+      border-radius: 28px;
+      padding: 2rem 1.8rem;
+      border: 1px solid #e0edf5;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.05);
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .btn-recordar {
+      position: absolute;
+      top: 22px;
+      right: 24px;
+      background: #ff9800;
+      color: white;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      cursor: pointer;
+      z-index: 12;
+      transition: background 0.2s, transform 0.1s;
+      letter-spacing: 0.3px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .btn-recordar:active {
+      background: #e68900;
+      transform: scale(0.96);
+    }
+
+    #headerDinamico {
+      margin-bottom: 1.4rem;
+      padding-right: 90px;
+    }
+
+    #tituloDerecho {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #1e4a6b;
+      line-height: 1.25;
+      margin-bottom: 6px;
+    }
+
+    #subtituloDerecho {
+      color: #5a7b8c;
+      font-size: 0.85rem;
+      font-weight: 500;
+      border-left: 2px solid #ff9800;
+      padding-left: 10px;
+      margin-top: 5px;
+    }
+
+    .info-detalle-scroll {
+      flex: 1;
+      overflow-y: auto;
+      max-height: 62vh;
+      padding-right: 6px;
+    }
+
+    /* Secciones de información (parecido al estilo de pasos pero informativo) */
+    .info-seccion {
+      background: #f9fdfe;
+      border-radius: 18px;
+      padding: 1rem 1.2rem;
+      margin-bottom: 1.3rem;
+      border: 1px solid #e6f0f5;
+      transition: all 0.1s;
+    }
+
+    .info-seccion h4 {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #1f5e7e;
+      margin-bottom: 0.7rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: -0.2px;
+    }
+
+    .info-seccion p, .info-seccion li {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: #1f3e4e;
+    }
+
+    .lista-geografica {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .lista-geografica li {
+      padding-left: 1.4rem;
+      position: relative;
+      margin-bottom: 0.5rem;
+      font-size: 0.88rem;
+    }
+
+    .lista-geografica li::before {
+      content: "▹";
+      position: absolute;
+      left: 0;
+      color: #ff9800;
+      font-weight: 600;
+    }
+
+    .badge-contacto {
+      background: #eef4fa;
+      border-radius: 12px;
+      padding: 0.5rem 0.8rem;
+      font-weight: 500;
+      display: inline-block;
+      margin-top: 5px;
+      font-size: 0.8rem;
+    }
+
+    hr {
+      margin: 10px 0;
+      border: none;
+      height: 1px;
+      background: linear-gradient(to right, #d4e2ec, transparent);
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(10, 43, 62, 0.88);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      backdrop-filter: blur(3px);
+    }
+
+    .modal-content {
+      background: white;
+      padding: 2rem 2rem;
+      border-radius: 32px;
+      max-width: 500px;
+      width: 88%;
+      position: relative;
+      box-shadow: 0 25px 40px rgba(0,0,0,0.2);
+    }
+
+    .modal-content button.modal-close {
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 1.8rem;
+      cursor: pointer;
+      color: #95a5a6;
+    }
+
+    .tip-box {
+      background: #fef5e8;
+      border-left: 5px solid #ff9800;
+      padding: 1rem 1.2rem;
+      border-radius: 20px;
+      margin-bottom: 1rem;
+    }
+
+    .tip-box h4 {
+      color: #c25d00;
+      margin-bottom: 8px;
+    }
+
+    @media (max-width: 800px) {
+      .container {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        padding: 1rem;
+      }
+      .columna-derecha {
+        padding: 1.5rem 1rem;
+        padding-top: 3.5rem;
+      }
+      .btn-recordar {
+        top: 14px;
+        right: 14px;
+        padding: 6px 12px;
+        font-size: 0.7rem;
+      }
+      #tituloDerecho {
+        font-size: 1.25rem;
+        padding-right: 10px;
+      }
+      .info-detalle-scroll {
+        max-height: 55vh;
+      }
+      .tarjeta-defensoria {
+        padding: 1rem;
+      }
+      .defensoria-titulo {
+        font-size: 1.05rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 0.75rem;
+      }
+      .columna-derecha {
+        padding: 1.2rem 0.9rem;
+        padding-top: 3rem;
+      }
+      .info-seccion {
+        padding: 0.8rem 1rem;
+      }
+      .info-seccion h4 {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-wrapper">
+  <div class="container">
+    <!-- COLUMNA IZQUIERDA: listado de defensorías (orden solicitado: primero Palacio, luego 7,8,9) -->
+    <div class="columna-izquierda">
+      <h1 class="titulo-principal">🗺️ Mapa de Defensorías</h1>
+      <div id="listaDefensoriasContainer">
+        <!-- las tarjetas se generarán dinámicamente con JS -->
+      </div>
+    </div>
+
+    <!-- COLUMNA DERECHA: info detallada -->
+    <div class="columna-derecha">
+      <button class="btn-recordar" id="btnRecordarInfo">📌 RECORDÁ ESTO</button>
+      <div id="headerDinamico">
+        <h2 id="tituloDerecho">Defensorías del Palacio de Justicia</h2>
+        <p id="subtituloDerecho">N° 3, 4, 5 y 6 · Sede central</p>
+      </div>
+      <div class="info-detalle-scroll" id="contenidoDinamico">
+        <!-- contenido dinámico -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL INFORMATIVO -->
+<div class="modal-overlay" id="modalInfo" onclick="toggleModal(false)">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="toggleModal(false)">&times;</button>
+    <div class="tip-box">
+      <h4>📌 Verificá siempre tu jurisdicción</h4>
+      <p>Antes de iniciar un trámite, confirmá que tu domicilio se encuentre dentro de los límites territoriales de la defensoría correspondiente. Llevá DNI y algún comprobante de residencia (servicio o factura).</p>
+    </div>
+    <div class="tip-box" style="background:#eef2fa; border-left-color:#2c7da0;">
+      <h4>⚖️ Acceso a la justicia</h4>
+      <p>Las defensorías oficiales brindan patrocinio gratuito a personas de escasos recursos. Horario general de atención: 7:00 a 12:00 hs (lunes a viernes).</p>
+    </div>
+    <div class="tip-box">
+      <h4>📞 ¿Necesitás orientación?</h4>
+      <p>Si tenés dudas sobre cuál te corresponde, podés consultar en Mesa de Entradas del Poder Judicial o llamar al Centro de Información Judicial: +54 376 4453000.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  // BASE DE DATOS DE DEFENSORÍAS (orden definitivo: primero las del Palacio, luego N°7, N°8, N°9)
+  // Direcciones y teléfonos actualizados según información proporcionada
+  const defensoriasData = [
+    {
+      id: "def3456",
+      nombre: "Defensorías N° 3, 4, 5 y 6",
+      subtitulo: "Civil, Comercial, Laboral y de Familia · Palacio de Justicia",
+      resumen: "Cuatro defensorías con asiento en el edificio judicial central de Posadas (Av. Santa Catalina 1735).",
+      colorClase: "color-def-4",
+      emoji: "⚖️",
+      detalles: {
+        limites: "Cada defensoría posee una jurisdicción específica dentro de la ciudad de Posadas (áreas céntricas, barrios aledaños). Para determinar la correcta, se debe consultar en el DEUT (Departamento de Entrada Única de Trámites) según el domicilio particular.",
+        barrios: "Cobertura de múltiples distritos judiciales. Atienden sectores del centro, zonas residenciales y áreas no comprendidas por las defensorías N°7, N°8 y N°9.",
+        direccion: "Palacio de Justicia: Av. Santa Catalina N° 1735, 1° Piso, Ala Norte (DEUT - Departamento de Entrada Única de Trámites), Posadas, Misiones.",
+        telefono: "DEUT: 0376-4446700 (internos 1300, 2805, 2811). Para consultas específicas de cada defensoría, acercarse personalmente o llamar a la central.",
+        horario: "Lunes a viernes de 7:00 a 12:00 hs.",
+        notas: "Las defensorías N°3, N°4, N°5 y N°6 atienden asuntos Civiles, Comerciales, Laborales y de Familia. El primer punto de contacto obligatorio es el DEUT en el 1° Piso, Ala Norte, donde te derivarán a la defensoría competente según tu domicilio."
+      }
+    },
+    {
+      id: "def7",
+      nombre: "Defensoría N° 7",
+      subtitulo: "Civil, Comercial, Laboral y de Familia · Villa Cabello",
+      resumen: "Jurisdicción oeste de Posadas: Arroyo Mártires, Av. San Martín, Av. Martín Fierro y Río Paraná.",
+      colorClase: "color-def-1",
+      emoji: "🏘️",
+      detalles: {
+        limites: "• Límite Oeste: Arroyo Mártires.<br>• Límite Este: Avenida San Martín.<br>• Límite Sur: Avenida Martín Fierro.<br>• Límite Norte: Río Paraná.",
+        barrios: "Complejo Habitacional Villa Cabello (chacras 147, 148, 149, 150), Barrio Yohasá, Barrio Yacyretá, Barrio San Gerardo, Barrio Villa Blosset (sector oeste), Barrio Los Pinos, Sector 'El Montecito' (zona costera).",
+        direccion: "Av. Blas Parera N° 6695 (intersección con calle 135), Posadas, Misiones.",
+        telefono: "0376-4468008",
+        horario: "Lunes a viernes de 7:00 a 12:00 hs.",
+        notas: "Trámites de familia, alimentos, régimen de comunicación, violencia familiar y cuestiones civiles/laborales en toda la zona oeste."
+      }
+    },
+    {
+      id: "def8",
+      nombre: "Defensoría N° 8",
+      subtitulo: "Garupá · Competencia municipal completa",
+      resumen: "Atención en todo el municipio de Garupá, con múltiples barrios y complejos habitacionales.",
+      colorClase: "color-def-3",
+      emoji: "🏛️",
+      detalles: {
+        limites: "Jurisdicción sobre TODO el municipio de Garupá (competencia plena). No se divide por avenidas: abarca el ejido completo.",
+        barrios: "Barrio Fátima, Barrio Santa Helena, Barrio Virgen de Fátima, Barrio Villalonga, Barrio Ñu Porá, Barrio Don Santiago, Barrio Garupá Centro, Barrio Gottschalk, Barrio Santa Inés.",
+        direccion: "Calle Guaraníes y calle Ntra. Sra. de Acaraguá (Barrio Fátima), Garupá, Misiones.",
+        telefono: "0376-4300795",
+        horario: "Lunes a viernes de 7:00 a 12:00 hs.",
+        notas: "Para casos urgentes de violencia familiar o protección de menores, también podés acudir al Juzgado de Familia y Violencia Familiar N° 1 de Garupá (Colectora Ruta Nacional 12)."
+      }
+    },
+    {
+      id: "def9",
+      nombre: "Defensoría N° 9",
+      subtitulo: "Itaembé Miní / Itaembé Guazú · Jurisdicción sur",
+      resumen: "Extremo suroeste de Posadas: cobertura total de Itaembé Miní e Itaembé Guazú.",
+      colorClase: "color-def-2",
+      emoji: "🌳",
+      detalles: {
+        limites: "• Norte: Ribera del Río Paraná (desde Arroyo Mártires hasta límite Corrientes).<br>• Sur: Ruta Nacional 12.<br>• Este: Arroyo Mártires.<br>• Oeste: Límite con la Provincia de Corrientes.",
+        barrios: "Itaembé Miní (17 de Junio, Terrazas, barrios del sector sur de Av. 147, asentamientos). Itaembé Guazú: todas las etapas (sector viviendas, 508 viviendas) hasta límite provincial.",
+        direccion: "Sede principal: Av. 147 s/n (casi Av. 170) - Itaembé Miní, Posadas.<br>Sede descentralizada: Centro de Atención al Vecino (CAV) - Calle Aguará Guazú N° 6375 y Magnolias, Itaembé Guazú.",
+        telefono: "0376-4595767",
+        horario: "Lunes a viernes de 7:00 a 12:00 hs.",
+        notas: "La Defensoría N° 9 tiene competencia directa en el Juzgado de Paz de Itaembé Guazú. Podés acercarte a cualquiera de las dos sedes para iniciar actuaciones."
+      }
+    }
+  ];
+
+  // Función para renderizar la lista de tarjetas (izquierda) en el orden definido
+  function renderListaDefensorias() {
+    const container = document.getElementById("listaDefensoriasContainer");
+    if (!container) return;
+    container.innerHTML = "";
+    defensoriasData.forEach(def => {
+      const card = document.createElement("div");
+      card.className = `tarjeta-defensoria ${def.colorClase}`;
+      card.setAttribute("data-id", def.id);
+      card.innerHTML = `
+        <div class="defensoria-titulo">
+          <span class="defensoria-badge">${def.emoji}</span>
+          <span style="font-weight:800;">${def.nombre}</span>
+        </div>
+        <div class="defensoria-resumen">${def.subtitulo}</div>
+        <div style="font-size:0.75rem; color:#4f7a92; margin-top:8px;">${def.resumen}</div>
+      `;
+      card.addEventListener("click", (e) => {
+        e.stopPropagation();
+        mostrarDetalleDefensoria(def.id);
+      });
+      // soporte táctil
+      card.addEventListener("touchstart", (e) => {
+        e.preventDefault();
+        mostrarDetalleDefensoria(def.id);
+      }, { passive: false });
+      container.appendChild(card);
+    });
+  }
+
+  // Renderizado de contenido dinámico en columna derecha con info detallada, estilo secciones
+  function mostrarDetalleDefensoria(id) {
+    const def = defensoriasData.find(d => d.id === id);
+    if (!def) return;
+
+    // Actualizar header
+    let tituloMostrado = `${def.emoji} ${def.nombre}`;
+    if (def.id === "def3456") tituloMostrado = `🏛️ ${def.nombre}`;
+    document.getElementById("tituloDerecho").innerHTML = tituloMostrado;
+    document.getElementById("subtituloDerecho").innerHTML = def.subtitulo;
+
+    const detalles = def.detalles;
+    // construir html modular
+    let html = `
+      <div class="info-seccion">
+        <h4>📍 Límites / Jurisdicción</h4>
+        <p>${detalles.limites || "Jurisdicción territorial según lo establecido por el Poder Judicial."}</p>
+      </div>
+      <div class="info-seccion">
+        <h4>🏘️ Barrios y sectores incluidos</h4>
+        <ul class="lista-geografica">
+          ${detalles.barrios.split(',').map(b => `<li>${b.trim()}</li>`).join('')}
+        </ul>
+      </div>
+      <div class="info-seccion">
+        <h4>📬 Dirección y sedes</h4>
+        <p>${detalles.direccion}</p>
+      </div>
+      <div class="info-seccion">
+        <h4>📞 Contacto y horario</h4>
+        <p><strong>Teléfono:</strong> ${detalles.telefono}<br>
+        <strong>Horario de atención:</strong> ${detalles.horario}</p>
+      </div>
+    `;
+    // Notas adicionales / dato útil
+    if (detalles.notas) {
+      html += `
+        <div class="info-seccion" style="background:#fef5e8;">
+          <h4>💡 Dato útil / Observaciones</h4>
+          <p>${detalles.notas}</p>
+        </div>
+      `;
+    }
+    // Para la defensoría 9 agregamos un destacado sobre las dos sedes
+    if (def.id === "def9") {
+      html += `
+        <div class="info-seccion" style="background:#eef2fc;">
+          <h4>🏢 Puntos de atención presencial</h4>
+          <p>✅ <strong>Sede Judicial Itaembé Miní:</strong> Av. 147 s/n (casi Av. 170) — oficinas centrales.<br>
+          ✅ <strong>Sede CAV Itaembé Guazú:</strong> Calle Aguará Guazú 6375 y Magnolias (Centro de Atención al Vecino).<br>
+          Ambos puntos operan en el horario habitual.</p>
+        </div>
+      `;
+    }
+    if (def.id === "def8") {
+      html += `
+        <div class="info-seccion">
+          <h4>⚠️ Urgencias familiares</h4>
+          <p>Para casos de violencia familiar y protección de menores fuera del horario, acudir al <strong>Juzgado de Familia y Violencia Familiar N° 1 de Garupá</strong>, ubicado sobre Colectora Ruta Nacional 12.</p>
+        </div>
+      `;
+    }
+    if (def.id === "def3456") {
+      html += `
+        <div class="info-seccion">
+          <h4>🗂️ ¿Cuál te corresponde?</h4>
+          <p>Las defensorías 3, 4, 5 y 6 tienen distribución geográfica interna dentro de Posadas. Para identificarla correctamente, debes dirigirte al <strong>DEUT (Departamento de Entrada Única de Trámites)</strong> en el 1° Piso, Ala Norte del Palacio de Justicia. Allí, con tu documento de identidad y comprobante de domicilio, el personal te derivará a la defensoría competente según tu barrio.</p>
+        </div>
+        <div class="info-seccion">
+          <h4>📍 Ubicación exacta y contacto central</h4>
+          <p>Palacio de Justicia, Av. Santa Catalina N° 1735, primer piso, Ala Norte. Acceso por la entrada principal. Teléfono DEUT: 0376-4446700 (internos 1300, 2805, 2811).</p>
+        </div>
+      `;
+    }
+
+    document.getElementById("contenidoDinamico").innerHTML = html;
+  }
+
+  // Modal functions
+  function toggleModal(show) {
+    const modal = document.getElementById("modalInfo");
+    if (modal) {
+      modal.style.display = show ? "flex" : "none";
+    }
+  }
+
+  // Inicializar la aplicación y mostrar por defecto la primera defensoría (Palacio de Justicia)
+  function initApp() {
+    renderListaDefensorias();
+    // Por defecto, mostrar la primera del array (Defensorías N° 3,4,5,6)
+    if (defensoriasData.length) {
+      mostrarDetalleDefensoria(defensoriasData[0].id);
+    }
+    // botón recordar
+    const btnRecordar = document.getElementById("btnRecordarInfo");
+    if (btnRecordar) {
+      btnRecordar.addEventListener("click", (e) => {
+        e.stopPropagation();
+        toggleModal(true);
+      });
+    }
+    // cerrar modal al hacer clic overlay
+    const modalOverlay = document.getElementById("modalInfo");
+    if (modalOverlay) {
+      modalOverlay.addEventListener("click", (e) => {
+        if (e.target === modalOverlay) toggleModal(false);
+      });
+    }
+  }
+
+  // Ejecutar al cargar
+  window.addEventListener("DOMContentLoaded", initApp);
+</script>
+</body>
+</html>
