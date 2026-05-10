@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+  <title>Normativa aplicable</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      overflow-x: hidden;
+      background: #f4f7fc;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f4f7fc;
+      color: #0a2b3e;
+      line-height: 1.45;
+    }
+
+    .app-wrapper {
+      display: flex;
+      width: 100%;
+      min-height: 100vh;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 2rem;
+      padding: 2rem;
+      width: 100%;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    /* COLUMNA IZQUIERDA (categorías) */
+    .columna-categorias {
+      overflow-y: visible;
+      padding-right: 0.5rem;
+    }
+
+    .titulo-principal {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #1e4a6b;
+      margin-bottom: 2rem;
+      text-transform: uppercase;
+      line-height: 1.2;
+      border-bottom: 3px solid #ff9800;
+      padding-bottom: 10px;
+      letter-spacing: -0.3px;
+    }
+
+    .tarjeta-categoria {
+      background: white;
+      border-radius: 18px;
+      padding: 1.5rem;
+      margin-bottom: 1.2rem;
+      border: 1px solid #e2edf2;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+    }
+
+    .tarjeta-categoria:active {
+      transform: scale(0.99);
+      background: #fefefe;
+      border-color: #cbdde6;
+    }
+
+    .categoria-titulo {
+      font-size: 1.2rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .categoria-desc {
+      font-size: 0.86rem;
+      color: #4a6272;
+      line-height: 1.4;
+      margin-top: 4px;
+    }
+
+    /* Colores distintivos por categoría (similar paleta previa) */
+    .cat-procesal { border-left: 6px solid #1e4a6b; padding-left: 14px; }
+    .cat-procesal .categoria-titulo { color: #1e4a6b; }
+    .cat-proteccion { border-left: 6px solid #2c7da0; padding-left: 14px; }
+    .cat-proteccion .categoria-titulo { color: #2c7da0; }
+    .cat-delitos { border-left: 6px solid #8e44ad; padding-left: 14px; }
+    .cat-delitos .categoria-titulo { color: #6c3483; }
+    .cat-honorarios { border-left: 6px solid #d35400; padding-left: 14px; }
+    .cat-honorarios .categoria-titulo { color: #b64900; }
+
+    /* COLUMNA DERECHA (detalle de leyes) */
+    .columna-detalle {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 2rem;
+      border: 1px solid #e2edf2;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.05);
+      transition: all 0.2s;
+    }
+
+    .btn-informacion {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #ff9800;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      z-index: 10;
+      transition: background 0.2s, transform 0.1s;
+      letter-spacing: 0.3px;
+      font-family: inherit;
+    }
+
+    .btn-informacion:active {
+      background: #e68900;
+      transform: scale(0.96);
+    }
+
+    .header-normativa {
+      margin-bottom: 1.5rem;
+      padding-right: 30px;
+    }
+
+    .header-normativa h2 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #1e4a6b;
+      margin-bottom: 6px;
+      letter-spacing: -0.2px;
+    }
+
+    .header-normativa p {
+      color: #5d7a8c;
+      font-size: 0.85rem;
+      font-weight: 500;
+      border-left: 3px solid #ff9800;
+      padding-left: 12px;
+      margin-top: 6px;
+    }
+
+    .leyes-scroll {
+      flex: 1;
+      overflow-y: auto;
+      max-height: 60vh;
+      padding-right: 4px;
+    }
+
+    /* lista estilo limpio para leyes */
+    .lista-leyes {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      animation: fadeSlide 0.3s ease;
+    }
+
+    .ley-item {
+      background: #f9fcfd;
+      border-radius: 18px;
+      padding: 1.2rem 1.2rem 1.2rem 1.5rem;
+      border: 1px solid #e6f0f5;
+      transition: all 0.2s;
+    }
+
+    .ley-titulo {
+      font-weight: 800;
+      font-size: 1rem;
+      color: #1a4b66;
+      margin-bottom: 8px;
+      letter-spacing: -0.2px;
+      display: block;
+    }
+
+    .ley-descripcion {
+      font-size: 0.85rem;
+      color: #3f5c6e;
+      margin-bottom: 12px;
+      line-height: 1.45;
+    }
+
+    .enlace-ley {
+      display: inline-flex;
+      align-items: center;
+      background: transparent;
+      color: #2c7da0;
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-decoration: none;
+      border: 1px solid #cde3ec;
+      padding: 6px 14px;
+      border-radius: 40px;
+      transition: 0.2s;
+      font-family: 'Inter', monospace;
+      letter-spacing: 0.2px;
+    }
+
+    .enlace-ley:hover {
+      background: #eef4fa;
+      border-color: #8fb9ce;
+      color: #145c7a;
+    }
+
+    .enlace-ley:active {
+      transform: scale(0.97);
+    }
+
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateX(12px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* MODAL */
+    .modal-legal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(10, 43, 62, 0.86);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      backdrop-filter: blur(3px);
+    }
+
+    .modal-card {
+      background: white;
+      padding: 2rem 1.8rem;
+      border-radius: 28px;
+      max-width: 500px;
+      width: 90%;
+      position: relative;
+      margin: 1rem;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 25px 40px rgba(0,0,0,0.2);
+    }
+
+    .modal-card button.close-modal {
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 2rem;
+      line-height: 1;
+      cursor: pointer;
+      color: #8aaec0;
+      font-weight: 300;
+    }
+
+    .modal-card h4 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      color: #1e4a6b;
+    }
+
+    .modal-card p {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: #2c3e4e;
+    }
+
+    .modal-insight {
+      background: #f1f7fb;
+      border-left: 4px solid #ff9800;
+      padding: 1rem;
+      margin-top: 1rem;
+      border-radius: 14px;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 800px) {
+      .container {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        padding: 1rem;
+      }
+      .columna-categorias, .columna-detalle {
+        width: 100%;
+        padding: 1rem;
+      }
+      .columna-detalle {
+        padding: 1.4rem;
+        padding-top: 3rem;
+      }
+      .btn-informacion {
+        top: 12px;
+        right: 12px;
+        font-size: 0.7rem;
+        padding: 6px 12px;
+      }
+      .titulo-principal {
+        font-size: 1.4rem;
+        margin-bottom: 1.2rem;
+      }
+      .tarjeta-categoria {
+        padding: 1rem;
+      }
+      .categoria-titulo {
+        font-size: 1rem;
+      }
+      .leyes-scroll {
+        max-height: none;
+        overflow-y: visible;
+      }
+      .header-normativa h2 {
+        font-size: 1.3rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        gap: 1rem;
+        padding: 0.75rem;
+      }
+      .columna-detalle {
+        padding: 1rem;
+        padding-top: 2.8rem;
+      }
+      .ley-item {
+        padding: 1rem;
+      }
+      .ley-titulo {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-wrapper">
+  <div class="container">
+    <!-- COLUMNA IZQUIERDA: CATEGORÍAS DE NORMATIVA -->
+    <div class="columna-categorias">
+      <h1 class="titulo-principal">Normativa aplicable</h1>
+      
+      <div class="tarjeta-categoria cat-procesal" data-categoria="procesal">
+        <span class="categoria-titulo">⚖️ Legislación procesal</span>
+        <p class="categoria-desc">Códigos procesales civiles, comerciales, familia y violencia familiar — Rigen los procedimientos judiciales y la organización del proceso.</p>
+      </div>
+
+      <div class="tarjeta-categoria cat-proteccion" data-categoria="proteccion">
+        <span class="categoria-titulo">⚖️ Protección de personas</span>
+        <p class="categoria-desc">Salud mental, acogimiento familiar, derechos de niños, niñas, adolescentes y personas mayores — Marcos esenciales para la defensa de grupos vulnerables.</p>
+      </div>
+
+      <div class="tarjeta-categoria cat-delitos" data-categoria="delitos">
+        <span class="categoria-titulo">⚖️ Integridad sexual</span>
+        <p class="categoria-desc">Protección integral a víctimas de delitos contra la integridad sexual y pensión graciable para menores afectados.</p>
+      </div>
+
+      <div class="tarjeta-categoria cat-honorarios" data-categoria="honorarios">
+        <span class="categoria-titulo">⚖️ Honorarios profesionales</span>
+        <p class="categoria-desc">Ley XII N.° 4: normas generales sobre honorarios de abogados y procuradores en la provincia de Misiones.</p>
+      </div>
+    </div>
+
+    <!-- COLUMNA DERECHA: DETALLE DINÁMICO (LEYES) -->
+    <div class="columna-detalle" id="detalleNormativa">
+      <button class="btn-informacion" id="infoEstrategicaBtn">Información legal</button>
+      
+      <div class="header-normativa" id="detalleHeader">
+        <h2 id="categoriaDinamicaTitulo">Legislación procesal</h2>
+        <p id="categoriaDinamicaSubtitulo">Normas de procedimiento aplicables en la Defensoría</p>
+      </div>
+
+      <div class="leyes-scroll" id="contenidoLeyes">
+        <!-- Aquí se inyectará dinámicamente el listado de leyes -->
+        <ul class="lista-leyes" id="listaNormativa"></ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL "INFORMACIÓN LEGAL" (recordatorio estratégico) -->
+<div class="modal-legal" id="modalLegal" onclick="toggleModalLegal(false)">
+  <div class="modal-card" onclick="event.stopPropagation()">
+    <button class="close-modal" onclick="toggleModalLegal(false)">&times;</button>
+    <h4>📌 Uso estratégico de la normativa</h4>
+    <p>Contar con el marco legal actualizado es fundamental para el patrocinio jurídico eficaz. La correcta aplicación de estas leyes garantiza defensa técnica, evita nulidades y protege derechos fundamentales.</p>
+    <div class="modal-insight">
+      <strong style="color:#d35400;">Recomendación:</strong> Siempre verificar la vigencia de las leyes y sus decretos reglamentarios. Ante casos complejos (violencia familiar, salud mental, niñez), priorizar la articulación con la ley nacional adherida y la perspectiva de derechos.
+    </div>
+    <div style="margin-top: 16px; font-size: 0.75rem; color: #6f8f9f; border-top: 1px solid #e2edf2; padding-top: 12px;">
+      Fuentes oficiales: digestomisiones.gob.ar · Leyes provinciales y nacionales
+    </div>
+  </div>
+</div>
+
+<script>
+  // --------------------------------------------------------------
+  // BASE DE DATOS DE NORMATIVA (estructura por categorías)
+  // siguiendo las leyes proporcionadas
+  // --------------------------------------------------------------
+  const normativaDB = {
+    procesal: {
+      titulo: "Legislación procesal",
+      subtitulo: "Códigos y leyes que rigen el proceso judicial en Misiones.",
+      leyes: [
+        {
+          nombre: "Ley XII N.º 27 – Código Procesal Civil, Comercial, de Familia y Violencia Familiar",
+          descripcion: "Establece el procedimiento para familia, violencia familiar, aspectos civiles y comerciales. Actualización procesal clave.",
+          url: "https://digestomisiones.gob.ar/archivospdf/1688596715_LEY%20XII%20-%20N%2027.pdf"
+        },
+        {
+          nombre: "Ley XII N.º 6 (ex Ley 2335) – Código Procesal Civil y Comercial",
+          descripcion: "Normativa procesal tradicional de Misiones, aplicable en procesos civiles y comerciales. Vigencia concurrente.",
+          url: "https://digestomisiones.gob.ar/archivospdf/1688593934_LEY%20XII%20-%20N%206.pdf"
+        }
+      ]
+    },
+    proteccion: {
+      titulo: "Protección integral de personas",
+      subtitulo: "Salud mental, acogimiento familiar, niñez, adolescencia y personas mayores.",
+      leyes: [
+        {
+          nombre: "Ley Provincial XVII-102 – Salud Mental (adhesión a Ley Nacional N° 26.657)",
+          descripcion: "Adhiere a la Ley Nacional de Salud Mental y su decreto reglamentario. Garantiza enfoque comunitario y derechos humanos.",
+          url: "https://www.mpd.gov.ar/uploads/documentos/Ley%2026657.pdf"
+        },
+        {
+          nombre: "Ley II – N.° 36 – Sistema de Acogimiento Familiar Alternativo",
+          descripcion: "Regula el acogimiento familiar como medida excepcional de protección de derechos de niños, niñas y adolescentes.",
+          url: "https://digestomisiones.gob.ar/archivospdf/1688569298_Ley%20II%20-%20N%2036%20Texto%20definitivo.pdf"
+        },
+        {
+          nombre: "Ley II – N.° 16 (ex Ley 3820) – Protección Integral de Niños, Niñas y Adolescentes",
+          descripcion: "Reconoce derechos sustanciales y procesales para personas menores de edad, marco integral de promoción y protección.",
+          url: "https://digestomisiones.gob.ar/archivospdf/1688565006_Ley%20II%20-%20N%2016%20(Antes%20Ley%203820).pdf"
+        },
+        {
+          nombre: "Ley XIX – N.° 41 (ex Ley 3920) – Derechos de las Personas Mayores",
+          descripcion: "Protección, promoción y defensa de derechos de adultos mayores; instituciones y políticas específicas.",
+          url: "https://digestomisiones.gob.ar/archivospdf/1688591505_Ley%20XIX%20-%20N%2041%20(Antes%20Ley%203920)%20Texto%20definitivo.pdf"
+        }
+      ]
+    },
+    delitos: {
+      titulo: "Delitos contra la integridad sexual",
+      subtitulo: "Protección y asistencia a víctimas · Pensión graciable.",
+      leyes: [
+        {
+          nombre: "Ley XVII – N.º 37 (ex Ley 4013) – Protección Integral a Víctimas",
+          descripcion: "Establece atención médica, psicológica, social y jurídica para víctimas de delitos contra la integridad sexual. Evita revictimización.",
+          url: "https://digestomisiones.gob.ar/archivospdf/1688585445_LEY%20XVII%20-%20N%2037%20(Antes%20Ley%204013).pdf"
+        },
+        {
+          nombre: "Ley XIX N.º 51 – Pensión graciable para menores víctimas",
+          descripcion: "Crea pensión especial mensual equivalente al 70% del salario mínimo vital y móvil para menores víctimas de delitos sexuales y su grupo conviviente.",
+          url: "https://digestomisiones.gob.ar/archivospdf/1688592925_LEY%20XIX%20-%20N%2051.pdf"
+        }
+      ]
+    },
+    honorarios: {
+      titulo: "Honorarios profesionales",
+      subtitulo: "Normas generales para abogados y procuradores en la provincia.",
+      leyes: [
+        {
+          nombre: "Ley XII – N.° 4 (ex Ley 607) – Honorarios de Abogados y Procuradores",
+          descripcion: "Regula la percepción de honorarios profesionales, pautas arancelarias y normas de ética en el cobro de servicios legales.",
+          url: "https://digestomisiones.gob.ar/archivospdf/1688593528_LEY%20XII%20-%20N%204.pdf"
+        }
+      ]
+    }
+  };
+
+  // Elementos del DOM
+  const listaElement = document.getElementById("listaNormativa");
+  const categoriaTituloElem = document.getElementById("categoriaDinamicaTitulo");
+  const categoriaSubtituloElem = document.getElementById("categoriaDinamicaSubtitulo");
+
+  // Función principal para renderizar leyes según categoría
+  function renderizarNormativa(categoriaKey) {
+    const data = normativaDB[categoriaKey];
+    if (!data) return;
+
+    // Actualizar header
+    categoriaTituloElem.innerText = data.titulo;
+    categoriaSubtituloElem.innerText = data.subtitulo;
+
+    // Generar HTML de leyes (sin íconos, solo texto y enlaces)
+    const leyesHtml = data.leyes.map(ley => `
+      <li class="ley-item">
+        <span class="ley-titulo">📄 ${ley.nombre}</span>
+        <div class="ley-descripcion">${ley.descripcion}</div>
+        <a href="${ley.url}" target="_blank" rel="noopener noreferrer" class="enlace-ley">Abrir normativa →</a>
+      </li>
+    `).join('');
+
+    listaElement.innerHTML = `<ul class="lista-leyes">${leyesHtml}</ul>`;
+  }
+
+  // Manejador de clic en tarjetas de categorías (izquierda)
+  function setupCategorias() {
+    const tarjetas = document.querySelectorAll('.tarjeta-categoria');
+    tarjetas.forEach(tarjeta => {
+      const clickHandler = (e) => {
+        e.stopPropagation();
+        const categoria = tarjeta.getAttribute('data-categoria');
+        if (categoria && normativaDB[categoria]) {
+          renderizarNormativa(categoria);
+          // pequeño feedback visual (no afecta rendimiento)
+          tarjeta.style.transform = "scale(0.99)";
+          setTimeout(() => { tarjeta.style.transform = ""; }, 120);
+        }
+      };
+      // Eventos táctiles y mouse
+      tarjeta.addEventListener('click', clickHandler);
+      tarjeta.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        clickHandler(e);
+      }, { passive: false });
+    });
+  }
+
+  // Modal flotante: recordatorio / información legal
+  const modalLegal = document.getElementById("modalLegal");
+  function toggleModalLegal(show) {
+    modalLegal.style.display = show ? "flex" : "none";
+  }
+
+  // Inicializar página y eventos
+  function init() {
+    // Mostrar por defecto 'Legislación procesal' (primer módulo)
+    renderizarNormativa('procesal');
+    setupCategorias();
+    
+    // Botón de información estratégica (modal)
+    const btnInfo = document.getElementById("infoEstrategicaBtn");
+    if (btnInfo) {
+      btnInfo.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleModalLegal(true);
+      });
+    }
+    // Cerrar modal si se hace clic fuera (ya manejado por onclick del overlay)
+  }
+
+  // Ejecutar después de carga completa
+  window.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
