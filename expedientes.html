@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+  <title>Expedientes según materia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f0f5fa;
+      color: #0a2b3e;
+      line-height: 1.4;
+      overflow-x: hidden;
+    }
+
+    .app-container {
+      display: flex;
+      width: 100%;
+      min-height: 100vh;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 2rem;
+      padding: 2rem;
+      width: 100%;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    /* COLUMNA IZQUIERDA */
+    .sidebar {
+      background: transparent;
+      overflow-y: auto;
+      padding-right: 0.5rem;
+    }
+
+    .titulo-principal {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: #1e4a6b;
+      margin-bottom: 1.8rem;
+      text-transform: uppercase;
+      border-bottom: 3px solid #ff9800;
+      padding-bottom: 12px;
+      letter-spacing: -0.3px;
+    }
+
+    .categoria-card {
+      background: white;
+      border-radius: 18px;
+      margin-bottom: 1.2rem;
+      border: 1px solid #dce9f0;
+      overflow: hidden;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    }
+
+    .categoria-header {
+      padding: 1rem 1.2rem;
+      background: #ffffff;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 800;
+      font-size: 1.05rem;
+      border-left: 5px solid #1e4a6b;
+      transition: background 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .categoria-header:hover {
+      background: #f8fcff;
+    }
+
+    .categoria-header span:first-child {
+      color: #1e4a6b;
+      letter-spacing: -0.2px;
+    }
+
+    .chevron {
+      font-size: 1.2rem;
+      color: #ff9800;
+      transition: transform 0.2s;
+      font-weight: bold;
+    }
+
+    .chevron.open {
+      transform: rotate(180deg);
+    }
+
+    .procesos-lista {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+      background: #fefefe;
+      border-top: 1px solid #eef2f7;
+    }
+
+    .procesos-lista.open {
+      max-height: 800px;
+      transition: max-height 0.4s ease-in;
+    }
+
+    .proceso-item {
+      padding: 0.85rem 1.2rem;
+      border-bottom: 1px solid #eef2f7;
+      cursor: pointer;
+      transition: all 0.15s;
+      position: relative;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #2c3e4e;
+    }
+
+    .proceso-item:last-child {
+      border-bottom: none;
+    }
+
+    .proceso-item:hover {
+      background: #f0f7fe;
+      padding-left: 1.6rem;
+    }
+
+    .proceso-item:active {
+      background: #e6f0f8;
+    }
+
+    .proceso-item .norma-badge {
+      font-size: 0.65rem;
+      background: #eef2fa;
+      display: inline-block;
+      border-radius: 12px;
+      padding: 2px 8px;
+      margin-left: 8px;
+      font-weight: 400;
+      color: #2c7da0;
+    }
+
+    /* COLUMNA DERECHA (detalle) */
+    .detail-panel {
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 2rem;
+      border: 1px solid #dce9f0;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+      position: relative;
+      transition: all 0.2s;
+    }
+
+    .btn-recordar {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      background: #ff9800;
+      color: white;
+      border: none;
+      padding: 6px 16px;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+      z-index: 5;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .btn-recordar:active {
+      background: #e68900;
+      transform: scale(0.97);
+    }
+
+    .detalle-titulo {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #1e4a6b;
+      margin-bottom: 0.5rem;
+      padding-right: 90px;
+    }
+
+    .detalle-sub {
+      color: #64748b;
+      font-size: 0.85rem;
+      border-left: 3px solid #ff9800;
+      padding-left: 12px;
+      margin-bottom: 1.8rem;
+    }
+
+    .detalle-contenido {
+      overflow-y: auto;
+      max-height: 70vh;
+      padding-right: 6px;
+    }
+
+    /* estilos para listas numeradas estilo escritos */
+    .steps-list {
+      list-style: none;
+      counter-reset: step-counter;
+      margin-top: 0.5rem;
+    }
+
+    .steps-list li {
+      counter-increment: step-counter;
+      background: #f8fbff;
+      margin-bottom: 12px;
+      padding: 14px 18px 14px 55px;
+      border-radius: 14px;
+      position: relative;
+      font-size: 0.92rem;
+      line-height: 1.45;
+      border: 1px solid #eef2f7;
+    }
+
+    .steps-list li::before {
+      content: counter(step-counter);
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #2c7da0;
+      color: white;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.8rem;
+    }
+
+    .norm-block {
+      background: #f0f7fc;
+      border-left: 4px solid #ff9800;
+      padding: 1rem 1.2rem;
+      border-radius: 16px;
+      margin: 1.2rem 0;
+      font-size: 0.85rem;
+    }
+
+    .alerta-box {
+      background: #fff4e5;
+      border-left: 5px solid #ff9800;
+      padding: 1rem;
+      border-radius: 14px;
+      margin: 1rem 0;
+    }
+
+    .badge-ley {
+      background: #eef2ff;
+      color: #1e4a6b;
+      font-size: 0.7rem;
+      font-weight: 600;
+      border-radius: 20px;
+      padding: 3px 10px;
+      display: inline-block;
+      margin-bottom: 8px;
+    }
+
+    hr {
+      margin: 1rem 0;
+      border-color: #e2edf5;
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(10, 43, 62, 0.85);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      backdrop-filter: blur(3px);
+    }
+
+    .modal-card {
+      background: white;
+      max-width: 500px;
+      width: 90%;
+      border-radius: 32px;
+      padding: 1.8rem;
+      position: relative;
+    }
+
+    /* responsive */
+    @media (max-width: 850px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+        gap: 1.2rem;
+        padding: 1rem;
+      }
+      .sidebar {
+        max-height: none;
+      }
+      .detalle-contenido {
+        max-height: 60vh;
+      }
+      .detalle-titulo {
+        font-size: 1.3rem;
+        padding-right: 70px;
+      }
+      .btn-recordar {
+        top: 16px;
+        right: 16px;
+      }
+      .detail-panel {
+        padding: 1.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .steps-list li {
+        font-size: 0.8rem;
+        padding: 10px 10px 10px 42px;
+      }
+      .steps-list li::before {
+        width: 26px;
+        height: 26px;
+        font-size: 0.7rem;
+        left: 10px;
+      }
+    }
+
+    .proceso-item.active-proceso {
+      background: #e6f0fa;
+      border-left: 4px solid #ff9800;
+      font-weight: 700;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.7rem;
+      color: #7e8c8f;
+      margin-top: 2rem;
+    }
+  </style>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+<div class="app-container">
+  <div class="main-grid">
+    <!-- COLUMNA IZQUIERDA: categorías colapsables -->
+    <aside class="sidebar">
+      <h2 class="titulo-principal">Reglas para procesos judiciales</h2>
+      <div id="categoriasContainer"></div>
+      <footer>Jurisprudencia + Leyes vigentes<br>Defensoría Oficial - Guía operativa</footer>
+    </aside>
+
+    <!-- COLUMNA DERECHA: detalle dinámico -->
+    <div class="detail-panel">
+      <button class="btn-recordar" id="btnAbrirModal">📌 RECORDÁ ESTO</button>
+      <div id="detalleDinamico">
+        <div class="detalle-titulo">Expedientes por materia</div>
+        <div class="detalle-sub">Seleccione un proceso para ver los pasos y normativa aplicable</div>
+        <div class="detalle-contenido">
+          <div class="norm-block">
+            <i data-lucide="scale" class="lucide-icon" style="width:20px;display:inline-block; vertical-align:middle"></i> 
+            <strong>Guía de actuación para Auxiliares de la Defensoría Oficial.</strong><br>Contiene protocolos, plazos, leyes especiales y criterios de intervención.
+          </div>
+          <p style="margin-top: 12px;">Utilice el panel izquierdo para explorar las materias: <strong>Familia, Violencia, Protección de personas, Civil y Leyes especiales</strong>. Cada ficha contiene instrucciones detalladas, pasos numerados y referencias legales.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL informativo -->
+<div class="modal-overlay" id="infoModal" onclick="toggleModal(false)">
+  <div class="modal-card" onclick="event.stopPropagation()">
+    <button style="position:absolute; top:12px; right:16px; background:none; border:none; font-size:1.8rem; cursor:pointer;" onclick="toggleModal(false)">&times;</button>
+    <div style="background:#eef4fa; border-left:5px solid #1e4a6b; padding:1rem; border-radius:16px;">
+      <h4 style="margin-bottom: 8px;">📌 Validez procesal y deberes</h4>
+      <p style="font-size:0.85rem;">Todos los procedimientos deben ajustarse al CPC (Ley XII-27), Ley Orgánica IV-N.15 y leyes especiales. La Defensoría garantiza el acceso a justicia de personas vulnerables. Ante cualquier duda, consulte normativa vigente y jurisprudencia.</p>
+    </div>
+    <div style="margin-top: 1rem; background:#fff4e5; border-left:5px solid #ff9800; padding:1rem; border-radius:16px;">
+      <p style="font-size:0.85rem;"><strong>📌 Recordatorio:</strong> Los plazos de gracia (Art.7 RPJ), la mediación previa obligatoria (Ley XII-19) y la gratuidad del ADN (Ley XII-31) son herramientas esenciales. Actuar siempre en resguardo del interés superior.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ====================== CONTENIDOS DETALLADOS (extraídos de guiatramite) ======================
+  // Funciones completas para cada proceso
+
+  function renderAlimentos() {
+    return `<div><h2 class="detalle-titulo">📌 Alimentos y Litisexpensas</h2><div class="detalle-sub">Arts. 696-710 CPC · Ley IV-N.15 arts.113,118 · Mediación previa (APO)</div>
+    <div class="detalle-contenido"><ul class="steps-list"><li><strong>DEUT envía Legajo</strong> – Intervención de la Defensoría, incluye oficio y documentación.</li><li><strong>Operador asigna legajo</strong> – Entrevista inicial con la persona.</li><li><strong>Redacción de demanda</strong> – Con documental y datos filiatorios.</li><li><strong>Sorteo ante Juzgado de Familia</strong> – Operador realiza sorteo.</li><li><strong>Conexidad (MEUI)</strong> – Si existen otras causas, completar formulario MEUI y presentar en 5 días.</li><li><strong>Providencia y cédula a la contraria</strong> – Adjuntar documental.</li><li><strong>Notificación en otra provincia (BUS FEDERAL)</strong> – Adjuntar proyecto cédula Ley 22172.</li><li><strong>Audiencia de partes</strong> – Asistencia del patrocinado.</li></ul>
+    <div class="norm-block"><i data-lucide="file-text"></i> <strong>Normativa clave:</strong> Arts. 696 a 710 CPC, Ley 12-19 (APO previo), Acordada STJ sobre alimentos provisorios.</div></div></div>`;
+  }
+
+  function renderViolenciaFamiliar() {
+    return `<div><h2 class="detalle-titulo">📌 Violencia Familiar (Ley XIV-6)</h2><div class="detalle-sub">Arts. 655-658 CPC · Ley Provincial XIV-6 · Perspectiva de género</div>
+    <div class="detalle-contenido"><ul class="steps-list"><li><strong>DEUT remite legajo</strong> – Denunciante o denunciado solicita patrocinio.</li><li><strong>Entrevista y análisis</strong> – Rol del patrocinado, situación de riesgo.</li><li><strong>Redacción de escrito</strong> – Solicitar medidas de resguardo (exclusión del hogar, prohibición acercamiento, oficios a organismos).</li><li><strong>Denunciado:</strong> Defensa, ofrecer terapia psicológica, solicitar vinculación SIGED.</li><li><strong>Seguimiento de providencias</strong> – Control de audiencias, medidas cautelares.</li><li><strong>Archivo</strong> – Transcurridos 2 años sin nuevos hechos, solicitar archivo.</li></ul>
+    <div class="alerta-box"><i data-lucide="alert-triangle"></i> <strong>Actuación urgente:</strong> Priorizar medidas de protección, oficios rápidos a salud/desarrollo social.</div></div></div>`;
+  }
+
+  function renderDefensorAusentes() {
+    return `<div><h2 class="detalle-titulo">📌 Defensor de Ausentes</h2><div class="detalle-sub">Arts. 344, 521, 560, 805 CPC · Ley Orgánica IV-N.15 arts.113,114,118</div>
+    <div class="detalle-contenido"><ul class="steps-list"><li><strong>Recepción expediente judicial</strong> – Juzgado designa defensor para persona incierta o ausente.</li><li><strong>Verificar presupuestos</strong> – Comprobar domicilio ignorado, ausencia de representante, <strong>no fallecimiento</strong> del ausente.</li><li><strong>Análisis de competencia</strong> – Si corresponde asumir se acepta el cargo.</li><li><strong>Si se acredita fallecimiento</strong> – Informar al Juzgado, no se asume (herencia yacente).</li><li><strong>Actuación como defensor</strong> – Contestar demandas, ofrecer prueba, interponer recursos.</li><li><strong>Cese del cargo</strong> – Comparece el ausente, designa apoderado o finaliza proceso.</li></ul>
+    <div class="norm-block"><strong>IMPORTANTE:</strong> No asumir si se acredita fehacientemente el fallecimiento.</div></div></div>`;
+  }
+
+  function renderSaludMental() {
+    return `<div><h2 class="detalle-titulo">📌 Ley Nacional de Salud Mental N° 26.657</h2><div class="detalle-sub">Internaciones involuntarias · Rol del defensor · Órgano de Revisión</div>
+    <div class="detalle-contenido"><ul class="steps-list"><li><strong>Presunción de capacidad</strong> (art.3). El diagnóstico no autoriza riesgo.</li><li><strong>Internación involuntaria</strong> – Debe estar fundada por 2 profesionales, notificar al juez en 10hs.</li><li><strong>Defensoría designa abogado</strong> – Entrevista al internado, puede oponerse y solicitar externación.</li><li><strong>Control cada 30/90 días</strong> – Juez solicita informes, equipo independiente.</li><li><strong>Prohibición de manicomios</strong> – Internaciones en hospitales generales.</li><li><strong>Protocolo interno</strong> – Visitar nosocomio, si hay menores y se actúa como MPC no asumir.</li></ul>
+    <div class="alerta-box"><i data-lucide="phone"></i> Contactos salud mental: Directora Zona 3764121222, Director Aranda 3751519868.</div></div></div>`;
+  }
+
+  function renderArticulo32() {
+    return `<div><h2 class="detalle-titulo">📌 Artículo 32 CCC – Capacidad restringida y apoyos</h2><div class="detalle-sub">Código Civil y Comercial · Principio de autonomía progresiva</div>
+    <div class="detalle-contenido"><ul class="steps-list"><li><strong>Restricción excepcional</strong> – Para actos determinados, con apoyos (art.43).</li><li><strong>Incapacidad solo por excepción</strong> – Cuando la persona no pueda expresar voluntad y apoyos ineficaces.</li><li><strong>Derivación DEUT o Juzgado</strong> – Inicio de juicio de determinación de capacidad.</li><li><strong>Entrevistas al grupo familiar</strong> – Propuesta de apoyos (art.33 CCC).</li><li><strong>Si existen menores y actúa como MPC</strong> – No asumir en ningún carácter.</li><li><strong>Revisión cada 3 años</strong> – Las causas de capacidad se revisan periódicamente.</li></ul>
+    <div class="norm-block"><i data-lucide="scale"></i> <strong>Convención Discapacidad:</strong> Ley 26.378, modelo social de apoyos.</div></div></div>`;
+  }
+
+  function renderFiliacion() {
+    return `<div><h2 class="detalle-titulo">📌 Acciones de Filiación – ADN gratuito</h2><div class="detalle-sub">Ley Provincial XII-31 · Arts. 644 CPC · Gratuidad automática para patrocinados</div>
+    <div class="detalle-contenido"><ul class="steps-list"><li><strong>Entrevista y recolección de datos</strong> – documento de identidad, indicios de filiación.</li><li><strong>Redacción de demanda</strong> – solicitando declaración de filiación y pericial genética gratuita (art.3 ley XII-31).</li><li><strong>Oficio al Instituto de Genética</strong> – Parque de la Salud para fijar extracción de muestras.</li><li><strong>Seguimiento del peritaje</strong> – Notificar fechas, acompañar al requirente.</li><li><strong>Sentencia y determinación de erogaciones</strong> – Art.9: el juez fija costas procedimentales.</li><li><strong>Archivo e inscripción</strong> – Una vez firme la sentencia.</li></ul>
+    <div class="norm-block"><strong>Beneficio directo:</strong> Quienes litigan con patrocinio de Defensoría acceden sin acreditar insolvencia.</div></div></div>`;
+  }
+
+  function renderGuardaTutela() {
+    return `<div><h2 class="detalle-titulo">📌 Guarda y Tutela de Menores</h2><div class="detalle-sub">Protocolo Defensoría · Interés superior del niño</div>
+    <div class="detalle-contenido"><ul class="steps-list"><li><strong>Padres fallecidos</strong> – Acta de defunción, iniciar guarda a favor del pariente.</li><li><strong>Problemas de salud graves</strong> – Historia clínica / epicrisis que acredite imposibilidad.</li><li><strong>Violencia familiar con guarda provisoria</strong> – Juez de Violencia Familiar otorgó guarda (art.4 Ley XIV-6).</li><li><strong>Falta de cumplimiento</strong> – Fijar audiencia, citar a padres para ceder responsabilidad parental.</li><li><strong>Informe del equipo interdisciplinario</strong> – Estudio socioambiental.</li><li><strong>Oposición materna</strong> – Iniciar juicio de restitución inmediatamente.</li></ul>
+    <div class="alerta-box"><i data-lucide="heart"></i> Se prioriza el interés superior, la solución consensuada y la excepcionalidad de la separación.</div></div></div>`;
+  }
+
+  function renderProteccionAdultos() {
+    return `<div><h2 class="detalle-titulo">📌 Protección de Personas Adultas Vulnerables</h2><div class="detalle-sub">Violencia familiar, salud mental, derivación DEUT</div>
+    <div class="detalle-contenido"><ul class="steps-list"><li><strong>Derivación por violencia familiar</strong> – Citar a familiares, visita domiciliaria como MPP.</li><li><strong>Si familiares tienen recursos</strong> – Patrocinio inicial, luego derivar a abogado particular.</li><li><strong>Derivación DEUT</strong> – analizar antecedentes y determinar vía procesal (medidas autosatisfactivas, amparo, curatela).</li><li><strong>Intento de suicidio</strong> – Activar red de salud mental (contactos Ministerio de Salud).</li><li><strong>Teléfonos útiles:</strong> Directora Rottoli 3764121222, Aranda 3751519868.</li></ul>
+    <div class="norm-block">Coordinación interdisciplinaria, evitar medidas restrictivas y priorizar el consentimiento.</div></div></div>`;
+  }
+
+  function renderConsumidor() {
+    return `<div><h2 class="detalle-titulo">📌 Defensa del Consumidor (Ley 24.240)</h2><div class="detalle-sub">Criterio restrictivo de intervención de Defensoría</div>
+    <div class="detalle-contenido"><div class="alerta-box"><strong>📌 INTERVENCIÓN SÓLO POR VULNERABILIDAD MANIFIESTA</strong><br>Consumidor autónomo debe ser derivado a Dirección de Comercio Interior.</div>
+    <ul class="steps-list"><li><strong>Evaluar vulnerabilidad</strong> (discapacidad, pobreza extrema, etc).</li><li><strong>Instancia administrativa previa</strong> ante DCI.</li><li><strong>Acción judicial sumarísima</strong> si fracasa conciliación.</li><li><strong>Solicitar gratuidad</strong> y medidas cautelares urgentes.</li></ul></div></div>`;
+  }
+
+  function renderMediacionHomologacion() {
+    return `<div><h2 class="detalle-titulo">📌 Mediación y Homologación (Ley XII-19)</h2><div class="detalle-sub">Avenimiento Prejudicial Obligatorio · CEJUME</div>
+    <div class="detalle-contenido"><ul class="steps-list"><li><strong>APO obligatorio</strong> antes de demandas de familia.</li><li><strong>Formulario 1A</strong> – Presentación en mesa entradas CEJUME o mail.</li><li><strong>Sorteo de mediador</strong> – Citación a partes con 5 días de antelación.</li><li><strong>Si hay acuerdo</strong> – Solicitar homologación judicial.</li><li><strong>Acta de falta de acuerdo</strong> – Permite iniciar demanda.</li><li><strong>La Defensoría NO es mediadora</strong> – Patrocina a su representado.</li></ul>
+    <div class="norm-block">Formulario 7B tiene vigencia ilimitada, solicitar por <strong>meu.cejume@jusmisiones.gov.ar</strong>.</div></div></div>`;
+  }
+
+  function renderProteccionMayores() {
+    return `<div><h2 class="detalle-titulo">📌 Protección Integral Personas Mayores (Ley XIX-41)</h2><div class="detalle-sub">Derechos, prevención de violencia institucional</div>
+    <div class="detalle-contenido"><ul class="steps-list"><li><strong>Detectar abandono, maltrato, violencia económica.</strong></li><li><strong>Patrocinio en denuncias</strong> por violencia familiar o civil.</li><li><strong>Violencia en geriátricos</strong> – Amparo o medidas autosatisfactivas.</li><li><strong>Promover sistemas de apoyos</strong> antes que curatela.</li><li><strong>Acceso a PAMI, pensiones, subsidios.</strong></li><li><strong>Internaciones no voluntarias</strong> en geriátricos: control judicial.</li></ul></div></div>`;
+  }
+
+  function renderPensionGraciable() {
+    return `<div><h2 class="detalle-titulo">📌 Pensión Graciable a Menores Víctimas (Ley XIX-51)</h2><div class="detalle-sub">Beneficio por delitos graves</div>
+    <div class="detalle-contenido"><ul class="steps-list"><li><strong>Supuestos:</strong> Víctimas de delitos contra integridad sexual, homicidio de progenitores, violencia familiar extrema.</li><li><strong>Requiere sentencia firme</strong> o causa debidamente acreditada.</li><li><strong>Presentación ante Ministerio de Desarrollo Social</strong> – con partida de nacimiento, sentencia penal, acreditación vulnerabilidad.</li><li><strong>Impugnar denegaciones</strong> mediante amparo.</li><li><strong>Cese al cumplir 21 años</strong> o cesar la causa.</li></ul></div></div>`;
+  }
+
+  function renderProteccionIntegridadSexual() {
+    return `<div><h2 class="detalle-titulo">📌 Protección Víctimas Integridad Sexual (Ley XVII-37)</h2><div class="detalle-sub">Patrocinio gratuito, evitar revictimización</div>
+    <div class="detalle-contenido"><ul class="steps-list"><li><strong>Contacto inmediato</strong> – sin revictimización.</li><li><strong>Patrocinio como querellante particular</strong> en proceso penal.</li><li><strong>Medidas de protección urgentes</strong> (prohibición acercamiento).</li><li><strong>Cámara Gesell / videoconferencia</strong> para evitar exposición.</li><li><strong>Solicitar reparación económica</strong> en el proceso.</li><li><strong>Acciones civiles por daños y perjuicios</strong> si corresponde.</li><li><strong>Confidencialidad absoluta.</strong></li></ul></div></div>`;
+  }
+
+  // Placeholders para otros procesos con normativa y pasos genéricos (pero útiles)
+  function genericProcess(name, articles, extra="") {
+    return `<div><h2 class="detalle-titulo">📌 ${name}</h2><div class="detalle-sub">Normativa: ${articles}</div>
+    <div class="detalle-contenido"><ul class="steps-list"><li><strong>Verificar competencia</strong> y admisibilidad de la acción.</li><li><strong>Entrevista inicial</strong> con la persona patrocinada, relevar prueba documental.</li><li><strong>Redacción de demanda / contestación</strong> según corresponda.</li><li><strong>Ofrecimiento de prueba</strong> y solicitud de medidas cautelares si hubiere riesgo.</li><li><strong>Control de plazos procesales</strong> y seguimiento de providencias.</li><li>${extra || "Aplicar principios generales del CPC y Ley Orgánica de la Defensoría."}</li></ul>
+    <div class="norm-block">Para mayor detalle, remitirse al articulado del Código Procesal Civil de Misiones (Ley XII-27) y leyes complementarias.</div></div></div>`;
+  }
+
+  // Configuración de materias y procesos (datos)
+  const categoriasData = [
+    { nombre: "⚖️ ETAPA PREJUDICIAL", procesos: [{ key: "cejume", nombre: "DEUT - CEJUME (APO)", subtitle: "Avenimiento Prejudicial Obligatorio", render: () => renderMediacionHomologacion() }] },
+    { nombre: "⚖️ PROCESOS DE FAMILIA", procesos: [
+      { key: "alimentos", nombre: "Alimentos y Litisexpensas", subtitle: "Art.696-710", render: renderAlimentos },
+      { key: "filiacion", nombre: "Acciones de Filiación (ADN gratuito)", subtitle: "Ley XII-31", render: renderFiliacion },
+      { key: "guardaTutela", nombre: "Guarda y Tutela de Menores", subtitle: "Protocolo", render: renderGuardaTutela },
+      { key: "divorcio", nombre: "Divorcio y Nulidad", subtitle: "Arts.641,648 CPC", render: () => genericProcess("Divorcio y Nulidad Matrimonial", "Arts. 641, 648, 715-716 CPC", "Mediación previa obligatoria (Ley XII-19).") },
+      { key: "cuidadoPersonal", nombre: "Cuidado Personal / Régimen", subtitle: "Arts.648,715", render: () => genericProcess("Régimen de cuidado personal", "Arts. 648, 715 CPC", "Priorizar acuerdos homologados.") },
+      { key: "restitucionMenores", nombre: "Restitución de Menores", subtitle: "Arts.679-695", render: () => genericProcess("Restitución Internacional o nacional de menores", "Arts. 679 a 695 CPC", "Procedimiento sumarísimo.") },
+      { key: "adopcion", nombre: "Adopción", subtitle: "Ley XII-20", render: () => genericProcess("Adopción", "Ley XII-20, arts.654 CPC", "Intervención del equipo interdisciplinario.") },
+    ] },
+    { nombre: "⚖️ VIOLENCIA FAMILIAR", procesos: [
+      { key: "violencia", nombre: "Violencia Familiar (Ley XIV-6)", subtitle: "Medidas protección", render: renderViolenciaFamiliar }
+    ] },
+    { nombre: "⚖️ PROTECCIÓN DE PERSONAS", procesos: [
+      { key: "saludMental", nombre: "Salud Mental (Ley 26.657)", subtitle: "Internaciones", render: renderSaludMental },
+      { key: "articulo32", nombre: "Art.32 CCC - Capacidad", subtitle: "Apoyos y curatela", render: renderArticulo32 },
+      { key: "proteccionAdultos", nombre: "Adultos en Vulnerabilidad", subtitle: "MPP, violencia", render: renderProteccionAdultos }
+    ] },
+    { nombre: "⚖️ PROCESOS CIVILES", procesos: [
+      { key: "desalojo", nombre: "Desalojo", subtitle: "Arts.623-635", render: () => genericProcess("Juicio de Desalojo", "Arts. 623 a 635 CPC", "Tener en cuenta causales de procedencia.") },
+      { key: "ejecutivo", nombre: "Juicio Ejecutivo", subtitle: "Arts.489-528", render: () => genericProcess("Juicio Ejecutivo", "Arts. 489-528 CPC", "Título ejecutivo hábil.") },
+      { key: "sucesorio", nombre: "Sucesorio", subtitle: "Arts.717-763", render: () => genericProcess("Proceso Sucesorio", "Arts. 717 a 763 CPC", "Designación de herederos, inventario.") },
+      { key: "ausentes", nombre: "Defensor de Ausentes", subtitle: "Arts.344,805", render: renderDefensorAusentes },
+      { key: "medidasAutosatisfactivas", nombre: "Medidas Autosatisfactivas", subtitle: "Arts.636-639", render: () => genericProcess("Medidas Autosatisfactivas", "Arts. 636-639 CPC", "Urgencia, verosimilitud.") }
+    ] },
+    { nombre: "⚖️ LEYES ESPECIALES", procesos: [
+      { key: "consumidor", nombre: "Defensa del Consumidor (solo vulnerables)", subtitle: "Ley 24.240", render: renderConsumidor },
+      { key: "mediacionHomologacion", nombre: "Mediación y Homologación", subtitle: "Ley XII-19", render: renderMediacionHomologacion },
+      { key: "proteccionMayores", nombre: "Protección Personas Mayores", subtitle: "Ley XIX-41", render: renderProteccionMayores },
+      { key: "pensionGraciable", nombre: "Pensión Graciable a Menores", subtitle: "Ley XIX-51", render: renderPensionGraciable },
+      { key: "integridadSexual", nombre: "Víctimas Integridad Sexual", subtitle: "Ley XVII-37", render: renderProteccionIntegridadSexual }
+    ] }
+  ];
+
+  let activeProcessKey = null;
+
+  function buildSidebar() {
+    const container = document.getElementById('categoriasContainer');
+    let html = '';
+    categoriasData.forEach((cat, idx) => {
+      const catId = `cat-${idx}`;
+      html += `<div class="categoria-card">
+        <div class="categoria-header" data-cat="${catId}">
+          <span>${cat.nombre}</span>
+          <span class="chevron" id="chevron-${catId}">⌵</span>
+        </div>
+        <div class="procesos-lista" id="list-${catId}">
+          ${cat.procesos.map(proc => `<div class="proceso-item" data-key="${proc.key}" data-nombre="${proc.nombre}">${proc.nombre} <span class="norma-badge">${proc.subtitle}</span></div>`).join('')}
+        </div>
+      </div>`;
+    });
+    container.innerHTML = html;
+
+    // acordeones
+    document.querySelectorAll('.categoria-header').forEach(header => {
+      header.addEventListener('click', (e) => {
+        const catId = header.getAttribute('data-cat');
+        const list = document.getElementById(`list-${catId}`);
+        const chevron = document.getElementById(`chevron-${catId}`);
+        if (list) {
+          list.classList.toggle('open');
+          if (chevron) chevron.classList.toggle('open');
+        }
+      });
+    });
+
+    // eventos procesos
+    document.querySelectorAll('.proceso-item').forEach(el => {
+      el.addEventListener('click', () => {
+        const key = el.getAttribute('data-key');
+        const proceso = findProcesoByKey(key);
+        if (proceso) {
+          activeProcessKey = key;
+          renderDetail(proceso);
+          highlightActive(el);
+        }
+      });
+    });
+    if (categoriasData[0]?.procesos[0]) renderDetail(categoriasData[0].procesos[0]);
+  }
+
+  function findProcesoByKey(key) {
+    for (let cat of categoriasData) {
+      const found = cat.procesos.find(p => p.key === key);
+      if (found) return found;
+    }
+    return null;
+  }
+
+  function renderDetail(proceso) {
+    const detailDiv = document.getElementById('detalleDinamico');
+    if (!proceso.render) return;
+    const content = proceso.render();
+    detailDiv.innerHTML = content;
+    if (window.lucide) lucide.createIcons();
+    // reajustar scroll si es necesario
+  }
+
+  function highlightActive(activeElement) {
+    document.querySelectorAll('.proceso-item').forEach(el => el.classList.remove('active-proceso'));
+    activeElement.classList.add('active-proceso');
+  }
+
+  function toggleModal(show) {
+    const modal = document.getElementById('infoModal');
+    modal.style.display = show ? 'flex' : 'none';
+  }
+
+  window.onload = () => {
+    buildSidebar();
+    if (window.lucide) lucide.createIcons();
+    const btnModal = document.getElementById('btnAbrirModal');
+    if (btnModal) btnModal.addEventListener('click', () => toggleModal(true));
+  };
+</script>
+</body>
+</html>
