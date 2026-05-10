@@ -46,6 +46,22 @@
             bottom: 0;
         }
 
+        /* === NUEVA BARRA DECORATIVA CENTRAL HORIZONTAL === */
+        /* Totalmente independiente, no interfiere con la card, va por detrás (z-index bajo) */
+        .linea-deco-central {
+            position: fixed;
+            left: 0;
+            width: 100%;
+            height: 2px;                /* más fina para elegancia */
+            background-color: #94a3b8;  /* gris pizarra suave, sutil */
+            z-index: 8;                 /* por debajo de .protocolo-card (z-index:20) pero por encima del fondo */
+            pointer-events: none;       /* no bloquea clicks */
+            top: 50%;
+            transform: translateY(-50%);
+            box-shadow: 0 0 1px rgba(0,0,0,0.1);
+            opacity: 0.7;               /* suaviza un poco */
+        }
+
         /* Contenedor principal con efecto glass y borde azul animado */
         .protocolo-card {
             text-align: center;
@@ -194,6 +210,10 @@
             .linea-deco-inferior {
                 height: 4px;
             }
+            .linea-deco-central {
+                height: 1.5px; /* ligeramente más fina en móviles */
+                opacity: 0.6;
+            }
             .hint-text {
                 margin-top: 32px;
                 font-size: 0.7rem;
@@ -220,6 +240,9 @@
     <!-- Líneas decorativas: arriba y abajo, extremo a extremo, color gris, grosor mediano -->
     <div class="linea-deco-superior" aria-hidden="true"></div>
     <div class="linea-deco-inferior" aria-hidden="true"></div>
+    
+    <!-- NUEVA barra decorativa central horizontal: sutil, no interfiere con la card, atraviesa toda la pantalla -->
+    <div class="linea-deco-central" aria-hidden="true"></div>
 
     <main class="protocolo-card" id="mainContainer">
         <h1>Protocolo de Actuación</h1>
@@ -229,11 +252,11 @@
     </main>
 
     <script>
-        // Redirección al hacer clic (exactamente igual a la funcionalidad original, pero con efecto glass)
+        // Redirección al hacer clic (exactamente igual a la funcionalidad original, con efecto glass)
         const container = document.getElementById('mainContainer');
         if (container) {
             container.addEventListener('click', (e) => {
-                // Pequeño retardo opcional para sentir la animación, pero redirección inmediata
+                // Redirección directa a app.html manteniendo toda la experiencia
                 window.location.href = 'app.html';
             });
         }
