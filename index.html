@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Protocolo de Actuación | Defensoría 6</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
@@ -16,13 +16,15 @@
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f1f5f9;
-            height: 100vh;
+            min-height: 100vh;
             width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
             position: relative;
+            overflow-x: hidden;
+            overflow-y: auto;
+            transition: all 0.2s;
         }
 
         /* --- LÍNEAS DECORATIVAS GRISES (EXTREMO A EXTREMO) --- */
@@ -46,7 +48,7 @@
             bottom: 0;
         }
 
-        /* === NUEVA BARRA DECORATIVA CENTRAL HORIZONTAL === */
+        /* Barra decorativa central horizontal */
         .linea-deco-central {
             position: fixed;
             left: 0;
@@ -187,7 +189,7 @@
             }
         }
 
-        /* --- CONTENEDOR CIRCULAR GLASS: TAMAÑO AMPLIO E IMAGEN MÁS PEQUEÑA PARA VERLA COMPLETA --- */
+        /* --- CONTENEDOR CIRCULAR GLASS: VERSIÓN ESCRITORIO (fijo lateral, gran tamaño) --- */
         .glass-circle {
             position: fixed;
             left: 30px;
@@ -220,11 +222,11 @@
 
         /* IMAGEN: reducida dentro del círculo para verse en plenitud */
         .glass-circle img {
-            max-width: 80%;      /* La imagen ocupa como máximo el 80% del círculo */
+            max-width: 80%;
             max-height: 80%;
             width: auto;
             height: auto;
-            object-fit: contain; /* Mantiene la proporción sin recortes */
+            object-fit: contain;
             object-position: center;
             filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.15));
             transition: transform 0.2s ease;
@@ -234,29 +236,6 @@
             transform: scale(1.02);
         }
 
-        @media (max-width: 640px) {
-            .protocolo-card {
-                margin: 0 16px;
-                padding: 2rem 1.5rem;
-                backdrop-filter: blur(6px);
-            }
-            .linea-deco-superior,
-            .linea-deco-inferior {
-                height: 4px;
-            }
-            .linea-deco-central {
-                height: 1.5px;
-                opacity: 0.6;
-            }
-            .hint-text {
-                margin-top: 32px;
-                font-size: 0.7rem;
-            }
-            .glass-circle {
-                left: 16px;
-            }
-        }
-        
         /* Fondo con sutiles puntos decorativos */
         body::before {
             content: "";
@@ -270,6 +249,115 @@
             pointer-events: none;
             z-index: 0;
         }
+
+        /* ============================================= */
+        /* === RESPONSIVE MÓVIL / TABLET PEQUEÑA: SIN SUPERPOSICIÓN, STACK VERTICAL === */
+        /* ============================================= */
+        @media (max-width: 860px) {
+            body {
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 1.5rem;
+                padding: 2rem 1rem;
+                overflow-y: auto;
+            }
+
+            /* Círculo: dejar de ser fixed, pasa a bloque relativo para NO superponer */
+            .glass-circle {
+                position: relative !important;
+                left: auto !important;
+                top: auto !important;
+                transform: none !important;
+                margin: 0 auto 0 auto !important;
+                width: 140px !important;
+                height: 140px !important;
+                min-width: 120px;
+                min-height: 120px;
+                flex-shrink: 0;
+                box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15), 0 0 0 2px rgba(255, 255, 255, 0.7) inset;
+            }
+            
+            /* Ajuste hover/active para móvil (no hay desplazamiento Y extra) */
+            .glass-circle:active {
+                transform: scale(0.96) !important;
+            }
+            
+            /* Tarjeta: ocupa el ancho disponible, sin márgenes laterales excesivos */
+            .protocolo-card {
+                max-width: 100%;
+                width: 100%;
+                margin: 0 auto;
+                padding: 2rem 1.8rem;
+                position: relative;
+                z-index: 20;
+            }
+            
+            /* pequeños ajustes de espaciado en hint text */
+            .hint-text {
+                margin-top: 28px;
+            }
+            
+            /* Líneas decorativas siguen intactas */
+            .linea-deco-superior,
+            .linea-deco-inferior {
+                height: 4px;
+            }
+            
+            .linea-deco-central {
+                height: 1.8px;
+                opacity: 0.55;
+            }
+        }
+
+        /* Ajuste adicional para pantallas muy compactas (hasta 480px) */
+        @media (max-width: 480px) {
+            body {
+                gap: 1rem;
+                padding: 1rem;
+            }
+            .glass-circle {
+                width: 130px !important;
+                height: 130px !important;
+            }
+            .protocolo-card {
+                padding: 1.75rem 1.25rem;
+            }
+            h1 {
+                font-size: 1.9rem;
+            }
+            h2 {
+                font-size: 1rem;
+            }
+            .hint-text {
+                font-size: 0.65rem;
+                margin-top: 24px;
+            }
+        }
+
+        /* En pantallas medianamente grandes como tablet en horizontal, seguimos sin overlap pero con círculo contenido */
+        @media (min-width: 861px) and (max-width: 1100px) {
+            /* Ajuste fino: si el círculo fijo aún pudiera rozar la tarjeta (anchos intermedios), le damos un pequeño margen izquierdo a la card */
+            .protocolo-card {
+                margin-left: 80px;
+                max-width: 620px;
+            }
+            .glass-circle {
+                left: 20px;
+                width: 130px;
+                height: 130px;
+            }
+        }
+
+        /* Para pantallas grandes, mantenemos el diseño original elegante pero aseguramos que no overlap */
+        @media (min-width: 1101px) {
+            .protocolo-card {
+                margin-left: 0;
+            }
+            .glass-circle {
+                left: 40px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -281,7 +369,7 @@
     <!-- Barra decorativa central horizontal -->
     <div class="linea-deco-central" aria-hidden="true"></div>
 
-    <!-- CONTENEDOR CIRCULAR GLASS (tamaño amplio dinámico) + imagen ligeramente reducida -->
+    <!-- CONTENEDOR CIRCULAR GLASS: con imagen reducida dentro, ahora responsivo sin overlap -->
     <div class="glass-circle" id="iconCircle">
         <img src="https://github.com/defensorialocal-seis/protocolo/blob/main/icono1.png?raw=true" alt="Ícono Defensoría">
     </div>
@@ -294,56 +382,130 @@
     </main>
 
     <script>
-        // Función que mantiene el círculo grande (más grande que la tarjeta) 
-        // y la imagen se ajusta automáticamente con max-width:80% para verse completa.
+        // Función de dimensionamiento dinámico SOLO para entorno de escritorio (pantallas anchas)
+        // En móviles, el CSS con !important anula los anchos dinámicos y fija un tamaño amigable.
+        // Esto garantiza que el círculo NUNCA superponga la tarjeta en móvil ni tablet estrecha.
         function dimensionarCirculo() {
             const tarjeta = document.querySelector('.protocolo-card');
             const circulo = document.getElementById('iconCircle');
-            if (tarjeta && circulo) {
+            // Solo aplicamos el redimensionamiento cuando la pantalla sea mayor a 860px (modo escritorio)
+            // Para evitar conflictos y mantener la estética original en desktop, y en mobile el CSS fijo prevalece.
+            if (!tarjeta || !circulo) return;
+            
+            const anchoVentana = window.innerWidth;
+            // Para resoluciones mayores a 860px, se usa el cálculo dinámico original (círculo grande lateral).
+            // En móvil y tablets pequeñas, el CSS responsivo se encarga (width/height fijo con !important).
+            if (anchoVentana > 860) {
                 const alturaTarjeta = tarjeta.offsetHeight;
-                // Hacemos el círculo un 70% más grande que la tarjeta (se ve imponente)
+                // Tamaño base: círculo un 70% más grande que la altura de la tarjeta (efecto vistoso)
                 let nuevoTamano = alturaTarjeta * 1.7;
-                const tamanoMinimo = 130;
+                const tamanoMinimo = 140;
                 const maxPorAltura = window.innerHeight * 0.7;
-                const maxPorAncho = window.innerWidth * 0.42;
-                const maxPermitido = Math.min(maxPorAltura, maxPorAncho);
+                const maxPorAncho = window.innerWidth * 0.35;
+                const maxPermitido = Math.min(maxPorAltura, maxPorAncho, 380); // límite estético
                 nuevoTamano = Math.min(Math.max(nuevoTamano, tamanoMinimo), maxPermitido);
                 circulo.style.width = nuevoTamano + 'px';
                 circulo.style.height = nuevoTamano + 'px';
+            } else {
+                // En dispositivos con ancho <=860px, no aplicamos estilos inline agresivos,
+                // dejamos que la hoja de estilo (con !important) maneje las dimensiones fijas sin superposición.
+                // Solo borramos posibles valores inline previos que pudieran quedar de un resize cruzado.
+                if (circulo.style.width) {
+                    circulo.style.width = '';
+                    circulo.style.height = '';
+                }
             }
         }
 
-        window.addEventListener('load', () => {
+        // Función para garantizar que en cualquier cambio de orientación o resize, se recalcule correctamente
+        // y en móvil nunca haya overlap.
+        function handleResizeAndMobile() {
             dimensionarCirculo();
-            setTimeout(dimensionarCirculo, 80);
-        });
-        window.addEventListener('resize', dimensionarCirculo);
-        
+            // Verificación extra de seguridad: si detectamos que en modo móvil el círculo por algún motivo tuviera position fixed,
+            // lo reafirmamos con CSS mediante clase, pero nuestro CSS ya lo hace robusto.
+            if (window.innerWidth <= 860) {
+                const circulo = document.getElementById('iconCircle');
+                if (circulo && window.getComputedStyle(circulo).position === 'fixed') {
+                    // Refuerzo: si algo extraño revierte el estilo, aseguramos compatibilidad
+                    circulo.style.position = 'relative';
+                    circulo.style.left = 'auto';
+                    circulo.style.top = 'auto';
+                    circulo.style.transform = 'none';
+                }
+            }
+        }
+
+        // Observador de cambios de tamaño de tarjeta para escritorio
         if (window.ResizeObserver) {
             const tarjeta = document.querySelector('.protocolo-card');
             if (tarjeta) {
                 const resizeObserver = new ResizeObserver(() => {
-                    dimensionarCirculo();
+                    // Solo aplicamos actualización de tamaño en escritorio
+                    if (window.innerWidth > 860) {
+                        dimensionarCirculo();
+                    }
                 });
                 resizeObserver.observe(tarjeta);
             }
         }
 
-        // Redirección al hacer clic en la tarjeta principal
+        // Escucha de eventos de carga y redimensionamiento
+        window.addEventListener('load', () => {
+            handleResizeAndMobile();
+            setTimeout(handleResizeAndMobile, 100);
+        });
+        window.addEventListener('resize', () => {
+            handleResizeAndMobile();
+        });
+
+        // También observamos cambios de orientación
+        window.addEventListener('orientationchange', () => {
+            setTimeout(handleResizeAndMobile, 50);
+        });
+
+        // Redirección al hacer clic en la tarjeta principal (app.html)
         const container = document.getElementById('mainContainer');
         if (container) {
-            container.addEventListener('click', () => {
+            container.addEventListener('click', (e) => {
+                e.stopPropagation();
                 window.location.href = 'app.html';
             });
         }
 
-        // Redirección también al hacer clic en el círculo
+        // Redirección también al hacer clic en el círculo (misma acción)
         const circle = document.getElementById('iconCircle');
         if (circle) {
-            circle.addEventListener('click', () => {
+            circle.addEventListener('click', (e) => {
+                e.stopPropagation();
                 window.location.href = 'app.html';
             });
         }
+
+        // Pequeño refuerzo inicial para móviles: eliminar cualquier estilo inline conflictivo que pudiera alterar el tamaño fijo
+        // sin afectar la funcionalidad general.
+        (function ensureMobileNoOverlap() {
+            const isMobileOrTablet = window.innerWidth <= 860;
+            const circulo = document.getElementById('iconCircle');
+            if (isMobileOrTablet && circulo) {
+                // Dejamos que los estilos CSS con !important dominen: eliminamos cualquier width/height inline previo para mayor claridad.
+                if (circulo.style.width) {
+                    circulo.style.width = '';
+                    circulo.style.height = '';
+                }
+                // Aseguramos que los atributos de posicionamiento hereden correctamente desde CSS.
+                circulo.style.position = '';
+                circulo.style.left = '';
+                circulo.style.top = '';
+                circulo.style.transform = '';
+            }
+            // También validamos que la tarjeta no tenga márgenes extraños en móvil
+            if (isMobileOrTablet) {
+                const tarjeta = document.querySelector('.protocolo-card');
+                if (tarjeta && tarjeta.style.marginLeft) {
+                    tarjeta.style.marginLeft = '';
+                }
+            }
+        })();
     </script>
 </body>
 </html>
