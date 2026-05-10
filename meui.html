@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+  <title>MEUI | Mesa de Entradas Única Informatizada – Guía Oficial</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f0f2f5;
+      color: #1e293b;
+      line-height: 1.45;
+    }
+
+    .app-container {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 1.8rem 1.5rem;
+    }
+
+    /* GRID PRINCIPAL */
+    .meui-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.35fr;
+      gap: 2rem;
+    }
+
+    /* COLUMNA IZQUIERDA – TEMARIO */
+    .col-tematico {
+      background: transparent;
+    }
+
+    .seccion-titulo {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #0c4a6e;
+      margin-bottom: 1.8rem;
+      border-bottom: 3px solid #3b82f6;
+      padding-bottom: 0.65rem;
+      display: inline-block;
+      letter-spacing: -0.3px;
+    }
+
+    .meui-card {
+      background: white;
+      border-radius: 1.5rem;
+      padding: 1.3rem 1.4rem;
+      margin-bottom: 1.2rem;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    }
+
+    .meui-card:hover {
+      transform: translateY(-3px);
+      border-color: #b9d0f0;
+      background: #ffffff;
+      box-shadow: 0 16px 24px -12px rgba(0, 0, 0, 0.12);
+    }
+
+    .meui-card:active {
+      transform: scale(0.98);
+    }
+
+    .card-header {
+      font-size: 1.2rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-badge {
+      background: #eef2ff;
+      border-radius: 30px;
+      padding: 0.2rem 0.7rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #1e40af;
+    }
+
+    .card-desc {
+      font-size: 0.85rem;
+      color: #475569;
+      line-height: 1.4;
+    }
+
+    /* BORDES DE COLOR (identidad MEUI) */
+    .borde-accent-1 { border-left: 6px solid #2563eb; }
+    .borde-accent-2 { border-left: 6px solid #0e9f6e; }
+    .borde-accent-3 { border-left: 6px solid #d97706; }
+    .borde-accent-4 { border-left: 6px solid #7c3aed; }
+    .borde-accent-5 { border-left: 6px solid #db2777; }
+    .borde-accent-6 { border-left: 6px solid #0891b2; }
+
+    /* PANEL DERECHO (DETALLE DINÁMICO) */
+    .panel-info {
+      background: #ffffff;
+      border-radius: 1.8rem;
+      border: 1px solid #e2edf5;
+      box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.08);
+      padding: 1.6rem 1.8rem;
+      position: relative;
+    }
+
+    .btn-remember {
+      position: absolute;
+      top: 1.2rem;
+      right: 1.5rem;
+      background: #2563eb;
+      color: white;
+      border: none;
+      font-weight: 700;
+      font-size: 0.75rem;
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: 0.2s;
+      z-index: 5;
+    }
+
+    .btn-remember:active {
+      background: #1d4ed8;
+      transform: scale(0.96);
+    }
+
+    .detalle-encabezado {
+      margin-bottom: 1.5rem;
+      padding-right: 5rem;
+    }
+
+    .detalle-titulo-principal {
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: #0c4a6e;
+      margin-bottom: 0.25rem;
+      line-height: 1.2;
+    }
+
+    .detalle-subtitulo {
+      font-size: 0.85rem;
+      color: #5b6e8c;
+      border-left: 3px solid #3b82f6;
+      padding-left: 0.7rem;
+      margin-top: 0.3rem;
+    }
+
+    .contenido-desplazable {
+      overflow-y: auto;
+      max-height: 62vh;
+      padding-right: 0.3rem;
+    }
+
+    /* ESTILOS COMUNES PARA CONTENIDO (similares a normativa pero frescos) */
+    .step-list-meui, .norm-list {
+      list-style: none;
+      padding-left: 0;
+    }
+    .step-list-meui li, .norm-list li {
+      margin-bottom: 0.75rem;
+      padding-left: 1.5rem;
+      position: relative;
+      font-size: 0.9rem;
+    }
+    .step-list-meui li::before, .norm-list li::before {
+      content: "▹";
+      color: #2563eb;
+      font-weight: bold;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+    .ordered-list-meui {
+      list-style: none;
+      counter-reset: meui-counter;
+      padding-left: 0;
+    }
+    .ordered-list-meui li {
+      counter-increment: meui-counter;
+      margin-bottom: 0.9rem;
+      padding-left: 2rem;
+      position: relative;
+    }
+    .ordered-list-meui li::before {
+      content: counter(meui-counter) ".";
+      color: #2563eb;
+      font-weight: 800;
+      font-size: 0.9rem;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+    .badge-norma {
+      background: #e0e7ff;
+      color: #1e3a8a;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.2rem 0.7rem;
+      border-radius: 20px;
+      display: inline-block;
+    }
+    .info-caja {
+      background: #f8fafc;
+      border-radius: 1rem;
+      padding: 1rem;
+      border-left: 4px solid;
+      margin: 1rem 0;
+    }
+    .info-caja.azul-claro { border-left-color: #3b82f6; background: #eff6ff; }
+    .info-caja.amber-claro { border-left-color: #f59e0b; background: #fffbeb; }
+    .info-caja.verde-claro { border-left-color: #10b981; background: #ecfdf5; }
+    .info-caja.rojo-claro { border-left-color: #ef4444; background: #fef2f2; }
+    .grid-dos-columnas {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 700px) {
+      .grid-dos-columnas {
+        grid-template-columns: 1fr;
+      }
+    }
+    .text-mono {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+    }
+
+    /* MODAL RECORDATORIO */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(12, 74, 110, 0.88);
+      backdrop-filter: blur(4px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1200;
+    }
+    .modal-card-meui {
+      background: white;
+      border-radius: 2rem;
+      max-width: 540px;
+      width: 90%;
+      padding: 2rem 1.8rem;
+      position: relative;
+      box-shadow: 0 30px 40px rgba(0,0,0,0.25);
+    }
+    .close-modal-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1.2rem;
+      font-size: 1.8rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #8098aa;
+    }
+
+    @media (max-width: 880px) {
+      .app-container {
+        padding: 1rem;
+      }
+      .meui-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      .panel-info {
+        padding: 1.2rem;
+        padding-top: 2.8rem;
+      }
+      .detalle-titulo-principal {
+        font-size: 1.35rem;
+      }
+      .contenido-desplazable {
+        max-height: 55vh;
+      }
+    }
+    .fade-in {
+      animation: fadeSlideIn 0.22s ease-out;
+    }
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateX(10px);}
+      to { opacity: 1; transform: translateX(0);}
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <div class="meui-grid">
+    <!-- COLUMNA IZQUIERDA: Módulos MEUI -->
+    <div class="col-tematico">
+      <h1 class="seccion-titulo">📋 MEUI<br><span style="font-size:0.9rem; font-weight:500;">Mesa de Entradas Única Informatizada – Poder Judicial Misiones</span></h1>
+      
+      <div class="meui-card borde-accent-1" data-modulo="que_es_meui">
+        <div class="card-header"><span>1. ¿Qué es la MEUI?</span><span class="card-badge">Concepto clave</span></div>
+        <div class="card-desc">Mesa de Entradas Única Informatizada: punto de recepción unificado de presentaciones cuando el sistema SIGED no permite iniciar procesos.</div>
+      </div>
+      <div class="meui-card borde-accent-2" data-modulo="normativa_acordada">
+        <div class="card-header"><span>2. Normativa aplicable</span><span class="card-badge">Acordada N° 8/2022</span></div>
+        <div class="card-desc">Modificación de la Acordada N° 50/2020, régimen de presentaciones electrónicas y excepciones con intervención MEUI.</div>
+      </div>
+      <div class="meui-card borde-accent-3" data-modulo="presentaciones_papel">
+        <div class="card-header"><span>3. Escritos obligatorios en papel</span><span class="card-badge">Art. 3° inc. a</span></div>
+        <div class="card-desc">Demandas, contestaciones, recursos, poderes, tasas de justicia: presentación física dentro de los 5 días.</div>
+      </div>
+      <div class="meui-card borde-accent-4" data-modulo="mero_impulso">
+        <div class="card-header"><span>4. Mero impulso procesal</span><span class="card-badge">Firma digital</span></div>
+        <div class="card-desc">Escritos de simple impulso: solo formato digital, sin papel. Proveídos en SIGED, eficacia plena.</div>
+      </div>
+      <div class="meui-card borde-accent-5" data-modulo="plazos_procedimiento">
+        <div class="card-header"><span>5. Plazos y procedimiento MEUI</span><span class="card-badge">Registro y constancias</span></div>
+        <div class="card-desc">Presentación en MEUI cuando la plataforma digital no soporta el inicio. Plazo, proveimiento y efectos.</div>
+      </div>
+      <div class="meui-card borde-accent-6" data-modulo="sanciones_incumplimiento">
+        <div class="card-header"><span>6. Sanciones y responsabilidades</span><span class="card-badge">Art. 37 CPCCF</span></div>
+        <div class="card-desc">Incumplimiento de formato papel: apercibimiento, sanciones conminatorias y derivación penal.</div>
+      </div>
+    </div>
+
+    <!-- COLUMNA DERECHA: PANEL DINÁMICO -->
+    <div class="panel-info" id="panelInfoMeui">
+      <button class="btn-remember" id="abrirModalRecordatorio">📌 NORMAS CLAVE</button>
+      <div class="detalle-encabezado">
+        <div class="detalle-titulo-principal" id="meuiTituloDinamico">MEUI</div>
+        <div class="detalle-subtitulo" id="meuiSubtituloDinamico">Mesa de Entradas Única Informatizada · Circuito electrónico e híbrido</div>
+      </div>
+      <div class="contenido-desplazable" id="contenidoPrincipalMeui">
+        <div style="background:#f0f9ff; border-radius:1.2rem; padding:1.5rem; text-align:center;">
+          <span style="font-size:2.2rem;">🏛️</span>
+          <p style="margin-top:0.8rem; color:#1e4b6e;">Seleccione un módulo para conocer el régimen de presentaciones electrónicas, la intervención de la MEUI y el impacto de la Acordada N° 8/2022.</p>
+          <div class="badge-norma" style="margin-top:1rem;">STJ Misiones · Acordada 8/2022 · SIGED</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL RECORDATORIO (informativo) -->
+<div class="modal-backdrop" id="modalRecordatorioGeneral" onclick="cerrarModalGlobal()">
+  <div class="modal-card-meui" onclick="event.stopPropagation()">
+    <button class="close-modal-btn" onclick="cerrarModalGlobal()">&times;</button>
+    <div style="background:#eef4ff; border-left:5px solid #2563eb; padding:1rem; border-radius:1rem; margin-bottom:1.5rem;">
+      <h4 style="color:#1e3a8a; margin-bottom:6px;">📌 Recordatorio MEUI – Acordada 8/2022</h4>
+      <p style="font-size:0.85rem;">La Mesa de Entradas Única Informatizada recibe presentaciones en papel cuando el sistema SIGED no permite iniciar procesos por falta de soporte técnico (ej. Justicia de Paz, quejas, incidentes en alzadas).</p>
+    </div>
+    <div style="background:#fff4e5; border-left:5px solid #f59e0b; padding:1rem; border-radius:1rem;">
+      <h4 style="color:#b45309; margin-bottom:6px;">⚡ Puntos esenciales</h4>
+      <ul style="font-size:0.85rem; margin-left:1.2rem; list-style:disc;">
+        <li>Escritos con firma ológrafa + soporte papel obligatorio para demandas, recursos, poderes, etc.</li>
+        <li>Plazo de 5 días para ratificar digital con formato físico en MEUI.</li>
+        <li>El juez puede requerir papel fundadamente bajo apercibimiento de sanciones (Art. 37 CPCCF).</li>
+        <li>El mero impulso procesal (solo con firma digital) no requiere papel.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ===================== CONTENIDOS OFICIALES EXTRAÍDOS DE ACORDADA N° 8/2022 =====================
+  const contenidoQueEsMeui = `
+    <div class="fade-in">
+      <div class="info-caja azul-claro">
+        <span class="badge-norma">📌 Definición funcional</span>
+        <p class="mt-2"><strong>Mesa de Entradas Única Informatizada (MEUI)</strong> es la dependencia judicial que recepta presentaciones en formato papel cuando, por razones técnicas o falta de soporte en la plataforma SIGED, no es posible iniciar procesos o realizar determinados trámites por medios electrónicos. Según la Acordada N° 8/2022 (modificatoria de la Acordada N° 50/2020), los abogados deben concurrir a la MEUI o a la dependencia judicial correspondiente para iniciar demandas, recursos o incidentes en aquellas materias que aún no estén completamente digitalizadas (p.ej., Justicia de Paz, ciertos procesos de Queja).</p>
+      </div>
+      <div class="grid-dos-columnas mt-3">
+        <div class="info-caja verde-claro">
+          <i data-lucide="monitor" class="w-5 h-5 inline"></i> <strong>⚙️ Principio general:</strong> Obligación de presentaciones electrónicas para abogados (SIGED). Excepción cuando el sistema no soporta la operación.
+        </div>
+        <div class="info-caja amber-claro">
+          <i data-lucide="file-text" class="w-5 h-5 inline"></i> <strong>🏛️ Función MEUI:</strong> garantizar acceso a la justicia ante limitaciones tecnológicas transitorias.
+        </div>
+      </div>
+      <p class="text-sm text-slate-600 mt-3"><i data-lucide="scale" class="w-3 h-3 inline"></i> Fundamento: Acordada N° 8/2022 – “Visto: el informe del Departamento de Gestión Informática Jurisdiccional ... carece de condiciones para soportar el sorteo e inicio de demandas en el ámbito de Justicia de Paz”.</p>
+    </div>
+  `;
+
+  const contenidoNormativa = `
+    <div class="fade-in">
+      <div class="info-caja azul-claro">
+        <h4 class="font-bold flex items-center gap-2"><i data-lucide="book-open"></i> Acordada N° 8/2022 – Superior Tribunal de Justicia</h4>
+        <p class="text-sm mt-2"><strong>Fecha:</strong> 2 de febrero de 2022. <br> <strong>Modifica:</strong> punto 3º del Instructivo de la Acordada N° 50/2020 (modificada por Acordadas N° 83/2020 y 215/2021).</p>
+      </div>
+      <ul class="norm-list mt-2">
+        <li>Establece que <strong>todas las presentaciones</strong> de abogados ante dependencias jurisdiccionales con soporte SIGED deben ser electrónicas, constituyéndose el presentante como depositario del soporte papel.</li>
+        <li><strong>Excepción expresa:</strong> Cuando no puedan iniciarse procesos por plataformas digitales, los abogados deberán hacerlo mediante presentación en la <strong>MEUI o Dependencia Judicial</strong> en cuestión.</li>
+        <li>Se incorpora un régimen dual: presentación digital + obligación de presentar el formato papel (dentro de 5 días) para los actos relevantes.</li>
+      </ul>
+      <div class="bg-indigo-50 p-3 rounded-lg mt-3">
+        <p class="text-xs font-mono">🔖 Vigencia: desde el 2 de febrero de 2022. Refuerza la digitalización gradual del proceso judicial en Misiones.</p>
+      </div>
+    </div>
+  `;
+
+  const contenidoPapelObligatorio = `
+    <div class="fade-in">
+      <div class="info-caja rojo-claro">
+        <strong>📄 Escritos que requieren formato papel (presentación física dentro de 5 días hábiles de la digital):</strong>
+      </div>
+      <ul class="ordered-list-meui mt-2">
+        <li>Demandas, contestaciones de demanda, ampliaciones, citaciones y primeras presentaciones en general.</li>
+        <li>Contestación del traslado previsto en el art. 83 C.P.L.</li>
+        <li>Las reconvenciones y sus contestaciones.</li>
+        <li>La oposición y contestación de excepciones.</li>
+        <li>Escritos de interposición, fundamentación y contestación de recursos.</li>
+        <li>Planteo y contestación de incidentes.</li>
+        <li>Documentos originales.</li>
+        <li>Escritos con firma ológrafa del patrocinado y/o patrocinante (salvo firma digital conjunta).</li>
+        <li>Poderes Especiales, Fondo permanente, Estampillas de tasa de justicia.</li>
+      </ul>
+      <div class="info-caja amber-claro mt-2">
+        <i data-lucide="clock"></i> <strong>Plazo:</strong> 5 días desde la presentación digital. El escrito físico debe estar firmado ológrafamente por el profesional y la parte cuando corresponda.
+      </div>
+    </div>
+  `;
+
+  const contenidoMeroImpulso = `
+    <div class="fade-in">
+      <div class="info-caja verde-claro">
+        <strong>✍️ Escritos de mero impulso procesal:</strong> No requieren presentación en soporte papel. Tienen idéntica eficacia jurídica y valor probatorio (art. 24 Ley IV N° 55).
+        <p class="text-sm mt-2">Son aquellos que instrumentan peticiones tendientes al solo desarrollo del procedimiento, sin que se sustenten o controviertan derechos propios o ajenos. Ejemplos: solicitudes de pronto despacho, pedidos de señalamiento de audiencia, meras notificaciones.</p>
+      </div>
+      <ul class="step-list-meui mt-2">
+        <li><strong>Requisito:</strong> Deben ser suscriptos con <strong>firma digital</strong> por el letrado patrocinante.</li>
+        <li>Se proveen en SIGED sin necesidad de imprimirse, firmarse físicamente ni coserse al expediente en papel.</li>
+        <li>Las resoluciones y sentencias registradas se firman digitalmente y también en forma ológrafa, glosándose al expediente papel.</li>
+      </ul>
+      <div class="bg-slate-50 p-3 rounded-lg border mt-3">
+        <p class="text-xs"><i data-lucide="info" class="w-3 h-3 inline"></i> Publicaciones en SIGED: los martes y viernes (o día hábil siguiente), rige el art. 134 del CPCCFyVF.</p>
+      </div>
+    </div>
+  `;
+
+  const contenidoPlazosProcedimiento = `
+    <div class="fade-in">
+      <div class="info-caja azul-claro">
+        <h4 class="font-bold">🔄 Procedimiento ante la MEUI o dependencia judicial</h4>
+        <p class="text-sm">Cuando no es posible iniciar un proceso por SIGED (por ej. Justicia de Paz, Queja en alzada, incidentes no soportados), el abogado concurre a la <strong>Mesa de Entradas Única Informatizada</strong> y presenta la documentación en formato papel. Allí se le dará constancia de recepción y se iniciará el trámite de manera tradicional o se derivará internamente para su carga en el sistema.</p>
+      </div>
+      <ul class="ordered-list-meui">
+        <li><strong>Presentación física:</strong> La MEUI recibe, registra y remite al juzgado competente.</li>
+        <li><strong>Plazo de homologación digital:</strong> Una vez superadas las limitaciones tecnológicas, se puede requerir la digitalización ex post.</li>
+        <li><strong>Proveimiento:</strong> La autoridad judicial proveerá los escritos físicos en el expediente papel, con notificaciones según reglamento aplicable.</li>
+        <li>El Juez puede intimar la presentación en papel de otros escritos no mencionados, con plazo razonable y bajo apercibimiento de sanción.</li>
+      </ul>
+      <div class="text-xs text-slate-500 mt-2">Nota: La MEUI garantiza la igualdad de acceso ante la imposibilidad tecnológica justificada.</div>
+    </div>
+  `;
+
+  const contenidoSanciones = `
+    <div class="fade-in">
+      <div class="info-caja rojo-claro">
+        <i data-lucide="gavel" class="w-5 h-5 inline"></i> <strong>Incumplimiento de presentación del formato papel:</strong>
+        <p class="text-sm mt-1">Si el abogado no presenta el soporte papel dentro del plazo de 5 días (o el fijado por el juez), será pasible de apercibimiento y sanción conminatoria prevista en el <strong>Art. 37 del CPCCFyVF</strong>.</p>
+      </div>
+      <ul class="step-list-meui mt-2">
+        <li>El juez puede aplicar <strong>sanciones disciplinarias</strong> y remitir las constancias al agente fiscal en turno si se configura un posible delito penal.</li>
+        <li>El profesional constituido en depositario del soporte papel es responsable por su conservación y autenticidad.</li>
+        <li>La exigencia de presentación en MEUI no exime la observancia de los plazos procesales; deben cumplirse ambas vías (digital y física) en tiempo.</li>
+      </ul>
+      <div class="bg-amber-50 p-3 rounded-lg mt-3">
+        <p><strong>Recomendación práctica:</strong> Mantener respaldo físico de toda presentación electrónica sujeta a ratificación en papel. Ante dudas sobre soporte SIGED, consultar en MEUI previo al vencimiento de plazos.</p>
+      </div>
+    </div>
+  `;
+
+  // Módulos mapeados
+  const mapaModulos = {
+    que_es_meui: {
+      titulo: "🏛️ ¿Qué es la Mesa de Entradas Única Informatizada?",
+      subtitulo: "Unificación de recepción · Excepcionalidad tecnológica",
+      html: contenidoQueEsMeui
+    },
+    normativa_acordada: {
+      titulo: "📜 Acordada N° 8/2022 (STJ Misiones)",
+      subtitulo: "Modificación al instructivo de presentaciones electrónicas",
+      html: contenidoNormativa
+    },
+    presentaciones_papel: {
+      titulo: "📑 Escritos con obligación de soporte papel",
+      subtitulo: "Demandas, recursos, poderes y tasas · Plazo 5 días",
+      html: contenidoPapelObligatorio
+    },
+    mero_impulso: {
+      titulo: "⚡ Mero impulso procesal – Firma digital",
+      subtitulo: "Sin formato papel · Eficacia plena en SIGED",
+      html: contenidoMeroImpulso
+    },
+    plazos_procedimiento: {
+      titulo: "🕒 Procedimiento en MEUI y plazos clave",
+      subtitulo: "Registro, derivación y proveimiento de escritos híbridos",
+      html: contenidoPlazosProcedimiento
+    },
+    sanciones_incumplimiento: {
+      titulo: "⚠️ Sanciones e incumplimiento",
+      subtitulo: "Art. 37 CPCCF · Apercibimientos y derivación penal",
+      html: contenidoSanciones
+    }
+  };
+
+  function cargarModulo(moduloId) {
+    const dataModulo = mapaModulos[moduloId];
+    if (!dataModulo) return;
+    const tituloElem = document.getElementById("meuiTituloDinamico");
+    const subtituloElem = document.getElementById("meuiSubtituloDinamico");
+    const contenedor = document.getElementById("contenidoPrincipalMeui");
+    tituloElem.innerText = dataModulo.titulo;
+    subtituloElem.innerText = dataModulo.subtitulo;
+    contenedor.innerHTML = `<div class="fade-in">${dataModulo.html}</div>`;
+    if (window.lucide) lucide.createIcons();
+  }
+
+  // Inicializar eventos click a las tarjetas
+  function inicializarCards() {
+    const cards = document.querySelectorAll('.meui-card');
+    cards.forEach(card => {
+      const modulo = card.getAttribute('data-modulo');
+      if (!modulo) return;
+      card.addEventListener('click', () => cargarModulo(modulo));
+      // Touch support
+      card.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        cargarModulo(modulo);
+      });
+    });
+  }
+
+  // Modal global recordatorio
+  const modalRef = document.getElementById('modalRecordatorioGeneral');
+  function abrirModalGlobal() {
+    if (modalRef) modalRef.style.display = 'flex';
+  }
+  function cerrarModalGlobal() {
+    if (modalRef) modalRef.style.display = 'none';
+  }
+
+  // Eventos
+  window.addEventListener('DOMContentLoaded', () => {
+    inicializarCards();
+    // Módulo por defecto: que_es_meui
+    cargarModulo('que_es_meui');
+    const btnModal = document.getElementById('abrirModalRecordatorio');
+    if (btnModal) btnModal.addEventListener('click', (e) => { e.stopPropagation(); abrirModalGlobal(); });
+    window.addEventListener('keydown', (e) => { if (e.key === 'Escape') cerrarModalGlobal(); });
+    if (window.lucide) lucide.createIcons();
+  });
+</script>
+</body>
+</html>
