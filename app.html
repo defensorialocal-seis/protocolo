@@ -8,7 +8,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     :root {
@@ -171,6 +171,30 @@
       line-height: 1.3;
       max-width: 800px;
       margin: 0 auto;
+    }
+
+    /* MEJORA TIPOGRÁFICA: Destacar "Hola, Defensoría." */
+    .welcome-highlight {
+      display: inline-block;
+      font-size: clamp(1.45rem, 6vw, 2rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(120deg, #ffffff, #e2f0ff, #ffffff);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+      margin-bottom: 0.1rem;
+      line-height: 1.2;
+    }
+    /* Ajuste responsivo para que la frase inferior mantenga armonía */
+    .welcome-banner h2 br + span,
+    .welcome-banner h2 .regular-text {
+      font-size: inherit;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.92);
+      display: inline-block;
+      margin-top: 0.25rem;
     }
 
     #dynamicContainer {
@@ -461,7 +485,10 @@
         min-height: 80px;
       }
       .welcome-banner h2 {
-        font-size: 0.95rem;
+        font-size: clamp(0.9rem, 3vw, 1.1rem);
+      }
+      .welcome-highlight {
+        font-size: clamp(1.3rem, 7vw, 1.8rem);
       }
       .iframe-header h3 {
         font-size: 0.9rem;
@@ -529,7 +556,7 @@
   <header class="top-bar">
     <div class="header-left">
       <button class="menu-btn" id="menuBtn">Menú</button>
-      <span class="header-title">Protocolo de Actuación</span>
+      <span class="header-title">Protocolo de Actuación Judicial de la Defensoria Civil y Comercial 6 Ministerios Públicos de Misiones</span>
       <nav class="menu-dropdown" id="menuDropdown">
         <button class="menu-item" data-key="atencion_publico">Cómo atender al público</button>
         <button class="menu-item" data-key="documentos_previos">Qué revisar antes de empezar</button>
@@ -554,7 +581,10 @@
 
   <main class="main-content" id="mainContent">
     <div class="welcome-banner" id="welcomeBanner">
-      <h2>Hola, Defensoría.<br>Seleccioná un tema para ver el contenido completo.</h2>
+      <h2>
+        <span class="welcome-highlight">Hola, Defensoria.</span><br>
+        <span class="regular-text">Seleccioná un tema para ver el contenido completo.</span>
+      </h2>
     </div>
     <div id="dynamicContainer"></div>
   </main>
@@ -589,7 +619,7 @@
       plazos_vencimientos: "",
       modelos_usar: "",
       modos_intervenir: "",
-      mapa_defensorias: "",
+      mapa_defensorias: "mapa.html",
       firma_digital_stamper: "",    // Nuevo: Firma Digital y Stamper
       meui: "",                     // Nuevo: MEUI
       cejume: ""                    // Nuevo: CEJUME
