@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+  <title>Reglas para escritos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f0f5fa;
+      color: #0a2b3e;
+      line-height: 1.4;
+    }
+
+    .app-wrapper {
+      display: flex;
+      width: 100%;
+      min-height: 100vh;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 2rem;
+      padding: 2rem;
+      width: 100%;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    /* COLUMNA IZQUIERDA */
+    .columna-izquierda {
+      overflow-y: visible;
+      padding-right: 1rem;
+    }
+
+    .titulo-principal {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #1e4a6b;
+      margin-bottom: 2rem;
+      text-transform: uppercase;
+      line-height: 1.2;
+      border-bottom: 3px solid #ff9800;
+      padding-bottom: 10px;
+    }
+
+    .tarjeta-perfil {
+      background: white;
+      border-radius: 15px;
+      padding: 1.5rem;
+      margin-bottom: 1.2rem;
+      border: 1px solid #dce9f0;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    }
+
+    .tarjeta-perfil:active {
+      transform: scale(0.99);
+      background: #fefefe;
+    }
+
+    .perfil-titulo {
+      font-size: 1.2rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .color-1 { color: #1e4a6b; border-left: 6px solid #1e4a6b; padding-left: 12px; }
+    .color-2 { color: #2c7da0; border-left: 6px solid #2c7da0; padding-left: 12px; }
+    .color-3 { color: #8e44ad; border-left: 6px solid #8e44ad; padding-left: 12px; }
+    .color-4 { color: #27ae60; border-left: 6px solid #27ae60; padding-left: 12px; }
+    .color-5 { color: #d35400; border-left: 6px solid #d35400; padding-left: 12px; }
+
+    /* COLUMNA DERECHA */
+    .columna-derecha {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 2rem;
+      border: 1px solid #dce9f0;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    }
+
+    .btn-recordar {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #ff9800;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      cursor: pointer;
+      z-index: 10;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-recordar:active {
+      background: #e68900;
+      transform: scale(0.97);
+    }
+
+    .principios-scroll {
+      flex: 1;
+      overflow-y: auto;
+      margin-top: 1rem;
+      max-height: 60vh;
+    }
+
+    /* Lista numerada de reglas */
+    .lista-pasos {
+      list-style: none;
+      counter-reset: paso-counter;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .lista-pasos li {
+      counter-increment: paso-counter;
+      background: #f8fbff;
+      margin-bottom: 12px;
+      padding: 14px 18px 14px 55px;
+      border-radius: 12px;
+      position: relative;
+      font-size: 0.95rem;
+      line-height: 1.45;
+      border: 1px solid #eef2f7;
+      word-break: break-word;
+    }
+
+    .lista-pasos li::before {
+      content: counter(paso-counter);
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #2c7da0;
+      color: white;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(10, 43, 62, 0.85);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      backdrop-filter: blur(2px);
+    }
+
+    .modal-content {
+      background: white;
+      padding: 2rem 1.8rem;
+      border-radius: 25px;
+      max-width: 550px;
+      width: 90%;
+      position: relative;
+      margin: 1rem;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .badge-referencia {
+      display: inline-block;
+      background: #eef2fa;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #1e4a6b;
+      border-radius: 20px;
+      padding: 2px 8px;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 800px) {
+      .container {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        padding: 1rem;
+        overflow: visible;
+      }
+      .columna-izquierda {
+        padding-right: 0;
+        width: 100%;
+      }
+      .columna-derecha {
+        width: 100%;
+        padding: 1.5rem 1rem;
+        padding-top: 3.2rem;
+        margin-bottom: 0.5rem;
+      }
+      .btn-recordar {
+        top: 12px;
+        right: 12px;
+        padding: 6px 12px;
+        font-size: 0.7rem;
+      }
+      .titulo-principal {
+        font-size: 1.4rem;
+        margin-bottom: 1.2rem;
+      }
+      .tarjeta-perfil {
+        padding: 1rem;
+        margin-bottom: 0.9rem;
+      }
+      .perfil-titulo {
+        font-size: 1.1rem;
+      }
+      .lista-pasos li {
+        font-size: 0.85rem;
+        padding: 12px 14px 12px 48px;
+      }
+      .lista-pasos li::before {
+        width: 26px;
+        height: 26px;
+        font-size: 0.75rem;
+        left: 12px;
+      }
+      .principios-scroll {
+        max-height: none;
+        overflow-y: visible;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 0.75rem;
+        gap: 1rem;
+      }
+      .columna-derecha {
+        padding: 1.2rem 0.8rem;
+        padding-top: 3rem;
+      }
+      .lista-pasos li {
+        font-size: 0.8rem;
+        padding: 10px 10px 10px 42px;
+      }
+      .lista-pasos li::before {
+        width: 24px;
+        height: 24px;
+        font-size: 0.7rem;
+        left: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-wrapper">
+  <div class="container" id="mainContainer">
+    <!-- COLUMNA IZQUIERDA: categorías de requisitos para escritos -->
+    <div class="columna-izquierda">
+      <h1 class="titulo-principal">Reglas para escritos</h1>
+      
+      <div class="tarjeta-perfil" data-protocolo="cargoPlazo">
+        <span class="perfil-titulo color-1">1. Cargo y plazo de gracia</span>
+        <p>Art. 7º – Obligación de poner cargo, plazo de gracia de 2 horas al día siguiente hábil.</p>
+      </div>
+
+      <div class="tarjeta-perfil" data-protocolo="formaPresentacion">
+        <span class="perfil-titulo color-2">2. Forma de presentación</span>
+        <p>Art. 8º – Formato, extensión máxima, márgenes, tipo de letra y consecuencias del incumplimiento.</p>
+      </div>
+
+      <div class="tarjeta-perfil" data-protocolo="encabezamientoDomicilio">
+        <span class="perfil-titulo color-3">3. Encabezamiento y domicilios</span>
+        <p>Art. 9º – Datos obligatorios, domicilio real y constituido, apercibimientos.</p>
+      </div>
+
+      <div class="tarjeta-perfil" data-protocolo="copiasDevolucion">
+        <span class="perfil-titulo color-4">4. Copias y devolución</span>
+        <p>Arts. 10 y 14 – Copias, conservación, prohibición de devolución sin resolución.</p>
+      </div>
+
+      <div class="tarjeta-perfil" data-protocolo="firmaSanciones">
+        <span class="perfil-titulo color-5">5. Firmas, sanciones y validez</span>
+        <p>Arts. 18, 57, 8 in fine – Firma y sello, sanciones a auxiliares, Firma Digital.</p>
+      </div>
+    </div>
+
+    <!-- COLUMNA DERECHA: detalles dinámicos -->
+    <div class="columna-derecha" id="columnaDetalles">
+      <button class="btn-recordar" id="btnRecordar">RECORDÁ ESTO</button>
+      
+      <div id="headerDinamico">
+        <h2 id="tituloDerecho" style="color: #1e4a6b; font-size: 1.4rem; margin-bottom: 5px;">Cargando...</h2>
+        <p id="subtituloDerecho" style="color: #7f8c8d; font-size: 0.9rem; margin-bottom: 15px;"></p>
+      </div>
+
+      <div class="principios-scroll" id="contenidoDerecho">
+        <!-- Contenido generado por JS -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL informativo -->
+<div class="modal-overlay" id="modalInfo" onclick="toggleModal(false)">
+  <div class="modal-content" onclick="stopPropagation(event)">
+    <button style="position:absolute; top:12px; right:16px; background:none; border:none; font-size:1.8rem; cursor:pointer; color:#95a5a6; line-height:1;" onclick="toggleModal(false)">&times;</button>
+    <div style="background:#eef4fa; border-left:5px solid #1e4a6b; padding:1.2rem; margin-bottom:1.5rem; border-radius:12px;">
+      <h4 style="color:#1a5d6c; margin-bottom:8px;">⚖️ Validez procesal</h4>
+      <p style="font-size:0.9rem; line-height:1.5;">El cumplimiento estricto de los Arts. 7, 8, 9, 10, 14 y 18 del RPJ evita el rechazo de escritos, asegura notificaciones válidas y resguarda derechos. La desestimación por defectos formales puede subsanarse solo si no constituye obstáculo insalvable (Art. 8).</p>
+    </div>
+    <div style="background:#fff4e5; border-left:5px solid #ff9800; padding:1.2rem; border-radius:12px;">
+      <h4 style="color:#a35200; margin-bottom:8px;">📎 Documentación adicional</h4>
+      <p style="font-size:0.9rem; line-height:1.5;">La falta de copias o presentación extemporánea sin observar el plazo de gracia produce la pérdida de la oportunidad. Recuerde el margen izquierdo de 5 cm y la obligación de aclarar firma con sello (Art. 18).</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Protocolos con la información textual extraída del PDF (RPJ 2025)
+  // Cada ítem contiene título y una lista de "pasos" que reflejan los requisitos exactos
+  const protocolos = {
+    cargoPlazo: {
+      titulo: "📌 Cargo y plazo de gracia (Art. 7)",
+      pasos: [
+        "Al pie de todo escrito debe ponerse el CARGO DE PRESENTACIÓN autorizado por el secretario o el oficial superior.",
+        "El cargo debe indicar: fecha, nombre de quien lo presenta, firma del mismo y detalle de la documentación adjunta.",
+        "Si el vencimiento del plazo ocurre en día inhábil o fuera del horario judicial, el escrito podrá presentarse válidamente el día hábil inmediato siguiente, dentro de las DOS PRIMERAS HORAS de atención al público (plazo de gracia).",
+        "Los escritos no presentados dentro del horario del día de vencimiento solo podrán entregarse en la secretaría correspondiente respetando el plazo de gracia de 2 horas."
+      ]
+    },
+    formaPresentacion: {
+      titulo: "✍️ Forma de presentación del escrito (Art. 8 – texto según Ac. 218/15)",
+      pasos: [
+        "Texto mecanografiado en tinta negra (excepto casos del art. 117 CPCC que admiten manuscritos).",
+        "Extensión máxima: 40 páginas. Papel A4 de 80 gr. como mínimo.",
+        "Interlineado mínimo 1,5, máximo 26 líneas por carilla; usar anverso y reverso.",
+        "Tipo de letra claramente legible, tamaño no menor a 12.",
+        "Márgenes: izquierdo 5 cm, derecho 1,5 cm (se invierten en el reverso), superior 5 cm, inferior 2 cm.",
+        "Si no se cumplimenta alguno de los recaudos, se DESESTIMARÁ la presentación mediante sola mención de la norma, salvo que el incumplimiento no constituya un obstáculo insalvable a criterio del juez (en ese caso las actuaciones se repuntan inoficiosas).",
+        "Firmas aclaradas al pie en tinta negra o azul. Abogados, procuradores y auxiliares deben indicar tomo, folio y número de matrícula."
+      ]
+    },
+    encabezamientoDomicilio: {
+      titulo: "🏠 Encabezamiento, personería y domicilios (Art. 9 – modif. Ac. 20/06)",
+      pasos: [
+        "Todo escrito debe encabezarse con: objeto del escrito, nombre del presentante, documento nacional de identidad y/o CUIL/CUIT, DOMICILIO CONSTITUIDO, y enunciación precisa de la carátula del expediente.",
+        "Quienes actúen por terceros deben expresar el nombre completo de todos sus representados y del letrado patrocinante (si lo hubiera).",
+        "DENUNCIA DE DOMICILIO REAL: debe hacerse comenzando por calle y número; a falta de número, calles transversales; en defecto, número de chacra y manzana; en rutas, hito kilométrico más cercano.",
+        "Infringida esta regla, el juez intimará de oficio o a petición de parte a subsanar la omisión dentro de 24 horas de notificado, bajo apercibimiento del art. 41 CPCC (multa o pérdida de derechos)."
+      ]
+    },
+    copiasDevolucion: {
+      titulo: "📄 Copias y devolución de escritos (Arts. 10 y 14)",
+      pasos: [
+        "En el cargo del escrito se indicará el número de copias que se acompañan. Dichas copias se conservarán en Secretaría durante DOS MESES.",
+        "De todo escrito o documento presentado, se devolverá al interesado que lo solicite una copia en la que conste, bajo firma del funcionario, la fecha y hora de presentación del original.",
+        "Art. 14 – Sin resolución del Presidente del Tribunal o del Juez NO podrá devolverse ningún escrito, aunque adolezca de defectos de forma o la petición fuera improcedente.",
+        "Excepción a la regla anterior: escritos presentados FUERA DE PLAZO o SIN COPIAS pueden ser devueltos sin resolución previa (Art. 14 in fine)."
+      ]
+    },
+    firmaSanciones: {
+      titulo: "✒️ Firmas, sanciones y formalidades (Arts. 18, 57, 8, Ac. 225/15)",
+      pasos: [
+        "Art. 18 – Providencias de trámite pueden suscribirse con media firma. En las demás actuaciones se usará firma entera, ambas aclaradas al pie con sello de goma.",
+        "Oficios, exhortos y certificaciones llevarán en cada foja media firma y sello correspondiente.",
+        "Firma Digital: Registro de firma digital para abogados (Ac. 225/15), obligatoria para presentaciones electrónicas en el marco del expediente electrónico (Ac. 180/22).",
+        "Art. 57 – Sanciones a auxiliares, litigantes o particulares por faltas contra la dignidad del tribunal o por obstrucción: apercibimiento, multa (hasta suma igual al salario de categoría inferior) o arresto de hasta 30 días.",
+        "Los jueces podrán imponer sanciones por escritos que contengan manifiesta falta de respeto o carencia de mensura, sin perjuicio de rechazar la presentación defectuosa (Art. 8)."
+      ]
+    }
+  };
+
+  // Función para mostrar los pasos/requisitos del módulo seleccionado
+  function mostrarPasos(id) {
+    const data = protocolos[id];
+    if (!data) return;
+    const contenedor = document.getElementById('contenidoDerecho');
+    document.getElementById('tituloDerecho').innerHTML = data.titulo;
+    document.getElementById('subtituloDerecho').innerHTML = "Requisitos exigidos por el Reglamento (RPJ):";
+    
+    const htmlPasos = data.pasos.map(paso => `<li>${paso}</li>`).join('');
+    contenedor.innerHTML = `<ul class="lista-pasos">${htmlPasos}</ul>`;
+  }
+
+  // Manejar clic en tarjetas (izquierda)
+  function handlePerfilClick(event, tarjeta) {
+    event.stopPropagation();
+    const protocoloId = tarjeta.getAttribute('data-protocolo');
+    if (protocoloId && protocolos[protocoloId]) {
+      mostrarPasos(protocoloId);
+    }
+  }
+
+  // detener propagación para modal
+  function stopPropagation(e) {
+    e.stopPropagation();
+  }
+
+  // control del modal
+  function toggleModal(show) {
+    const modal = document.getElementById('modalInfo');
+    modal.style.display = show ? 'flex' : 'none';
+  }
+
+  // inicializar eventos en todas las tarjetas (táctil y mouse)
+  function inicializarTarjetas() {
+    const tarjetas = document.querySelectorAll('.tarjeta-perfil');
+    tarjetas.forEach(tarjeta => {
+      // remover listeners previos para evitar duplicación (seguro)
+      tarjeta.removeEventListener('click', tarjeta._listener);
+      tarjeta.removeEventListener('touchstart', tarjeta._touchListener);
+      
+      const clickHandler = (e) => handlePerfilClick(e, tarjeta);
+      const touchHandler = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        handlePerfilClick(e, tarjeta);
+      };
+      
+      tarjeta.addEventListener('click', clickHandler);
+      tarjeta.addEventListener('touchstart', touchHandler, { passive: false });
+      
+      tarjeta._listener = clickHandler;
+      tarjeta._touchListener = touchHandler;
+    });
+  }
+
+  // mostrar módulo por defecto: Cargo y plazo de gracia
+  window.onload = function() {
+    inicializarTarjetas();
+    mostrarPasos('cargoPlazo');
+    
+    const btnRecordar = document.getElementById('btnRecordar');
+    if (btnRecordar) {
+      btnRecordar.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleModal(true);
+      });
+    }
+  };
+</script>
+</body>
+</html>
