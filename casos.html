@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+  <title>Casos Especiales</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f4f7fc;
+      color: #0a2b3e;
+      line-height: 1.4;
+    }
+
+    .app-wrapper {
+      display: flex;
+      width: 100%;
+      min-height: 100vh;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 2rem;
+      padding: 2rem;
+      width: 100%;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    /* COLUMNA IZQUIERDA – TARJETAS DE CASOS */
+    .columna-izquierda {
+      overflow-y: visible;
+      padding-right: 1rem;
+    }
+
+    .titulo-principal {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #1e4a6b;
+      margin-bottom: 1.8rem;
+      text-transform: uppercase;
+      line-height: 1.2;
+      border-bottom: 3px solid #ff9800;
+      padding-bottom: 10px;
+    }
+
+    .subtitulo-casos {
+      font-size: 0.9rem;
+      color: #2c7da0;
+      margin-top: -1rem;
+      margin-bottom: 1.5rem;
+      font-weight: 500;
+    }
+
+    .tarjeta-caso {
+      background: white;
+      border-radius: 15px;
+      padding: 1.5rem;
+      margin-bottom: 1.2rem;
+      border: 1px solid #dce9f0;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .tarjeta-caso:active {
+      transform: scale(0.99);
+      background: #fefefe;
+    }
+
+    .caso-titulo {
+      font-size: 1.2rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    /* paleta de colores para bordes laterales y textos */
+    .color-emergencia { color: #c0392b; border-left: 6px solid #c0392b; padding-left: 12px; }
+    .color-territorio { color: #1e6f5c; border-left: 6px solid #1e6f5c; padding-left: 12px; }
+    .color-intercultural { color: #8e44ad; border-left: 6px solid #8e44ad; padding-left: 12px; }
+    .color-violencia { color: #d35400; border-left: 6px solid #d35400; padding-left: 12px; }
+    .color-infancia { color: #2980b9; border-left: 6px solid #2980b9; padding-left: 12px; }
+    .color-ausencia { color: #27ae60; border-left: 6px solid #27ae60; padding-left: 12px; }
+
+    /* COLUMNA DERECHA */
+    .columna-derecha {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 2rem;
+      border: 1px solid #dce9f0;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    }
+
+    .btn-recordar {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #ff9800;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      cursor: pointer;
+      z-index: 10;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-recordar:active {
+      background: #e68900;
+      transform: scale(0.97);
+    }
+
+    .scrolling-contenido {
+      flex: 1;
+      overflow-y: auto;
+      margin-top: 1rem;
+      max-height: 65vh;
+      padding-right: 6px;
+    }
+
+    /* Tarjeta interna de detalle */
+    .detalle-card {
+      animation: fadeIn 0.3s ease;
+    }
+
+    .detalle-bloque {
+      background: #f8fbff;
+      border-radius: 18px;
+      padding: 1.4rem;
+      margin-bottom: 1.4rem;
+      border-left: 5px solid #ff9800;
+    }
+
+    .detalle-bloque h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+      color: #1e4a6b;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .detalle-bloque p {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: #2c3e50;
+    }
+
+    .badge-normativa {
+      background: #eef2fa;
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 30px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #1e4a6b;
+      margin-top: 12px;
+    }
+
+    .lista-accion {
+      padding-left: 1.2rem;
+      margin-top: 8px;
+    }
+    .lista-accion li {
+      margin-bottom: 6px;
+      font-size: 0.92rem;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateX(12px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(10, 43, 62, 0.85);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      backdrop-filter: blur(2px);
+    }
+    .modal-content {
+      background: white;
+      padding: 2rem 1.8rem;
+      border-radius: 25px;
+      max-width: 550px;
+      width: 90%;
+      position: relative;
+      margin: 1rem;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    /* RESPONSIVE MÓVIL */
+    @media (max-width: 800px) {
+      .container {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        padding: 1rem;
+      }
+      .columna-izquierda {
+        padding-right: 0;
+      }
+      .columna-derecha {
+        width: 100%;
+        padding: 1.5rem 1rem;
+        padding-top: 3.2rem;
+      }
+      .btn-recordar {
+        top: 12px;
+        right: 12px;
+        padding: 6px 12px;
+        font-size: 0.7rem;
+      }
+      .titulo-principal {
+        font-size: 1.4rem;
+      }
+      .tarjeta-caso {
+        padding: 1rem;
+      }
+      .caso-titulo {
+        font-size: 1.05rem;
+      }
+      .scrolling-contenido {
+        max-height: 55vh;
+      }
+      .detalle-bloque h3 {
+        font-size: 1rem;
+      }
+    }
+    @media (max-width: 480px) {
+      .container {
+        padding: 0.75rem;
+      }
+      .columna-derecha {
+        padding: 1rem 0.8rem;
+        padding-top: 2.8rem;
+      }
+      .detalle-bloque {
+        padding: 1rem;
+      }
+      .detalle-bloque p, .lista-accion li {
+        font-size: 0.85rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="app-wrapper">
+  <div class="container">
+    <!-- COLUMNA IZQUIERDA: Casos prioritarios -->
+    <div class="columna-izquierda">
+      <h1 class="titulo-principal">Regla para casos especiales</h1>
+      <div class="subtitulo-casos">Intervención obligatoria del Defensor Oficial · Alta vulnerabilidad</div>
+
+      <div class="tarjeta-caso" data-caso="saludMental">
+        <span class="caso-titulo color-emergencia">📌 1. Salud Mental · Internaciones Involuntarias</span>
+        <p>Ley Nacional 26.657 · Control de legalidad y externación inmediata</p>
+      </div>
+      <div class="tarjeta-caso" data-caso="desalojos">
+        <span class="caso-titulo color-territorio">📌 2. Conflictos territoriales y desalojos</span>
+        <p>Derecho a la vivienda · Familias en pobreza · Lanzamientos en contexto crítico</p>
+      </div>
+      <div class="tarjeta-caso" data-caso="intercultural">
+        <span class="caso-titulo color-intercultural">📌 3. Defensa Intercultural · Pueblos Mbya Guaraní</span>
+        <p>Cosmovisión indígena · Intérprete y perspectiva propia</p>
+      </div>
+      <div class="tarjeta-caso" data-caso="violenciaGenero">
+        <span class="caso-titulo color-violencia">📌 4. Violencia Familiar y de Género</span>
+        <p>Medidas urgentes · Exclusiones · Botón antipánico</p>
+      </div>
+      <div class="tarjeta-caso" data-caso="nnyA">
+        <span class="caso-titulo color-infancia">📌 5. Protección de NNyA · Interés contrapuesto</span>
+        <p>Separación familiar · Abuso · Control de legalidad</p>
+      </div>
+      <div class="tarjeta-caso" data-caso="ausentes">
+        <span class="caso-titulo color-ausencia">📌 6. Ausentes y Capacidad Restringida</span>
+        <p>Representación de oficio · Evitar indefensión procesal</p>
+      </div>
+    </div>
+
+    <!-- COLUMNA DERECHA (detalles dinámicos) -->
+    <div class="columna-derecha" id="columnaDetalles">
+      <button class="btn-recordar" id="btnRecordarAtencion">📌 RECORDÁ ESTO</button>
+      <div id="headerDinamico">
+        <h2 id="tituloDerecho" style="color:#1e4a6b; font-size:1.4rem; margin-bottom:6px;">Cargando...</h2>
+        <p id="subtituloDerecho" style="color:#7f8c8d; font-size:0.85rem; margin-bottom:12px; border-left:2px solid #ff9800; padding-left:10px;">Intervención crítica · Normativa Misiones</p>
+      </div>
+      <div class="scrolling-contenido" id="contenidoDerecho"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL información clave -->
+<div class="modal-overlay" id="modalInfoAtencion" onclick="toggleModalAtencion(false)">
+  <div class="modal-content" onclick="stopPropagationAtencion(event)">
+    <button style="position:absolute; top:12px; right:16px; background:none; border:none; font-size:1.8rem; cursor:pointer; color:#95a5a6; line-height:1;" onclick="toggleModalAtencion(false)">&times;</button>
+    <div style="background:#eef4fa; border-left:5px solid #c0392b; padding:1.2rem; margin-bottom:1.5rem; border-radius:12px;">
+      <h4 style="color:#a82313; margin-bottom:8px;">📌 Prioridad absoluta</h4>
+      <p style="font-size:0.9rem; line-height:1.5;">En los casos de “mayor atención” el Defensor Oficial actúa con debida diligencia reforzada: plazos perentorios, entrevistas inmediatas y coordinación interinstitucional para evitar daños irreversibles.</p>
+    </div>
+    <div style="background:#fff4e5; border-left:5px solid #ff9800; padding:1.2rem; border-radius:12px;">
+      <h4 style="color:#a35200; margin-bottom:8px;">📌 Enfoque transversal</h4>
+      <p style="font-size:0.9rem; line-height:1.5;">Salud mental, niñez, violencia, interculturalidad: todos exigen sensibilidad técnica y conocimiento de leyes especiales (Ley IV N.º 15, Ley Nacional 26.657, etc.). Consultar siempre con el equipo interdisciplinario.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Base de datos de casos con información detallada (situación, acción, normativa, acciones específicas)
+  const casosPrioritarios = {
+    saludMental: {
+      titulo: "📌 Salud Mental – Internaciones Involuntarias",
+      situacion: "Situación difícil: Persona privada de libertad ambulatoria por crisis de salud mental. Riesgo de internación arbitraria o ilegal por falta de debido control judicial.",
+      rolAccion: "El Defensor Oficial interviene de oficio para verificar la legalidad de la medida, puede oponerse a la internación, solicitar externación inmediata o exigir el tratamiento menos restrictivo posible, siempre garantizando la defensa técnica de la persona en situación de vulnerabilidad extrema.",
+      normativa: "Ley Nacional de Salud Mental N.º 26.657 (arts. 20, 21, 43) – Adhesión de Misiones; Código Civil y Comercial; Ley IV – N.º 15 (Orgánica del Poder Judicial).",
+      accionesPrevias: [
+        "Entrevista urgente al paciente y a su familia.",
+        "Solicitar informe médico fundado y revisar alternativa ambulatoria.",
+        "Promover hábeas corpus correctivo si corresponde."
+      ]
+    },
+    desalojos: {
+      titulo: "📌 Conflictos territoriales – Desalojos vulnerables",
+      situacion: "Familias en pobreza extrema o asentamientos enfrentan órdenes de desalojo. Riesgo inminente de quedar en situación de calle, especialmente con menores, discapacidad o adulto mayor.",
+      rolAccion: "El Defensor Oficial interviene para garantizar el derecho a la vivienda, controlar que no se vulneren derechos humanos básicos durante el lanzamiento, y coordinar con Defensoría del Pueblo y organismos sociales para soluciones habitacionales alternativas.",
+      normativa: "Ley IV – N.º 15, doctrina de Corte IDH (derecho a vivienda adecuada), Ley Nacional 26.061 (interés superior del niño) y jurisprudencia local sobre desalojos progresivos.",
+      accionesPrevias: [
+        "Verificar notificación y composición del grupo familiar.",
+        "Solicitar suspensión del lanzamiento mientras no exista reubicación digna.",
+        "Articular con áreas de desarrollo social de Misiones."
+      ]
+    },
+    intercultural: {
+      titulo: "📌 Defensa Intercultural – Comunidades Mbya Guaraní",
+      situacion: "Miembros de comunidades originarias enfrentan procesos judiciales sin intérprete, con desconocimiento de sus normas comunitarias y cosmovisión, agravando su vulnerabilidad.",
+      rolAccion: "El Defensor Oficial debe garantizar un intérprete bilingüe (Ley de preservación del idioma Mbya Guaraní) y asegurar una defensa técnica con perspectiva intercultural, evitando la criminalización de conductas propias de la comunidad.",
+      normativa: "Constitución Nacional art. 75 inc. 17, Convenio 169 OIT, Ley IV – N.º 15 (adecuación intercultural), Ley Provincial de Preservación del Idioma Mbya Guaraní.",
+      accionesPrevias: [
+        "Solicitar intérprete certificado de la comunidad.",
+        "Realizar pericia antropológica si es necesario.",
+        "Respetar los mecanismos internos de justicia indígena sin colisión de derechos."
+      ]
+    },
+    violenciaGenero: {
+      titulo: "📌 Violencia Familiar y de Género – Crisis aguda",
+      situacion: "Víctima de violencia doméstica o de género en riesgo vital. Necesidad de medidas urgentes (exclusión del agresor, perimetral, botón antipánico). Muchas mujeres no cuentan con representación privada.",
+      rolAccion: "El Defensor Oficial (especializado en violencia) solicita en 24 hs medidas cautelares, patrocina a la víctima, evita la revictimización y acompaña el proceso penal/familiar para garantizar la protección integral.",
+      normativa: "Ley de Violencia Familiar de Misiones, Ley Nacional 26.485, Ley IV – N.º 15 (Defensorías de Violencia Familiar especializadas), Código Civil y Comercial.",
+      accionesPrevias: [
+        "Evaluación de riesgo (protocolo local).",
+        "Petición inmediata de exclusión del hogar y prohibición de acercamiento.",
+        "Derivación a refugios y asistencia psicológica."
+      ]
+    },
+    nnyA: {
+      titulo: "📌 Niñas, Niños y Adolescentes – Interés contrapuesto",
+      situacion: "Situaciones donde los padres no pueden representar a sus hijos (abuso, negligencia, intereses opuestos) o existe una medida de protección excepcional que separa al NNyA de su familia biológica.",
+      rolAccion: "El Defensor Oficial interviene como curador ad litem o representante legal del niño, garantizando el interés superior, controlando la medida excepcional y promoviendo el reintegro familiar si es posible.",
+      normativa: "Ley IV – N.º 52 (Defensoría de los Derechos de NNyA) en articulación con Defensorías Oficiales; Ley Nacional 26.061; Código Civil y Comercial (capacidad progresiva).",
+      accionesPrevias: [
+        "Entrevista privada con el niño/niña.",
+        "Solicitar informes del equipo técnico.",
+        "Impugnar medidas desproporcionadas (separación innecesaria)."
+      ]
+    },
+    ausentes: {
+      titulo: "📌 Ausentes y Personas con Capacidad Restringida",
+      situacion: "Persona en paradero desconocido o con discapacidad mental sin representante legal, enfrentando un proceso judicial (sucesorio, reivindicación, etc.) en indefensión total.",
+      rolAccion: "El Defensor Oficial asume la representación de oficio del ausente o persona con capacidad restringida, asegurando su derecho de defensa, solicitando curaduría especial y evitando resoluciones adversas en rebeldía.",
+      normativa: "Código Civil y Comercial (arts. 152, 153, Capítulo sobre ausencia), Ley IV – N.º 15, Convención de Derechos de Personas con Discapacidad.",
+      accionesPrevias: [
+        "Designación inmediata como defensor del ausente.",
+        "Investigar último domicilio y parientes.",
+        "Promover la designación de un apoyo si hay restricción a la capacidad."
+      ]
+    }
+  };
+
+  // Mostrar detalles en columna derecha
+  function mostrarDetalleCaso(casoId) {
+    const data = casosPrioritarios[casoId];
+    if (!data) return;
+
+    // Actualizar título y subtítulo
+    document.getElementById('tituloDerecho').innerText = data.titulo;
+    document.getElementById('subtituloDerecho').innerHTML = `📌 Intervención prioritaria · Defensoría Oficial Misiones`;
+
+    const contenedor = document.getElementById('contenidoDerecho');
+    
+    // Estructura visual tipo card de situación, acciones y normativa
+    const html = `
+      <div class="detalle-card">
+        <div class="detalle-bloque">
+          <h3>📌 Situación de especial vulnerabilidad</h3>
+          <p>${data.situacion}</p>
+        </div>
+        <div class="detalle-bloque">
+          <h3>📌 Rol y acción del Defensor Oficial</h3>
+          <p>${data.rolAccion}</p>
+        </div>
+        <div class="detalle-bloque">
+          <h3>📌 Marco normativo prioritario</h3>
+          <p>${data.normativa}</p>
+          <div class="badge-normativa">Ley IV N.º 15 – Poder Judicial Misiones</div>
+        </div>
+        <div class="detalle-bloque">
+          <h3>📌 Acciones urgentes / Checklist</h3>
+          <ul class="lista-accion">
+            ${data.accionesPrevias.map(acc => `<li>🔹 ${acc}</li>`).join('')}
+          </ul>
+        </div>
+        <div class="detalle-bloque" style="background:#fff6e8;">
+          <p style="font-weight:600; margin-bottom:5px;">🗓️ Plazo crítico</p>
+          <p style="font-size:0.85rem;">Intervención dentro de las 24–48 hs hábiles. En casos de internación involuntaria o violencia familiar, accionar inmediato (mismo día).</p>
+        </div>
+      </div>
+    `;
+    contenedor.innerHTML = html;
+  }
+
+  // Eventos para tarjetas de casos (táctil y mouse)
+  function inicializarTarjetasCasos() {
+    const tarjetas = document.querySelectorAll('.tarjeta-caso');
+    tarjetas.forEach(tarjeta => {
+      const casoKey = tarjeta.getAttribute('data-caso');
+      if (!casoKey) return;
+
+      const handler = (e) => {
+        e.stopPropagation();
+        if (casosPrioritarios[casoKey]) {
+          mostrarDetalleCaso(casoKey);
+        }
+      };
+      tarjeta.addEventListener('click', handler);
+      tarjeta.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        handler(e);
+      }, { passive: false });
+    });
+  }
+
+  // manejo modal "recordá esto"
+  function toggleModalAtencion(show) {
+    const modal = document.getElementById('modalInfoAtencion');
+    modal.style.display = show ? 'flex' : 'none';
+  }
+  function stopPropagationAtencion(e) {
+    e.stopPropagation();
+  }
+
+  // cargar contenido inicial por defecto: salud mental (caso 1)
+  window.onload = () => {
+    inicializarTarjetasCasos();
+    // Mostrar primer caso (salud mental) por defecto
+    if (casosPrioritarios.saludMental) {
+      mostrarDetalleCaso('saludMental');
+    } else {
+      // fallback
+      document.getElementById('contenidoDerecho').innerHTML = `<p style="padding:1rem;">Seleccione un caso prioritario</p>`;
+    }
+
+    const btnRecordar = document.getElementById('btnRecordarAtencion');
+    if (btnRecordar) {
+      btnRecordar.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleModalAtencion(true);
+      });
+    }
+  };
+</script>
+</body>
+</html>
