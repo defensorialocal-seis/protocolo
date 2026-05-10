@@ -15,13 +15,13 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f1f5f9;  /* fondo neutro suave para resaltar el glass */
+            background-color: #f1f5f9;
             height: 100vh;
             width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;           /* evita scrolls no deseados */
+            overflow: hidden;
             position: relative;
         }
 
@@ -31,10 +31,10 @@
             position: fixed;
             left: 0;
             width: 100%;
-            height: 5px;                /* grosor mediano */
-            background-color: #9ca3af;  /* gris elegante */
+            height: 5px;
+            background-color: #9ca3af;
             z-index: 5;
-            pointer-events: none;       /* para que no interfieran con clics */
+            pointer-events: none;
             box-shadow: 0 0 2px rgba(0,0,0,0.05);
         }
 
@@ -47,19 +47,18 @@
         }
 
         /* === NUEVA BARRA DECORATIVA CENTRAL HORIZONTAL === */
-        /* Totalmente independiente, no interfiere con la card, va por detrás (z-index bajo) */
         .linea-deco-central {
             position: fixed;
             left: 0;
             width: 100%;
-            height: 2px;                /* más fina para elegancia */
-            background-color: #94a3b8;  /* gris pizarra suave, sutil */
-            z-index: 8;                 /* por debajo de .protocolo-card (z-index:20) pero por encima del fondo */
-            pointer-events: none;       /* no bloquea clicks */
+            height: 2px;
+            background-color: #94a3b8;
+            z-index: 8;
+            pointer-events: none;
             top: 50%;
             transform: translateY(-50%);
             box-shadow: 0 0 1px rgba(0,0,0,0.1);
-            opacity: 0.7;               /* suaviza un poco */
+            opacity: 0.7;
         }
 
         /* Contenedor principal con efecto glass y borde azul animado */
@@ -68,27 +67,21 @@
             max-width: 700px;
             width: 100%;
             padding: clamp(2rem, 8vw, 4rem);
-            background: rgba(255, 255, 255, 0.85);   /* base transparente para efecto glass */
-            backdrop-filter: blur(4px);               /* sensación de vidrio esmerilado */
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(4px);
             border-radius: 28px;
-            
-            /* === BORDE AZUL GLASS + ANIMACIÓN === */
-            border: 2px solid rgba(56, 189, 248, 0.6);    /* azul cielo translúcido */
+            border: 2px solid rgba(56, 189, 248, 0.6);
             box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08), 
                         0 0 0 2px rgba(56, 189, 248, 0.1) inset, 
-                        0 0 20px rgba(2, 132, 199, 0.3);   /* brillo azul base */
-            
+                        0 0 20px rgba(2, 132, 199, 0.3);
             cursor: pointer;
             transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
             user-select: none;
             position: relative;
             z-index: 20;
-            
-            /* animación sutil del borde (glow y tono) */
             animation: borderGlow 3s infinite alternate ease-in-out;
         }
 
-        /* Animación principal del borde "glass azul" */
         @keyframes borderGlow {
             0% {
                 border-color: rgba(56, 189, 248, 0.5);
@@ -106,7 +99,6 @@
             }
         }
 
-        /* Efecto hover: eleva y refuerza el glass azul */
         .protocolo-card:hover {
             transform: translateY(-6px);
             animation: borderGlowHover 1.2s infinite alternate;
@@ -129,13 +121,11 @@
             }
         }
 
-        /* clic activo: feedback inmediato */
         .protocolo-card:active {
             transform: scale(0.97);
             transition: 0.08s linear;
         }
 
-        /* Títulos y textos */
         h1 {
             font-size: clamp(1.8rem, 6vw, 3rem);
             font-weight: 800;
@@ -155,7 +145,6 @@
             opacity: 0.9;
         }
 
-        /* Línea decorativa interna (ya existente) ahora con ajuste sutil */
         .decorator-line {
             height: 4px;
             width: 65px;
@@ -183,7 +172,6 @@
             backdrop-filter: blur(2px);
         }
 
-        /* Animación de entrada refinada */
         .protocolo-card {
             animation: slideUpFade 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1);
         }
@@ -199,7 +187,53 @@
             }
         }
 
-        /* Ajuste para móviles: las líneas decorativas siguen fijas, contenedor bien centrado */
+        /* --- CONTENEDOR CIRCULAR GLASS: TAMAÑO AMPLIO E IMAGEN MÁS PEQUEÑA PARA VERLA COMPLETA --- */
+        .glass-circle {
+            position: fixed;
+            left: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+            z-index: 30;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            cursor: pointer;
+            min-width: 80px;
+            min-height: 80px;
+        }
+
+        .glass-circle:hover {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 18px 32px rgba(0, 0, 0, 0.25), 0 0 0 2px rgba(255, 255, 255, 0.6) inset;
+        }
+
+        .glass-circle:active {
+            transform: translateY(-50%) scale(0.96);
+        }
+
+        /* IMAGEN: reducida dentro del círculo para verse en plenitud */
+        .glass-circle img {
+            max-width: 80%;      /* La imagen ocupa como máximo el 80% del círculo */
+            max-height: 80%;
+            width: auto;
+            height: auto;
+            object-fit: contain; /* Mantiene la proporción sin recortes */
+            object-position: center;
+            filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.15));
+            transition: transform 0.2s ease;
+        }
+
+        .glass-circle:hover img {
+            transform: scale(1.02);
+        }
+
         @media (max-width: 640px) {
             .protocolo-card {
                 margin: 0 16px;
@@ -211,16 +245,19 @@
                 height: 4px;
             }
             .linea-deco-central {
-                height: 1.5px; /* ligeramente más fina en móviles */
+                height: 1.5px;
                 opacity: 0.6;
             }
             .hint-text {
                 margin-top: 32px;
                 font-size: 0.7rem;
             }
+            .glass-circle {
+                left: 16px;
+            }
         }
         
-        /* Fondo con un toque de patrón sutil para resaltar glass */
+        /* Fondo con sutiles puntos decorativos */
         body::before {
             content: "";
             position: fixed;
@@ -228,7 +265,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: radial-gradient(circle at 15% 30%, rgba(56, 189, 248, 0.03) 2%, transparent 2.5%);
+            background-image: radial-gradient(circle at 15% 30%, rgba(56, 189, 248, 0.05) 2%, transparent 2.5%);
             background-size: 32px 32px;
             pointer-events: none;
             z-index: 0;
@@ -237,12 +274,17 @@
 </head>
 <body>
 
-    <!-- Líneas decorativas: arriba y abajo, extremo a extremo, color gris, grosor mediano -->
+    <!-- Líneas decorativas: arriba y abajo, extremo a extremo -->
     <div class="linea-deco-superior" aria-hidden="true"></div>
     <div class="linea-deco-inferior" aria-hidden="true"></div>
     
-    <!-- NUEVA barra decorativa central horizontal: sutil, no interfiere con la card, atraviesa toda la pantalla -->
+    <!-- Barra decorativa central horizontal -->
     <div class="linea-deco-central" aria-hidden="true"></div>
+
+    <!-- CONTENEDOR CIRCULAR GLASS (tamaño amplio dinámico) + imagen ligeramente reducida -->
+    <div class="glass-circle" id="iconCircle">
+        <img src="https://github.com/defensorialocal-seis/protocolo/blob/main/icono1.png?raw=true" alt="Ícono Defensoría">
+    </div>
 
     <main class="protocolo-card" id="mainContainer">
         <h1>Protocolo de Actuación</h1>
@@ -252,11 +294,53 @@
     </main>
 
     <script>
-        // Redirección al hacer clic (exactamente igual a la funcionalidad original, con efecto glass)
+        // Función que mantiene el círculo grande (más grande que la tarjeta) 
+        // y la imagen se ajusta automáticamente con max-width:80% para verse completa.
+        function dimensionarCirculo() {
+            const tarjeta = document.querySelector('.protocolo-card');
+            const circulo = document.getElementById('iconCircle');
+            if (tarjeta && circulo) {
+                const alturaTarjeta = tarjeta.offsetHeight;
+                // Hacemos el círculo un 70% más grande que la tarjeta (se ve imponente)
+                let nuevoTamano = alturaTarjeta * 1.7;
+                const tamanoMinimo = 130;
+                const maxPorAltura = window.innerHeight * 0.7;
+                const maxPorAncho = window.innerWidth * 0.42;
+                const maxPermitido = Math.min(maxPorAltura, maxPorAncho);
+                nuevoTamano = Math.min(Math.max(nuevoTamano, tamanoMinimo), maxPermitido);
+                circulo.style.width = nuevoTamano + 'px';
+                circulo.style.height = nuevoTamano + 'px';
+            }
+        }
+
+        window.addEventListener('load', () => {
+            dimensionarCirculo();
+            setTimeout(dimensionarCirculo, 80);
+        });
+        window.addEventListener('resize', dimensionarCirculo);
+        
+        if (window.ResizeObserver) {
+            const tarjeta = document.querySelector('.protocolo-card');
+            if (tarjeta) {
+                const resizeObserver = new ResizeObserver(() => {
+                    dimensionarCirculo();
+                });
+                resizeObserver.observe(tarjeta);
+            }
+        }
+
+        // Redirección al hacer clic en la tarjeta principal
         const container = document.getElementById('mainContainer');
         if (container) {
-            container.addEventListener('click', (e) => {
-                // Redirección directa a app.html manteniendo toda la experiencia
+            container.addEventListener('click', () => {
+                window.location.href = 'app.html';
+            });
+        }
+
+        // Redirección también al hacer clic en el círculo
+        const circle = document.getElementById('iconCircle');
+        if (circle) {
+            circle.addEventListener('click', () => {
                 window.location.href = 'app.html';
             });
         }
