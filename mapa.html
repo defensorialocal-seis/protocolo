@@ -346,7 +346,7 @@
   <div class="container">
     <!-- COLUMNA IZQUIERDA: listado de defensorías (orden solicitado: primero Palacio, luego 7,8,9) -->
     <div class="columna-izquierda">
-      <h1 class="titulo-principal">🗺️ Mapa de Defensorías</h1>
+      <h1 class="titulo-principal">Mapa de Defensorías</h1>
       <div id="listaDefensoriasContainer">
         <!-- las tarjetas se generarán dinámicamente con JS -->
       </div>
@@ -375,11 +375,11 @@
       <p>Antes de iniciar un trámite, confirmá que tu domicilio se encuentre dentro de los límites territoriales de la defensoría correspondiente. Llevá DNI y algún comprobante de residencia (servicio o factura).</p>
     </div>
     <div class="tip-box" style="background:#eef2fa; border-left-color:#2c7da0;">
-      <h4>⚖️ Acceso a la justicia</h4>
+      <h4>📌 Acceso a la justicia</h4>
       <p>Las defensorías oficiales brindan patrocinio gratuito a personas de escasos recursos. Horario general de atención: 7:00 a 12:00 hs (lunes a viernes).</p>
     </div>
     <div class="tip-box">
-      <h4>📞 ¿Necesitás orientación?</h4>
+      <h4>📌 ¿Necesitás orientación?</h4>
       <p>Si tenés dudas sobre cuál te corresponde, podés consultar en Mesa de Entradas del Poder Judicial o llamar al Centro de Información Judicial: +54 376 4453000.</p>
     </div>
   </div>
@@ -395,7 +395,7 @@
       subtitulo: "Civil, Comercial, Laboral y de Familia · Palacio de Justicia",
       resumen: "Cuatro defensorías con asiento en el edificio judicial central de Posadas (Av. Santa Catalina 1735).",
       colorClase: "color-def-4",
-      emoji: "⚖️",
+      emoji: "📌",
       detalles: {
         limites: "Cada defensoría posee una jurisdicción específica dentro de la ciudad de Posadas (áreas céntricas, barrios aledaños). Para determinar la correcta, se debe consultar en el DEUT (Departamento de Entrada Única de Trámites) según el domicilio particular.",
         barrios: "Cobertura de múltiples distritos judiciales. Atienden sectores del centro, zonas residenciales y áreas no comprendidas por las defensorías N°7, N°8 y N°9.",
@@ -411,7 +411,7 @@
       subtitulo: "Civil, Comercial, Laboral y de Familia · Villa Cabello",
       resumen: "Jurisdicción oeste de Posadas: Arroyo Mártires, Av. San Martín, Av. Martín Fierro y Río Paraná.",
       colorClase: "color-def-1",
-      emoji: "🏘️",
+      emoji: "📌",
       detalles: {
         limites: "• Límite Oeste: Arroyo Mártires.<br>• Límite Este: Avenida San Martín.<br>• Límite Sur: Avenida Martín Fierro.<br>• Límite Norte: Río Paraná.",
         barrios: "Complejo Habitacional Villa Cabello (chacras 147, 148, 149, 150), Barrio Yohasá, Barrio Yacyretá, Barrio San Gerardo, Barrio Villa Blosset (sector oeste), Barrio Los Pinos, Sector 'El Montecito' (zona costera).",
@@ -427,7 +427,7 @@
       subtitulo: "Garupá · Competencia municipal completa",
       resumen: "Atención en todo el municipio de Garupá, con múltiples barrios y complejos habitacionales.",
       colorClase: "color-def-3",
-      emoji: "🏛️",
+      emoji: "📌",
       detalles: {
         limites: "Jurisdicción sobre TODO el municipio de Garupá (competencia plena). No se divide por avenidas: abarca el ejido completo.",
         barrios: "Barrio Fátima, Barrio Santa Helena, Barrio Virgen de Fátima, Barrio Villalonga, Barrio Ñu Porá, Barrio Don Santiago, Barrio Garupá Centro, Barrio Gottschalk, Barrio Santa Inés.",
@@ -443,7 +443,7 @@
       subtitulo: "Itaembé Miní / Itaembé Guazú · Jurisdicción sur",
       resumen: "Extremo suroeste de Posadas: cobertura total de Itaembé Miní e Itaembé Guazú.",
       colorClase: "color-def-2",
-      emoji: "🌳",
+      emoji: "📌",
       detalles: {
         limites: "• Norte: Ribera del Río Paraná (desde Arroyo Mártires hasta límite Corrientes).<br>• Sur: Ruta Nacional 12.<br>• Este: Arroyo Mártires.<br>• Oeste: Límite con la Provincia de Corrientes.",
         barrios: "Itaembé Miní (17 de Junio, Terrazas, barrios del sector sur de Av. 147, asentamientos). Itaembé Guazú: todas las etapas (sector viviendas, 508 viviendas) hasta límite provincial.",
@@ -492,7 +492,7 @@
 
     // Actualizar header
     let tituloMostrado = `${def.emoji} ${def.nombre}`;
-    if (def.id === "def3456") tituloMostrado = `🏛️ ${def.nombre}`;
+    if (def.id === "def3456") tituloMostrado = `📌 ${def.nombre}`;
     document.getElementById("tituloDerecho").innerHTML = tituloMostrado;
     document.getElementById("subtituloDerecho").innerHTML = def.subtitulo;
 
@@ -500,21 +500,21 @@
     // construir html modular
     let html = `
       <div class="info-seccion">
-        <h4>📍 Límites / Jurisdicción</h4>
+        <h4>📌 Límites / Jurisdicción</h4>
         <p>${detalles.limites || "Jurisdicción territorial según lo establecido por el Poder Judicial."}</p>
       </div>
       <div class="info-seccion">
-        <h4>🏘️ Barrios y sectores incluidos</h4>
+        <h4>📌 Barrios y sectores incluidos</h4>
         <ul class="lista-geografica">
           ${detalles.barrios.split(',').map(b => `<li>${b.trim()}</li>`).join('')}
         </ul>
       </div>
       <div class="info-seccion">
-        <h4>📬 Dirección y sedes</h4>
+        <h4>📌 Dirección y sedes</h4>
         <p>${detalles.direccion}</p>
       </div>
       <div class="info-seccion">
-        <h4>📞 Contacto y horario</h4>
+        <h4>📌 Contacto y horario</h4>
         <p><strong>Teléfono:</strong> ${detalles.telefono}<br>
         <strong>Horario de atención:</strong> ${detalles.horario}</p>
       </div>
@@ -532,9 +532,9 @@
     if (def.id === "def9") {
       html += `
         <div class="info-seccion" style="background:#eef2fc;">
-          <h4>🏢 Puntos de atención presencial</h4>
-          <p>✅ <strong>Sede Judicial Itaembé Miní:</strong> Av. 147 s/n (casi Av. 170) — oficinas centrales.<br>
-          ✅ <strong>Sede CAV Itaembé Guazú:</strong> Calle Aguará Guazú 6375 y Magnolias (Centro de Atención al Vecino).<br>
+          <h4>📌 Puntos de atención presencial</h4>
+          <p>📌 <strong>Sede Judicial Itaembé Miní:</strong> Av. 147 s/n (casi Av. 170) — oficinas centrales.<br>
+          📌 <strong>Sede CAV Itaembé Guazú:</strong> Calle Aguará Guazú 6375 y Magnolias (Centro de Atención al Vecino).<br>
           Ambos puntos operan en el horario habitual.</p>
         </div>
       `;
@@ -542,7 +542,7 @@
     if (def.id === "def8") {
       html += `
         <div class="info-seccion">
-          <h4>⚠️ Urgencias familiares</h4>
+          <h4>📌 Urgencias familiares</h4>
           <p>Para casos de violencia familiar y protección de menores fuera del horario, acudir al <strong>Juzgado de Familia y Violencia Familiar N° 1 de Garupá</strong>, ubicado sobre Colectora Ruta Nacional 12.</p>
         </div>
       `;
@@ -550,11 +550,11 @@
     if (def.id === "def3456") {
       html += `
         <div class="info-seccion">
-          <h4>🗂️ ¿Cuál te corresponde?</h4>
+          <h4>📌 ¿Cuál te corresponde?</h4>
           <p>Las defensorías 3, 4, 5 y 6 tienen distribución geográfica interna dentro de Posadas. Para identificarla correctamente, debes dirigirte al <strong>DEUT (Departamento de Entrada Única de Trámites)</strong> en el 1° Piso, Ala Norte del Palacio de Justicia. Allí, con tu documento de identidad y comprobante de domicilio, el personal te derivará a la defensoría competente según tu barrio.</p>
         </div>
         <div class="info-seccion">
-          <h4>📍 Ubicación exacta y contacto central</h4>
+          <h4>📌 Ubicación exacta y contacto central</h4>
           <p>Palacio de Justicia, Av. Santa Catalina N° 1735, primer piso, Ala Norte. Acceso por la entrada principal. Teléfono DEUT: 0376-4446700 (internos 1300, 2805, 2811).</p>
         </div>
       `;

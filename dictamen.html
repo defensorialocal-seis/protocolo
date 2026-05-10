@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-  <title>Reglas para escritos</title>
+  <title>Reglas para Dictamen</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -84,11 +84,13 @@
       display: block;
     }
 
+    /* paleta inspirada pero propia: azules, verde, violeta, naranja */
     .color-1 { color: #1e4a6b; border-left: 6px solid #1e4a6b; padding-left: 12px; }
     .color-2 { color: #2c7da0; border-left: 6px solid #2c7da0; padding-left: 12px; }
     .color-3 { color: #8e44ad; border-left: 6px solid #8e44ad; padding-left: 12px; }
     .color-4 { color: #27ae60; border-left: 6px solid #27ae60; padding-left: 12px; }
     .color-5 { color: #d35400; border-left: 6px solid #d35400; padding-left: 12px; }
+    .color-6 { color: #e67e22; border-left: 6px solid #e67e22; padding-left: 12px; }
 
     /* COLUMNA DERECHA */
     .columna-derecha {
@@ -131,7 +133,7 @@
       max-height: 60vh;
     }
 
-    /* Lista numerada de reglas */
+    /* Lista numerada de pautas / directrices */
     .lista-pasos {
       list-style: none;
       counter-reset: paso-counter;
@@ -291,37 +293,42 @@
 
 <div class="app-wrapper">
   <div class="container" id="mainContainer">
-    <!-- COLUMNA IZQUIERDA: categorías de requisitos para escritos -->
+    <!-- COLUMNA IZQUIERDA: categorías de dictamen (no penal / defensa oficial) -->
     <div class="columna-izquierda">
-      <h1 class="titulo-principal">Reglas para escritos</h1>
+      <h1 class="titulo-principal">Reglas para Dictamen</h1>
       
-      <div class="tarjeta-perfil" data-protocolo="cargoPlazo">
-        <span class="perfil-titulo color-1">1. Cargo y plazo de gracia</span>
-        <p>Art. 7º – Obligación de poner cargo, plazo de gracia de 2 horas al día siguiente hábil.</p>
+      <div class="tarjeta-perfil" data-protocolo="personeriaObjeto">
+        <span class="perfil-titulo color-1">1. Personería y Objeto</span>
+        <p>Legitimación activa (pobre, ausente, promoción de derechos) y definición precisa del objeto del dictamen.</p>
       </div>
 
-      <div class="tarjeta-perfil" data-protocolo="formaPresentacion">
-        <span class="perfil-titulo color-2">2. Forma de presentación</span>
-        <p>Art. 8º – Formato, extensión máxima, márgenes, tipo de letra y consecuencias del incumplimiento.</p>
+      <div class="tarjeta-perfil" data-protocolo="hechosVulnerabilidad">
+        <span class="perfil-titulo color-2">2. Hechos y Situación de Vulnerabilidad</span>
+        <p>Relato fáctico con énfasis en realidad socioeconómica y justificación de la intervención del Ministerio Público de la Defensa.</p>
       </div>
 
-      <div class="tarjeta-perfil" data-protocolo="encabezamientoDomicilio">
-        <span class="perfil-titulo color-3">3. Encabezamiento y domicilios</span>
-        <p>Art. 9º – Datos obligatorios, domicilio real y constituido, apercibimientos.</p>
+      <div class="tarjeta-perfil" data-protocolo="fundamentacionDerecho">
+        <span class="perfil-titulo color-3">3. Fundamentación en Derecho Civil y Familia</span>
+        <p>CCCN, Ley de Procedimiento de Familia de Misiones, perspectiva de género y Reglas de Brasilia.</p>
       </div>
 
-      <div class="tarjeta-perfil" data-protocolo="copiasDevolucion">
-        <span class="perfil-titulo color-4">4. Copias y devolución</span>
-        <p>Arts. 10 y 14 – Copias, conservación, prohibición de devolución sin resolución.</p>
+      <div class="tarjeta-perfil" data-protocolo="interesSuperior">
+        <span class="perfil-titulo color-4">4. Eje del Interés Superior (Niñez y Capacidad)</span>
+        <p>Interés Superior del Niño, derecho a ser oído, integración de la voluntad en el dictamen.</p>
       </div>
 
-      <div class="tarjeta-perfil" data-protocolo="firmaSanciones">
-        <span class="perfil-titulo color-5">5. Firmas, sanciones y validez</span>
-        <p>Arts. 18, 57, 8 in fine – Firma y sello, sanciones a auxiliares, Firma Digital.</p>
+      <div class="tarjeta-perfil" data-protocolo="controlConvencionalidad">
+        <span class="perfil-titulo color-5">5. Control de Convencionalidad y Constitucionalidad</span>
+        <p>Tratados internacionales con jerarquía constitucional (CDN, CDPD) como guía del Defensor.</p>
+      </div>
+
+      <div class="tarjeta-perfil" data-protocolo="conclusionDictamen">
+        <span class="perfil-titulo color-6">6. Conclusión y Dictamen</span>
+        <p>Propuesta de solución al conflicto, medidas concretas de protección y apoyo interdisciplinario forense.</p>
       </div>
     </div>
 
-    <!-- COLUMNA DERECHA: detalles dinámicos -->
+    <!-- COLUMNA DERECHA: contenido dinámico de dictamen -->
     <div class="columna-derecha" id="columnaDetalles">
       <button class="btn-recordar" id="btnRecordar">RECORDÁ ESTO</button>
       
@@ -331,95 +338,104 @@
       </div>
 
       <div class="principios-scroll" id="contenidoDerecho">
-        <!-- Contenido generado por JS -->
+        <!-- Contenido dinámico generado por JS -->
       </div>
     </div>
   </div>
 </div>
 
-<!-- MODAL informativo -->
+<!-- MODAL informativo: Dato Clave sobre Cuerpo Interdisciplinario Forense y trabajo en conjunto -->
 <div class="modal-overlay" id="modalInfo" onclick="toggleModal(false)">
   <div class="modal-content" onclick="stopPropagation(event)">
     <button style="position:absolute; top:12px; right:16px; background:none; border:none; font-size:1.8rem; cursor:pointer; color:#95a5a6; line-height:1;" onclick="toggleModal(false)">&times;</button>
     <div style="background:#eef4fa; border-left:5px solid #1e4a6b; padding:1.2rem; margin-bottom:1.5rem; border-radius:12px;">
-      <h4 style="color:#1a5d6c; margin-bottom:8px;">⚖️ Validez procesal</h4>
-      <p style="font-size:0.9rem; line-height:1.5;">El cumplimiento estricto de los Arts. 7, 8, 9, 10, 14 y 18 del RPJ evita el rechazo de escritos, asegura notificaciones válidas y resguarda derechos. La desestimación por defectos formales puede subsanarse solo si no constituye obstáculo insalvable (Art. 8).</p>
+      <h4 style="color:#1a5d6c; margin-bottom:8px;">⚖️ Cuerpo Interdisciplinario Forense</h4>
+      <p style="font-size:0.9rem; line-height:1.5;">En la justicia de Misiones, el Defensor Oficial en materia no penal trabaja estrechamente con el <strong>Cuerpo Interdisciplinario Forense</strong>. Un dictamen sólido menciona o se apoya en informes psicológicos, sociales o médicos para dar sustento científico a la opinión técnica, reforzando la situación de vulnerabilidad y las medidas de protección.</p>
     </div>
     <div style="background:#fff4e5; border-left:5px solid #ff9800; padding:1.2rem; border-radius:12px;">
-      <h4 style="color:#a35200; margin-bottom:8px;">📎 Documentación adicional</h4>
-      <p style="font-size:0.9rem; line-height:1.5;">La falta de copias o presentación extemporánea sin observar el plazo de gracia produce la pérdida de la oportunidad. Recuerde el margen izquierdo de 5 cm y la obligación de aclarar firma con sello (Art. 18).</p>
+      <h4 style="color:#a35200; margin-bottom:8px;">⚖️ Reglas de Brasilia & Perspectiva de Género</h4>
+      <p style="font-size:0.9rem; line-height:1.5;">El dictamen debe analizar asimetrías de poder y garantizar igualdad ante la ley. La Convención sobre los Derechos del Niño y la Convención sobre los Derechos de las Personas con Discapacidad son parámetros de control de convencionalidad obligatorios.</p>
+    </div>
+    <div style="margin-top: 12px; background:#eaf7ea; border-left:5px solid #27ae60; padding:1rem; border-radius:12px;">
+      <h4 style="color:#1e6b3e; margin-bottom:5px;">📌 Dato Práctico</h4>
+      <p style="font-size:0.9rem;">Siempre dejar constancia de haber escuchado al niño/a o adolescente (derecho a ser oído) y explicar cómo la solución propuesta satisface su interés superior, no como fórmula vacía sino como razonamiento concreto.</p>
     </div>
   </div>
 </div>
 
 <script>
-  // Protocolos con la información textual extraída del PDF (RPJ 2025)
-  // Cada ítem contiene título y una lista de "pasos" que reflejan los requisitos exactos
+  // Protocolos completos para DICTAMEN (Defensoría Oficial, materia no penal, Misiones)
   const protocolos = {
-    cargoPlazo: {
-      titulo: "📌 Cargo y plazo de gracia (Art. 7)",
+    personeriaObjeto: {
+      titulo: "📌 Personería y Objeto del Dictamen",
       pasos: [
-        "Al pie de todo escrito debe ponerse el CARGO DE PRESENTACIÓN autorizado por el secretario o el oficial superior.",
-        "El cargo debe indicar: fecha, nombre de quien lo presenta, firma del mismo y detalle de la documentación adjunta.",
-        "Si el vencimiento del plazo ocurre en día inhábil o fuera del horario judicial, el escrito podrá presentarse válidamente el día hábil inmediato siguiente, dentro de las DOS PRIMERAS HORAS de atención al público (plazo de gracia).",
-        "Los escritos no presentados dentro del horario del día de vencimiento solo podrán entregarse en la secretaría correspondiente respetando el plazo de gracia de 2 horas."
+        "Legitimación activa: Identificar si el Defensor actúa en representación de persona declarada «pobre» (arts. 78 y ss. CPCC), de un «ausente» citado por edictos, o en ejercicio de la Promoción y Defensa de Derechos (art. 44 Ley Orgánica del Ministerio Público).",
+        "Objeto preciso: Definir la materia del dictamen: régimen de comunicación, cuota alimentaria, sucesión, medida de protección de persona o cualquier otra cuestión de familia/civil.",
+        "Debe indicarse claramente el expediente, carátula y el interés jurídico protegido que motiva la intervención del Ministerio Público de la Defensa."
       ]
     },
-    formaPresentacion: {
-      titulo: "📌 Forma de presentación del escrito (Art. 8 – texto según Ac. 218/15)",
+    hechosVulnerabilidad: {
+      titulo: "📌 Relación de Hechos y Situación de Vulnerabilidad",
       pasos: [
-        "Texto mecanografiado en tinta negra (excepto casos del art. 117 CPCC que admiten manuscritos).",
-        "Extensión máxima: 40 páginas. Papel A4 de 80 gr. como mínimo.",
-        "Interlineado mínimo 1,5, máximo 26 líneas por carilla; usar anverso y reverso.",
-        "Tipo de letra claramente legible, tamaño no menor a 12.",
-        "Márgenes: izquierdo 5 cm, derecho 1,5 cm (se invierten en el reverso), superior 5 cm, inferior 2 cm.",
-        "Si no se cumplimenta alguno de los recaudos, se DESESTIMARÁ la presentación mediante sola mención de la norma, salvo que el incumplimiento no constituya un obstáculo insalvable a criterio del juez (en ese caso las actuaciones se repuntan inoficiosas).",
-        "Firmas aclaradas al pie en tinta negra o azul. Abogados, procuradores y auxiliares deben indicar tomo, folio y número de matrícula."
+        "Resumen de la controversia: descripción ordenada y cronológica de los hechos relevantes, especialmente aquellos que evidencian la necesidad de la defensa pública.",
+        "Énfasis en la realidad socio-económica y familiar: informar sobre condiciones de vida, ingresos, acceso a salud, educación, redes de apoyo, etc., que justifican la asistencia del Defensor.",
+        "Vulnerabilidad manifiesta: Identificar factores de riesgo, violencia de género, discapacidad, pobreza o cualquier otra circunstancia que coloque a la persona en situación de desventaja frente a la otra parte.",
+        "Sustento fáctico basado en entrevistas, pruebas documentales o indicios que respalden la situación de asimetría."
       ]
     },
-    encabezamientoDomicilio: {
-      titulo: "📌 Encabezamiento, personería y domicilios (Art. 9 – modif. Ac. 20/06)",
+    fundamentacionDerecho: {
+      titulo: "📌 Fundamentación en Derecho Civil y de Familia",
       pasos: [
-        "Todo escrito debe encabezarse con: objeto del escrito, nombre del presentante, documento nacional de identidad y/o CUIL/CUIT, DOMICILIO CONSTITUIDO, y enunciación precisa de la carátula del expediente.",
-        "Quienes actúen por terceros deben expresar el nombre completo de todos sus representados y del letrado patrocinante (si lo hubiera).",
-        "DENUNCIA DE DOMICILIO REAL: debe hacerse comenzando por calle y número; a falta de número, calles transversales; en defecto, número de chacra y manzana; en rutas, hito kilométrico más cercano.",
-        "Infringida esta regla, el juez intimará de oficio o a petición de parte a subsanar la omisión dentro de 24 horas de notificado, bajo apercibimiento del art. 41 CPCC (multa o pérdida de derechos)."
+        "Código Civil y Comercial de la Nación: Citar normas de fondo pertinentes (arts. 400, 431, 658, 660, 706, entre otros, según el caso).",
+        "Ley de Procedimiento de Familia de Misiones (Ley II - N.º 43): encuadre procesal específico, principios de oficiosidad, celeridad y tutela efectiva.",
+        "Perspectiva de Género y Reglas de Brasilia: analizar asimetrías de poder y la obligación del juez de compensar desigualdades para garantizar igualdad ante la ley (Caso “González” vs. Argentina, 100 Reglas de Brasilia).",
+        "Incorporar jurisprudencia de Tribunales de Familia de Misiones o de la CSJN que respalde el enfoque protectorio.",
+        "Principio de progresividad y favor debilis: toda interpretación debe favorecer a la parte más vulnerable."
       ]
     },
-    copiasDevolucion: {
-      titulo: "📄 Copias y devolución de escritos (Arts. 10 y 14)",
+    interesSuperior: {
+      titulo: "📌 El Eje del Interés Superior (Niñez y Capacidad)",
       pasos: [
-        "En el cargo del escrito se indicará el número de copias que se acompañan. Dichas copias se conservarán en Secretaría durante DOS MESES.",
-        "De todo escrito o documento presentado, se devolverá al interesado que lo solicite una copia en la que conste, bajo firma del funcionario, la fecha y hora de presentación del original.",
-        "Art. 14 – Sin resolución del Presidente del Tribunal o del Juez NO podrá devolverse ningún escrito, aunque adolezca de defectos de forma o la petición fuera improcedente.",
-        "Excepción a la regla anterior: escritos presentados FUERA DE PLAZO o SIN COPIAS pueden ser devueltos sin resolución previa (Art. 14 in fine)."
+        "Interés Superior del Niño (art. 3 CDN, art. 706 CCCN): desarrollar no como frase vacía, sino explicando cómo la solución propuesta garantiza el desarrollo integral, bienestar y protección.",
+        "Derecho a ser oído: dejar constancia expresa de que se ha escuchado la opinión del niño, niña o adolescente (arts. 12 CDN, 24 CCCN).",
+        "Integrar la voluntad del menor según su edad y grado de madurez, detallando cómo su opinión fue valorada en el dictamen.",
+        "En personas con capacidad restringida: incluir salvaguardas del art. 32 CCCN y Convención sobre los Derechos de las Personas con Discapacidad (apoyos, toma de decisiones asistida)."
       ]
     },
-    firmaSanciones: {
-      titulo: "📌 Firmas, sanciones y formalidades (Arts. 18, 57, 8, Ac. 225/15)",
+    controlConvencionalidad: {
+      titulo: "📌 Control de Convencionalidad y Constitucionalidad",
       pasos: [
-        "Art. 18 – Providencias de trámite pueden suscribirse con media firma. En las demás actuaciones se usará firma entera, ambas aclaradas al pie con sello de goma.",
-        "Oficios, exhortos y certificaciones llevarán en cada foja media firma y sello correspondiente.",
-        "Firma Digital: Registro de firma digital para abogados (Ac. 225/15), obligatoria para presentaciones electrónicas en el marco del expediente electrónico (Ac. 180/22).",
-        "Art. 57 – Sanciones a auxiliares, litigantes o particulares por faltas contra la dignidad del tribunal o por obstrucción: apercibimiento, multa (hasta suma igual al salario de categoría inferior) o arresto de hasta 30 días.",
-        "Los jueces podrán imponer sanciones por escritos que contengan manifiesta falta de respeto o carencia de mensura, sin perjuicio de rechazar la presentación defectuosa (Art. 8)."
+        "Jerarquía constitucional: cita obligatoria de la Convención sobre los Derechos del Niño (CDN), Convención sobre los Derechos de las Personas con Discapacidad (CDPD) y la Convención Americana sobre Derechos Humanos (CADH).",
+        "Debe examinarse que toda decisión judicial propuesta respete los tratados internacionales, con control de convencionalidad oficioso.",
+        "Guía de Defensores Oficiales: El dictamen debe interpretar las normas internas conforme a los estándares de la Corte Interamericana y observaciones generales de comités de Derechos Humanos.",
+        "En procesos de familia, reforzar la prohibición de discriminación y la igualdad sustancial."
+      ]
+    },
+    conclusionDictamen: {
+      titulo: "📌 Conclusión y Dictamen – Propuesta & Medidas",
+      pasos: [
+        "Propuesta de solución concreta: por ejemplo: “Esta Defensoría opina que debe hacerse lugar a la demanda de alimentos fijando una cuota equivalente al 30% de los ingresos del progenitor”.",
+        "Medidas de protección urgentes: si se detecta riesgo inminente (violencia intrafamiliar, desprotección de adulto mayor), solicitar medidas precautorias, exclusión del hogar, o intervención del equipo interdisciplinario.",
+        "Apoyo interdisciplinario forense: incorporar conclusiones de informes psicológicos, sociales o médicos del Cuerpo Interdisciplinario Forense para dar sustento científico a la opinión (vulnerabilidad, daño psicológico, entorno familiar).",
+        "Petición de costas o imposición al vencido según la ley procesal, siempre que no afecte el acceso a justicia del asistido.",
+        "Dictamen claro y fundado: debe cerrar con la suscripción del Defensor Oficial, aclarando fecha y firma, con indicación de matrícula y tomo según reglamento local."
       ]
     }
   };
 
-  // Función para mostrar los pasos/requisitos del módulo seleccionado
+  // Función para mostrar los pasos del dictamen según el módulo seleccionado
   function mostrarPasos(id) {
     const data = protocolos[id];
     if (!data) return;
     const contenedor = document.getElementById('contenidoDerecho');
     document.getElementById('tituloDerecho').innerHTML = data.titulo;
-    document.getElementById('subtituloDerecho').innerHTML = "Requisitos exigidos por el Reglamento (RPJ):";
+    document.getElementById('subtituloDerecho').innerHTML = "Directrices para el dictamen del Defensor Oficial (Misiones – materia no penal):";
     
     const htmlPasos = data.pasos.map(paso => `<li>${paso}</li>`).join('');
     contenedor.innerHTML = `<ul class="lista-pasos">${htmlPasos}</ul>`;
   }
 
-  // Manejar clic en tarjetas (izquierda)
+  // Manejo de clic en tarjetas (táctil y mouse)
   function handlePerfilClick(event, tarjeta) {
     event.stopPropagation();
     const protocoloId = tarjeta.getAttribute('data-protocolo');
@@ -428,24 +444,23 @@
     }
   }
 
-  // detener propagación para modal
   function stopPropagation(e) {
     e.stopPropagation();
   }
 
-  // control del modal
+  // Modal control
   function toggleModal(show) {
     const modal = document.getElementById('modalInfo');
     modal.style.display = show ? 'flex' : 'none';
   }
 
-  // inicializar eventos en todas las tarjetas (táctil y mouse)
+  // Inicializar eventos en tarjetas (para que funcionen en ratón y tacto)
   function inicializarTarjetas() {
     const tarjetas = document.querySelectorAll('.tarjeta-perfil');
     tarjetas.forEach(tarjeta => {
-      // remover listeners previos para evitar duplicación (seguro)
-      tarjeta.removeEventListener('click', tarjeta._listener);
-      tarjeta.removeEventListener('touchstart', tarjeta._touchListener);
+      // remover listeners previos para evitar duplicaciones
+      if (tarjeta._listener) tarjeta.removeEventListener('click', tarjeta._listener);
+      if (tarjeta._touchListener) tarjeta.removeEventListener('touchstart', tarjeta._touchListener);
       
       const clickHandler = (e) => handlePerfilClick(e, tarjeta);
       const touchHandler = (e) => {
@@ -462,10 +477,10 @@
     });
   }
 
-  // mostrar módulo por defecto: Cargo y plazo de gracia
   window.onload = function() {
     inicializarTarjetas();
-    mostrarPasos('cargoPlazo');
+    // Módulo por defecto: Personería y Objeto
+    mostrarPasos('personeriaObjeto');
     
     const btnRecordar = document.getElementById('btnRecordar');
     if (btnRecordar) {
