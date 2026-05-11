@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Protocolo de Actuación | Defensoría 6</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+        /* FUENTE LIMPIA Y MODERNA */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&display=swap');
 
         * {
             margin: 0;
@@ -14,8 +15,9 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f1f5f9;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: #ffffff;       /* blanco puro – minimalismo radical */
+            color: #1e293b;
             min-height: 100vh;
             width: 100%;
             display: flex;
@@ -24,211 +26,118 @@
             position: relative;
             overflow-x: hidden;
             overflow-y: auto;
-            transition: all 0.2s;
+            padding: 2rem 1.5rem;
         }
 
-        /* --- LÍNEAS DECORATIVAS GRISES (EXTREMO A EXTREMO) --- */
-        .linea-deco-superior,
-        .linea-deco-inferior {
-            position: fixed;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background-color: #9ca3af;
-            z-index: 5;
-            pointer-events: none;
-            box-shadow: 0 0 2px rgba(0,0,0,0.05);
-        }
-
-        .linea-deco-superior {
-            top: 0;
-        }
-
-        .linea-deco-inferior {
-            bottom: 0;
-        }
-
-        /* Barra decorativa central horizontal */
-        .linea-deco-central {
-            position: fixed;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background-color: #94a3b8;
-            z-index: 8;
-            pointer-events: none;
-            top: 50%;
-            transform: translateY(-50%);
-            box-shadow: 0 0 1px rgba(0,0,0,0.1);
-            opacity: 0.7;
-        }
-
-        /* Contenedor principal con efecto glass y borde azul animado */
+        /* ========== CONTENEDOR PRINCIPAL (TARJETA MINIMALISTA) ========== */
         .protocolo-card {
             text-align: center;
-            max-width: 700px;
+            max-width: 680px;
             width: 100%;
-            padding: clamp(2rem, 8vw, 4rem);
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(4px);
-            border-radius: 28px;
-            border: 2px solid rgba(56, 189, 248, 0.6);
-            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08), 
-                        0 0 0 2px rgba(56, 189, 248, 0.1) inset, 
-                        0 0 20px rgba(2, 132, 199, 0.3);
+            padding: 3rem 2rem;
+            background: transparent;          /* sin fondo vítreo, solo blanco */
+            border: none;                    /* sin borde decorativo */
+            border-radius: 0;                /* sin esquinas redondeadas pesadas */
             cursor: pointer;
-            transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            transition: all 0.2s ease;
             user-select: none;
             position: relative;
             z-index: 20;
-            animation: borderGlow 3s infinite alternate ease-in-out;
         }
 
-        @keyframes borderGlow {
-            0% {
-                border-color: rgba(56, 189, 248, 0.5);
-                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06),
-                            0 0 0 1px rgba(56, 189, 248, 0.2) inset,
-                            0 0 12px rgba(14, 165, 233, 0.4);
-                background: rgba(255, 255, 255, 0.82);
-            }
-            100% {
-                border-color: rgba(2, 136, 209, 0.85);
-                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1),
-                            0 0 0 3px rgba(2, 132, 199, 0.25) inset,
-                            0 0 28px rgba(2, 132, 199, 0.7);
-                background: rgba(255, 255, 255, 0.92);
-            }
-        }
-
+        /* sutíl elevación al hover para feedback táctil, sin sombra dramática */
         .protocolo-card:hover {
-            transform: translateY(-6px);
-            animation: borderGlowHover 1.2s infinite alternate;
-            backdrop-filter: blur(8px);
-            background: rgba(255, 255, 255, 0.88);
-        }
-        
-        @keyframes borderGlowHover {
-            0% {
-                border-color: rgba(56, 189, 248, 0.7);
-                box-shadow: 0 20px 38px rgba(0, 0, 0, 0.12),
-                            0 0 0 2px rgba(2, 132, 199, 0.3) inset,
-                            0 0 18px #38bdf8;
-            }
-            100% {
-                border-color: #0ea5e9;
-                box-shadow: 0 26px 48px rgba(0, 0, 0, 0.15),
-                            0 0 0 4px rgba(2, 132, 199, 0.4) inset,
-                            0 0 32px #0284c7;
-            }
+            transform: translateY(-3px);
         }
 
         .protocolo-card:active {
-            transform: scale(0.97);
-            transition: 0.08s linear;
+            transform: scale(0.99);
         }
 
+        /* TIPOGRAFÍA CON MUCHO AIRE */
         h1 {
-            font-size: clamp(1.8rem, 6vw, 3rem);
-            font-weight: 800;
+            font-size: clamp(2rem, 7vw, 3.5rem);
+            font-weight: 600;               /* semi-negrita, no extra-bold */
             color: #0f172a;
             line-height: 1.2;
             letter-spacing: -0.02em;
-            margin-bottom: 12px;
-            text-shadow: 0 1px 1px rgba(255,255,255,0.5);
+            margin-bottom: 0.75rem;
         }
 
         h2 {
-            font-size: clamp(1rem, 3.5vw, 1.4rem);
-            font-weight: 600;
-            color: #1e293b;
-            margin-bottom: 28px;
+            font-size: clamp(1rem, 4vw, 1.4rem);
+            font-weight: 400;
+            color: #334155;
+            margin-bottom: 2rem;
             letter-spacing: -0.01em;
-            opacity: 0.9;
+            border-bottom: none;
         }
 
+        /* Línea decorativa minimalista: muy fina, gris, con espacio generoso */
         .decorator-line {
-            height: 4px;
-            width: 65px;
-            background: linear-gradient(90deg, #1e3a8a, #38bdf8, #1e3a8a);
-            margin: 0 auto;
-            border-radius: 4px;
-            transition: width 0.3s ease;
+            width: 64px;
+            height: 2px;
+            background: #cbd5e1;
+            margin: 1.5rem auto;
+            border-radius: 2px;
+            transition: width 0.2s ease;
         }
 
         .protocolo-card:hover .decorator-line {
-            width: 120px;
+            width: 88px;
         }
 
+        /* texto de acción (hint) – pequeño y discreto */
         .hint-text {
-            margin-top: 40px;
-            font-size: 0.75rem;
+            margin-top: 2.5rem;
+            font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 0.2em;
-            color: #5b6e8c;
-            font-weight: 600;
-            background: rgba(255,255,240,0.3);
-            display: inline-block;
-            padding: 5px 16px;
-            border-radius: 40px;
-            backdrop-filter: blur(2px);
+            color: #94a3b8;
+            font-weight: 500;
+            background: none;
+            padding: 0;
+            border-radius: 0;
         }
 
-        .protocolo-card {
-            animation: slideUpFade 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-        }
-
-        @keyframes slideUpFade {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* --- CONTENEDOR CIRCULAR GLASS: VERSIÓN ESCRITORIO (fijo lateral, gran tamaño) --- */
+        /* ========== CÍRCULO CON ÍCONO (LATERAL – VERSIÓN ESCRITORIO) ========== */
         .glass-circle {
             position: fixed;
-            left: 30px;
+            left: 40px;
             top: 50%;
             transform: translateY(-50%);
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.65);
-            backdrop-filter: blur(8px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+            background: rgba(248, 250, 252, 0.9);  /* gris muy claro, casi blanco */
+            backdrop-filter: blur(4px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(203, 213, 225, 0.4);
             z-index: 30;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
-            overflow: hidden;
+            transition: all 0.2s ease;
             cursor: pointer;
-            min-width: 80px;
-            min-height: 80px;
+            overflow: hidden;
+            width: 140px;       /* tamaño base, luego JS lo escala dinámicamente */
+            height: 140px;
         }
 
         .glass-circle:hover {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            box-shadow: 0 18px 32px rgba(0, 0, 0, 0.25), 0 0 0 2px rgba(255, 255, 255, 0.6) inset;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06), 0 0 0 1px #cbd5e1;
+            transform: translateY(-50%) scale(1.02);
         }
 
         .glass-circle:active {
-            transform: translateY(-50%) scale(0.96);
+            transform: translateY(-50%) scale(0.97);
         }
 
-        /* IMAGEN: reducida dentro del círculo para verse en plenitud */
         .glass-circle img {
-            max-width: 80%;
-            max-height: 80%;
+            max-width: 68%;
+            max-height: 68%;
             width: auto;
             height: auto;
             object-fit: contain;
-            object-position: center;
-            filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.15));
+            filter: none;
             transition: transform 0.2s ease;
         }
 
@@ -236,144 +145,121 @@
             transform: scale(1.02);
         }
 
-        /* Fondo con sutiles puntos decorativos */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: radial-gradient(circle at 15% 30%, rgba(56, 189, 248, 0.05) 2%, transparent 2.5%);
-            background-size: 32px 32px;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        /* ============================================= */
-        /* === RESPONSIVE MÓVIL / TABLET PEQUEÑA: SIN SUPERPOSICIÓN, STACK VERTICAL === */
-        /* ============================================= */
+        /* ========== RESPONSIVE: SIN OVERLAP, CÍRCULO RELATIVO EN MÓVIL ========== */
         @media (max-width: 860px) {
             body {
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
-                gap: 1.5rem;
-                padding: 2rem 1rem;
-                overflow-y: auto;
+                gap: 1.8rem;
+                padding: 2rem 1.2rem;
             }
 
-            /* Círculo: dejar de ser fixed, pasa a bloque relativo para NO superponer */
+            /* círculo deja de ser fixed, pasa a ser un bloque centrado */
             .glass-circle {
                 position: relative !important;
                 left: auto !important;
                 top: auto !important;
                 transform: none !important;
                 margin: 0 auto 0 auto !important;
-                width: 140px !important;
-                height: 140px !important;
-                min-width: 120px;
-                min-height: 120px;
-                flex-shrink: 0;
-                box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15), 0 0 0 2px rgba(255, 255, 255, 0.7) inset;
+                width: 130px !important;
+                height: 130px !important;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04), 0 0 0 1px #e2e8f0;
             }
-            
-            /* Ajuste hover/active para móvil (no hay desplazamiento Y extra) */
+
             .glass-circle:active {
                 transform: scale(0.96) !important;
             }
-            
-            /* Tarjeta: ocupa el ancho disponible, sin márgenes laterales excesivos */
+
             .protocolo-card {
                 max-width: 100%;
-                width: 100%;
-                margin: 0 auto;
-                padding: 2rem 1.8rem;
-                position: relative;
-                z-index: 20;
+                padding: 1.8rem 1.2rem;
             }
-            
-            /* pequeños ajustes de espaciado en hint text */
+
             .hint-text {
-                margin-top: 28px;
-            }
-            
-            /* Líneas decorativas siguen intactas */
-            .linea-deco-superior,
-            .linea-deco-inferior {
-                height: 4px;
-            }
-            
-            .linea-deco-central {
-                height: 1.8px;
-                opacity: 0.55;
+                margin-top: 1.8rem;
             }
         }
 
-        /* Ajuste adicional para pantallas muy compactas (hasta 480px) */
+        /* Ajuste fino para pantallas muy pequeñas */
         @media (max-width: 480px) {
             body {
                 gap: 1rem;
-                padding: 1rem;
+                padding: 1.2rem;
             }
             .glass-circle {
-                width: 130px !important;
-                height: 130px !important;
+                width: 110px !important;
+                height: 110px !important;
             }
             .protocolo-card {
-                padding: 1.75rem 1.25rem;
+                padding: 1.5rem 1rem;
             }
             h1 {
                 font-size: 1.9rem;
             }
             h2 {
-                font-size: 1rem;
+                font-size: 0.95rem;
             }
-            .hint-text {
-                font-size: 0.65rem;
-                margin-top: 24px;
+            .decorator-line {
+                margin: 1rem auto;
             }
         }
 
-        /* En pantallas medianamente grandes como tablet en horizontal, seguimos sin overlap pero con círculo contenido */
+        /* Para tablets horizontales o escritorio con menor ancho, evitar que el círculo toque la tarjeta */
         @media (min-width: 861px) and (max-width: 1100px) {
-            /* Ajuste fino: si el círculo fijo aún pudiera rozar la tarjeta (anchos intermedios), le damos un pequeño margen izquierdo a la card */
             .protocolo-card {
                 margin-left: 80px;
-                max-width: 620px;
+                max-width: 580px;
             }
             .glass-circle {
-                left: 20px;
-                width: 130px;
-                height: 130px;
+                left: 24px;
+                width: 120px;
+                height: 120px;
             }
         }
 
-        /* Para pantallas grandes, mantenemos el diseño original elegante pero aseguramos que no overlap */
         @media (min-width: 1101px) {
             .protocolo-card {
                 margin-left: 0;
             }
             .glass-circle {
-                left: 40px;
+                left: 48px;
+            }
+        }
+
+        /* Pequeño detalle: entrada suave, sin animaciones exageradas */
+        .protocolo-card {
+            animation: fadeSlideUp 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- Líneas decorativas: arriba y abajo, extremo a extremo -->
-    <div class="linea-deco-superior" aria-hidden="true"></div>
-    <div class="linea-deco-inferior" aria-hidden="true"></div>
-    
-    <!-- Barra decorativa central horizontal -->
-    <div class="linea-deco-central" aria-hidden="true"></div>
+    <!-- 
+        VERSIÓN MINIMALISTA 
+        - Sin líneas decorativas (elementos .linea-deco-*) 
+        - Sin efectos glass pesados ni bordes animados
+        - Blanco puro, tipografía aireada, jerarquía clara
+        - Toda la lógica responsiva para evitar overlap se conserva y optimiza
+    -->
 
-    <!-- CONTENEDOR CIRCULAR GLASS: con imagen reducida dentro, ahora responsivo sin overlap -->
+    <!-- Círculo lateral con ícono (funcionalidad igual) -->
     <div class="glass-circle" id="iconCircle">
         <img src="https://github.com/defensorialocal-seis/protocolo/blob/main/icono1.png?raw=true" alt="Ícono Defensoría">
     </div>
 
+    <!-- Tarjeta principal: título, subtítulo y llamada a acción -->
     <main class="protocolo-card" id="mainContainer">
         <h1>Protocolo de Actuación</h1>
         <h2>Defensoría Oficial Civil y Comercial 6</h2>
@@ -382,128 +268,104 @@
     </main>
 
     <script>
-        // Función de dimensionamiento dinámico SOLO para entorno de escritorio (pantallas anchas)
-        // En móviles, el CSS con !important anula los anchos dinámicos y fija un tamaño amigable.
-        // Esto garantiza que el círculo NUNCA superponga la tarjeta en móvil ni tablet estrecha.
-        function dimensionarCirculo() {
-            const tarjeta = document.querySelector('.protocolo-card');
-            const circulo = document.getElementById('iconCircle');
-            // Solo aplicamos el redimensionamiento cuando la pantalla sea mayor a 860px (modo escritorio)
-            // Para evitar conflictos y mantener la estética original en desktop, y en mobile el CSS fijo prevalece.
-            if (!tarjeta || !circulo) return;
-            
-            const anchoVentana = window.innerWidth;
-            // Para resoluciones mayores a 860px, se usa el cálculo dinámico original (círculo grande lateral).
-            // En móvil y tablets pequeñas, el CSS responsivo se encarga (width/height fijo con !important).
-            if (anchoVentana > 860) {
-                const alturaTarjeta = tarjeta.offsetHeight;
-                // Tamaño base: círculo un 70% más grande que la altura de la tarjeta (efecto vistoso)
-                let nuevoTamano = alturaTarjeta * 1.7;
-                const tamanoMinimo = 140;
-                const maxPorAltura = window.innerHeight * 0.7;
-                const maxPorAncho = window.innerWidth * 0.35;
-                const maxPermitido = Math.min(maxPorAltura, maxPorAncho, 380); // límite estético
-                nuevoTamano = Math.min(Math.max(nuevoTamano, tamanoMinimo), maxPermitido);
-                circulo.style.width = nuevoTamano + 'px';
-                circulo.style.height = nuevoTamano + 'px';
-            } else {
-                // En dispositivos con ancho <=860px, no aplicamos estilos inline agresivos,
-                // dejamos que la hoja de estilo (con !important) maneje las dimensiones fijas sin superposición.
-                // Solo borramos posibles valores inline previos que pudieran quedar de un resize cruzado.
-                if (circulo.style.width) {
-                    circulo.style.width = '';
-                    circulo.style.height = '';
-                }
-            }
-        }
-
-        // Función para garantizar que en cualquier cambio de orientación o resize, se recalcule correctamente
-        // y en móvil nunca haya overlap.
-        function handleResizeAndMobile() {
-            dimensionarCirculo();
-            // Verificación extra de seguridad: si detectamos que en modo móvil el círculo por algún motivo tuviera position fixed,
-            // lo reafirmamos con CSS mediante clase, pero nuestro CSS ya lo hace robusto.
-            if (window.innerWidth <= 860) {
-                const circulo = document.getElementById('iconCircle');
-                if (circulo && window.getComputedStyle(circulo).position === 'fixed') {
-                    // Refuerzo: si algo extraño revierte el estilo, aseguramos compatibilidad
-                    circulo.style.position = 'relative';
-                    circulo.style.left = 'auto';
-                    circulo.style.top = 'auto';
-                    circulo.style.transform = 'none';
-                }
-            }
-        }
-
-        // Observador de cambios de tamaño de tarjeta para escritorio
-        if (window.ResizeObserver) {
-            const tarjeta = document.querySelector('.protocolo-card');
-            if (tarjeta) {
-                const resizeObserver = new ResizeObserver(() => {
-                    // Solo aplicamos actualización de tamaño en escritorio
-                    if (window.innerWidth > 860) {
-                        dimensionarCirculo();
-                    }
-                });
-                resizeObserver.observe(tarjeta);
-            }
-        }
-
-        // Escucha de eventos de carga y redimensionamiento
-        window.addEventListener('load', () => {
-            handleResizeAndMobile();
-            setTimeout(handleResizeAndMobile, 100);
-        });
-        window.addEventListener('resize', () => {
-            handleResizeAndMobile();
-        });
-
-        // También observamos cambios de orientación
-        window.addEventListener('orientationchange', () => {
-            setTimeout(handleResizeAndMobile, 50);
-        });
-
-        // Redirección al hacer clic en la tarjeta principal (app.html)
-        const container = document.getElementById('mainContainer');
-        if (container) {
-            container.addEventListener('click', (e) => {
-                e.stopPropagation();
-                window.location.href = 'app.html';
-            });
-        }
-
-        // Redirección también al hacer clic en el círculo (misma acción)
-        const circle = document.getElementById('iconCircle');
-        if (circle) {
-            circle.addEventListener('click', (e) => {
-                e.stopPropagation();
-                window.location.href = 'app.html';
-            });
-        }
-
-        // Pequeño refuerzo inicial para móviles: eliminar cualquier estilo inline conflictivo que pudiera alterar el tamaño fijo
-        // sin afectar la funcionalidad general.
-        (function ensureMobileNoOverlap() {
-            const isMobileOrTablet = window.innerWidth <= 860;
-            const circulo = document.getElementById('iconCircle');
-            if (isMobileOrTablet && circulo) {
-                // Dejamos que los estilos CSS con !important dominen: eliminamos cualquier width/height inline previo para mayor claridad.
-                if (circulo.style.width) {
-                    circulo.style.width = '';
-                    circulo.style.height = '';
-                }
-                // Aseguramos que los atributos de posicionamiento hereden correctamente desde CSS.
-                circulo.style.position = '';
-                circulo.style.left = '';
-                circulo.style.top = '';
-                circulo.style.transform = '';
-            }
-            // También validamos que la tarjeta no tenga márgenes extraños en móvil
-            if (isMobileOrTablet) {
+        (function() {
+            // === DIMENSIONAMIENTO DINÁMICO DEL CÍRCULO (SOLO ESCRITORIO) ===
+            // Mantiene la proporción armoniosa sin sacrificar minimalismo.
+            function dimensionarCirculo() {
                 const tarjeta = document.querySelector('.protocolo-card');
-                if (tarjeta && tarjeta.style.marginLeft) {
-                    tarjeta.style.marginLeft = '';
+                const circulo = document.getElementById('iconCircle');
+                if (!tarjeta || !circulo) return;
+
+                const anchoVentana = window.innerWidth;
+                // Solo en pantallas > 860px aplicamos el escalado dinámico (escritorio)
+                if (anchoVentana > 860) {
+                    const alturaTarjeta = tarjeta.offsetHeight;
+                    // Tamaño base: un 60% más que la altura de la tarjeta (elegante, sin exagerar)
+                    let nuevoTamano = alturaTarjeta * 1.6;
+                    const tamanoMinimo = 130;
+                    const maxPorAltura = window.innerHeight * 0.65;
+                    const maxPorAncho = window.innerWidth * 0.28;
+                    const maxPermitido = Math.min(maxPorAltura, maxPorAncho, 340);
+                    nuevoTamano = Math.min(Math.max(nuevoTamano, tamanoMinimo), maxPermitido);
+                    circulo.style.width = nuevoTamano + 'px';
+                    circulo.style.height = nuevoTamano + 'px';
+                } else {
+                    // En móviles y tablets estrechas, eliminamos cualquier estilo inline
+                    // para que prevalezca el CSS (dimensiones fijas, sin overlap)
+                    if (circulo.style.width) {
+                        circulo.style.width = '';
+                        circulo.style.height = '';
+                    }
                 }
+            }
+
+            // Refuerzo de posicionamiento para móviles (garantiza que el círculo no sea fixed)
+            function asegurarPosicionMovil() {
+                if (window.innerWidth <= 860) {
+                    const circulo = document.getElementById('iconCircle');
+                    if (circulo) {
+                        // Elimina cualquier estilo inline que pueda forzar fixed
+                        circulo.style.position = '';
+                        circulo.style.left = '';
+                        circulo.style.top = '';
+                        circulo.style.transform = '';
+                    }
+                }
+            }
+
+            // Manejo de resize y carga
+            window.addEventListener('load', () => {
+                dimensionarCirculo();
+                asegurarPosicionMovil();
+                // Pequeño retardo para asegurar medidas finales
+                setTimeout(dimensionarCirculo, 80);
+            });
+            window.addEventListener('resize', () => {
+                dimensionarCirculo();
+                asegurarPosicionMovil();
+            });
+            window.addEventListener('orientationchange', () => {
+                setTimeout(() => {
+                    dimensionarCirculo();
+                    asegurarPosicionMovil();
+                }, 60);
+            });
+
+            // ResizeObserver para actualizar tamaño del círculo cuando cambie la tarjeta (escritorio)
+            if (window.ResizeObserver) {
+                const tarjeta = document.querySelector('.protocolo-card');
+                if (tarjeta) {
+                    const resizeObserver = new ResizeObserver(() => {
+                        if (window.innerWidth > 860) {
+                            dimensionarCirculo();
+                        }
+                    });
+                    resizeObserver.observe(tarjeta);
+                }
+            }
+
+            // === REDIRECCIONES AL HACER CLIC ===
+            const container = document.getElementById('mainContainer');
+            const circle = document.getElementById('iconCircle');
+            const destino = 'app.html';
+
+            if (container) {
+                container.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    window.location.href = destino;
+                });
+            }
+            if (circle) {
+                circle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    window.location.href = destino;
+                });
+            }
+
+            // limpieza final: si por algun motivo hubiera restos de márgenes extraños en móvil
+            if (window.innerWidth <= 860) {
+                const tarjeta = document.querySelector('.protocolo-card');
+                if (tarjeta && tarjeta.style.marginLeft) tarjeta.style.marginLeft = '';
             }
         })();
     </script>
