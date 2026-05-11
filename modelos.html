@@ -3,10 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-  <title>Modelos para redactar escritos</title>
+  <title>Modelos por etapa | Defensoría</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+  <!-- Quill editor -->
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+  <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
   <style>
     * {
       margin: 0;
@@ -21,7 +27,6 @@
       line-height: 1.45;
     }
 
-    /* arquitectura principal */
     .app-layout {
       display: flex;
       width: 100%;
@@ -38,7 +43,6 @@
       margin: 0 auto;
     }
 
-    /* PANEL IZQUIERDO (materias + procesos) */
     .panel-materias {
       background: transparent;
       overflow-y: auto;
@@ -62,7 +66,6 @@
       border: 1px solid #d9e4ec;
       overflow: hidden;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
-      transition: all 0.2s;
     }
 
     .materia-titulo {
@@ -72,13 +75,13 @@
       font-size: 1.05rem;
       border-left: 5px solid #ff9800;
       color: #1e4a6b;
-      letter-spacing: -0.2px;
       border-bottom: 1px solid #ecf3f8;
     }
 
     .lista-procesos {
       list-style: none;
       padding: 0.4rem 0;
+      counter-reset: proceso-counter;
     }
 
     .proceso-enlace {
@@ -94,7 +97,6 @@
       counter-increment: proceso-counter;
     }
 
-    /* numeración manual (estilo enumerado) */
     .lista-procesos .proceso-enlace::before {
       content: counter(proceso-counter) ".";
       position: absolute;
@@ -102,10 +104,6 @@
       font-weight: 600;
       color: #ff9800;
       font-size: 0.85rem;
-    }
-
-    .lista-procesos {
-      counter-reset: proceso-counter;
     }
 
     .proceso-enlace:hover {
@@ -120,14 +118,13 @@
       color: #0a2f44;
     }
 
-    /* PANEL DERECHO (etapas + urls) */
+    /* PANEL DERECHO */
     .panel-escritos {
       background: #ffffff;
       border-radius: 28px;
       padding: 1.8rem 2rem;
       border: 1px solid #dce9f0;
       box-shadow: 0 12px 28px rgba(0, 0, 0, 0.04);
-      transition: all 0.2s;
     }
 
     .cabecera-proceso {
@@ -158,7 +155,7 @@
     .etapa-card {
       background: #fbfeff;
       border-radius: 20px;
-      margin-bottom: 1.3rem;
+      margin-bottom: 1.5rem;
       border: 1px solid #e4edf5;
       padding: 1.2rem 1.4rem;
       transition: all 0.1s;
@@ -187,36 +184,74 @@
       line-height: 1.45;
       margin-bottom: 12px;
     }
-
-    .modelo-url-area {
+    
+    .modelo-info {
       background: #f6fafd;
       border-radius: 16px;
-      padding: 0.75rem 1rem;
+      padding: 0.9rem 1rem;
       margin-top: 12px;
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      font-size: 0.85rem;
       border: 1px solid #e2ecf5;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
     }
-
-    .etiqueta-url {
-      font-weight: 600;
-      color: #2c7da0;
-      background: #eef3fc;
+    
+    .modelo-titulo {
+      font-weight: 700;
+      color: #1e4a6b;
+      background: white;
       padding: 4px 12px;
-      border-radius: 30px;
-      letter-spacing: -0.2px;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      border: 1px solid #cde3ef;
+      word-break: break-word;
+      max-width: 60%;
     }
-
-    .url-placeholder {
-      font-family: monospace;
-      font-size: 0.8rem;
-      color: #4d7c9b;
-      word-break: break-all;
+    
+    .botones-modelo {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
     }
-
+    
+    .btn-modelo {
+      border: none;
+      padding: 6px 12px;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.7rem;
+      cursor: pointer;
+      transition: 0.1s ease;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    .btn-crear {
+      background: #ff9800;
+      color: white;
+    }
+    
+    .btn-editar {
+      background: #2c7da0;
+      color: white;
+    }
+    
+    .btn-eliminar {
+      background: #d9534f;
+      color: white;
+    }
+    
+    .btn-imprimir {
+      background: #5a6874;
+      color: white;
+    }
+    
+    .btn-modelo:hover {
+      transform: translateY(-1px);
+      filter: brightness(0.95);
+    }
+    
     .mensaje-guia {
       background: #fef6e8;
       border-left: 5px solid #ff9800;
@@ -226,12 +261,7 @@
       font-size: 0.8rem;
       color: #5b6e7e;
     }
-
-    hr {
-      margin: 0.5rem 0 1.2rem;
-      border-color: #eef2f5;
-    }
-
+    
     footer {
       text-align: center;
       font-size: 0.7rem;
@@ -240,31 +270,107 @@
       border-top: 1px solid #e2edf5;
       padding-top: 1.2rem;
     }
-
-    /* RESPONSIVE */
+    
+    /* MODAL */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.6);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .modal-content {
+      background: white;
+      padding: 25px;
+      border-radius: 28px;
+      width: 90%;
+      max-width: 900px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 35px rgba(0,0,0,0.2);
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #ffeedb;
+      padding-bottom: 10px;
+    }
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 28px;
+      cursor: pointer;
+      color: #888;
+    }
+    .form-group {
+      margin-bottom: 18px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 700;
+      color: #1e4a6b;
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #cbdbe6;
+      border-radius: 14px;
+      font-family: 'Inter', sans-serif;
+      background: white;
+    }
+    .form-group select:disabled, .form-group input:disabled {
+      background: #f0f2f5;
+      color: #5a6e7c;
+      cursor: not-allowed;
+    }
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .btn-save, .btn-cancel-modal {
+      border: none;
+      padding: 10px 20px;
+      border-radius: 40px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-save {
+      background: #ff9800;
+      color: white;
+    }
+    .btn-cancel-modal {
+      background: #e2e8f0;
+      color: #2c4b64;
+    }
+    #bodyEditorQuill {
+      min-height: 280px;
+      background: white;
+      border-radius: 14px;
+      border: 1px solid #cbdbe6;
+    }
+    .loading-spinner {
+      text-align: center;
+      padding: 2rem;
+      color: #ff9800;
+    }
     @media (max-width: 820px) {
       .grid-dos-paneles {
         grid-template-columns: 1fr;
-        gap: 1.2rem;
+        gap: 1rem;
         padding: 1rem;
       }
       .panel-materias {
         max-height: 450px;
-      }
-      .nombre-proceso-grande {
-        font-size: 1.35rem;
-      }
-      .panel-escritos {
-        padding: 1.3rem;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .etapa-card {
-        padding: 0.9rem;
-      }
-      .etapa-titulo {
-        font-size: 1rem;
       }
     }
   </style>
@@ -272,206 +378,398 @@
 <body>
 <div class="app-layout">
   <div class="grid-dos-paneles">
-    <!-- COLUMNA IZQUIERDA: MATERIAS + PROCESOS ENUMERADOS (5 c/u) -->
     <aside class="panel-materias">
       <h1 class="titulo-herramienta">Redacción de escritos</h1>
       <div id="contenedorMaterias"></div>
-      <footer>Guía de modelos procesales · Etapas inicial, contestación, probatoria y recursiva<br>URLs listas para vincular modelos oficiales</footer>
+      <footer>Modelos vinculados a cada etapa procesal · Guarda y administra escritos por etapa</footer>
     </aside>
 
-    <!-- COLUMNA DERECHA: ETAPAS Y URL MODELOS -->
     <div class="panel-escritos" id="panelEscritos">
       <div class="cabecera-proceso">
         <div class="nombre-proceso-grande" id="procesoSeleccionadoNombre">Proceso legal</div>
         <div class="subtitulo-materia" id="subMateriaProceso">Seleccione un proceso del menú izquierdo</div>
       </div>
       <div id="etapasDinamicasContainer">
-        <div class="mensaje-guia">
-          ◆ Elija cualquier proceso listado en la columna izquierda (organizado por materias: Familia, Civil, Laboral, Violencia Familiar).<br>
-          ◆ Para cada proceso se despliegan las 4 etapas clave, con espacio para asignar URL del modelo correspondiente.
-        </div>
+        <div class="mensaje-guia">◆ Elija cualquier proceso listado a la izquierda. Cada etapa permite crear, editar o eliminar su modelo de escrito (con editor enriquecido).</div>
       </div>
     </div>
   </div>
 </div>
 
+<!-- MODAL para crear/editar modelo por etapa -->
+<div id="modalModelo" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 id="modalTitleModelo">Modelo de escrito</h2>
+      <button class="close-btn" id="closeModalBtnModelo">&times;</button>
+    </div>
+    <form id="etapaModelForm">
+      <input type="hidden" id="modeloDocId">
+      <input type="hidden" id="materiaHidden">
+      <input type="hidden" id="procesoHidden">
+      <input type="hidden" id="etapaHidden">
+      <input type="hidden" id="isEditingFlag" value="false">
+      <div class="form-group">
+        <label for="tituloModelo">Título del modelo *</label>
+        <input type="text" id="tituloModelo" required placeholder="Ej: Demanda de divorcio - Etapa inicial">
+      </div>
+      <div class="form-group">
+        <label for="thematicModelo">Temática *</label>
+        <select id="thematicModelo" required disabled>
+          <option value="">Seleccionar</option>
+          <option value="Civil">Civil</option>
+          <option value="Penal">Penal</option>
+          <option value="Laboral">Laboral</option>
+          <option value="Familia">Familia</option>
+          <option value="Administrativo">Administrativo</option>
+          <option value="Violencia Familiar">Violencia Familiar</option>
+          <option value="Otro">Otro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="categoriaModelo">Categoría *</label>
+        <select id="categoriaModelo" required>
+          <option value="">Seleccionar</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="leyModelo">Ley / Normativa (opcional)</label>
+        <input type="text" id="leyModelo" placeholder="Ej. Código Civil y Comercial, Ley 26.485">
+      </div>
+      <div class="form-group">
+        <label>Cuerpo del escrito *</label>
+        <div id="bodyEditorQuill"></div>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn-cancel-modal" id="cancelModalBtn">Cancelar</button>
+        <button type="submit" class="btn-save">Guardar modelo</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script>
-  // ---------------- DEFINICIÓN DE MATERIAS Y PROCESOS (5 por materia exactamente) ----------------
+  // ---------- CONFIGURACIÓN FIREBASE (misma que index.html) ----------
+  const firebaseConfig = {
+    apiKey: "AIzaSyAchXP14PPlBLGFdJhQG-ABvCZEvxtExP0",
+    authDomain: "modelosvarios6.firebaseapp.com",
+    projectId: "modelosvarios6",
+    storageBucket: "modelosvarios6.firebasestorage.app",
+    messagingSenderId: "1020516092766",
+    appId: "1:1020516092766:web:56954ecc35055fff901dcf"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+  const modelosEtapaCollection = db.collection('modelosEtapa');
+
+  // ---------- DEFINICIÓN DE MATERIAS Y PROCESOS (5 por materia) ----------
   const listaMaterias = [
-    {
-      nombre: "⚖️ FAMILIA",
-      procesos: [
-        "Divorcio (con hijos o sin hijos)",
-        "Alimentos / Cuota alimentaria",
-        "Filiación y determinación de ADN",
-        "Régimen de comunicación / Visitas",
-        "Guarda y custodia de niños, niñas"
-      ]
-    },
-    {
-      nombre: "⚖️ CIVIL",
-      procesos: [
-        "Desalojo (vivienda / inmueble)",
-        "Juicio ejecutivo (títulos ejecutivos)",
-        "Sucesorio / Declaratoria de herederos",
-        "Daños y perjuicios (responsabilidad civil)",
-        "Medidas autosatisfactivas / Cautelares"
-      ]
-    },
-    {
-      nombre: "⚖️ LABORAL",
-      procesos: [
-        "Despido injustificado / Indemnización",
-        "Reclamo de salarios adeudados",
-        "Accidente laboral / Enfermedad profesional",
-        "Diferencias salariales / Categorización",
-        "Multas ART / Incumplimiento preventivo"
-      ]
-    },
-    {
-      nombre: "⚖️ VIOLENCIA FAMILIAR",
-      procesos: [
-        "Medidas de protección urgente",
-        "Exclusión del hogar del agresor",
-        "Prohibición de acercamiento / Perímetro",
-        "Violencia económica / Pensión provisoria",
-        "Restitución de menores en contexto de violencia"
-      ]
-    }
+    { nombre: "⚖️ FAMILIA", procesos: [ "Divorcio (con hijos o sin hijos)", "Alimentos / Cuota alimentaria", "Filiación y determinación de ADN", "Régimen de comunicación / Visitas", "Guarda y custodia de niños, niñas" ] },
+    { nombre: "⚖️ CIVIL", procesos: [ "Desalojo (vivienda / inmueble)", "Juicio ejecutivo (títulos ejecutivos)", "Sucesorio / Declaratoria de herederos", "Daños y perjuicios (responsabilidad civil)", "Medidas autosatisfactivas / Cautelares" ] },
+    { nombre: "⚖️ LABORAL", procesos: [ "Despido injustificado / Indemnización", "Reclamo de salarios adeudados", "Accidente laboral / Enfermedad profesional", "Diferencias salariales / Categorización", "Multas ART / Incumplimiento preventivo" ] },
+    { nombre: "⚖️ VIOLENCIA FAMILIAR", procesos: [ "Medidas de protección urgente", "Exclusión del hogar del agresor", "Prohibición de acercamiento / Perímetro", "Violencia económica / Pensión provisoria", "Restitución de menores en contexto de violencia" ] }
   ];
 
-  // ---------- función generadora de etapas + placeholder URL (listo para asignar modelo concreto) ----------
-  function generarEtapasConUrls(procesoNombre, materiaNombre) {
-    // Estructura de etapas fija: 1. Etapa inicial, 2. Contestación, 3. Probatoria, 4. Recursiva
-    const etapas = [
-      { numero: 1, nombre: "Etapa inicial", descripcion: "Redacción de demanda, poder especial, medidas cautelares urgentes, anexos documentales y solicitud de gratuidad (si corresponde)." },
-      { numero: 2, nombre: "Etapa de Contestación", descripcion: "Respuesta al traslado de la demanda, planteamiento de excepciones, reconvención (si aplica) y ofrecimiento de prueba de contrario." },
-      { numero: 3, nombre: "Etapa probatoria", descripcion: "Producción de prueba: testimonial, pericial, documental, informes, absolución de posiciones. Control de audiencias y alegatos." },
-      { numero: 4, nombre: "Etapa Recursiva", descripcion: "Interposición de recursos ordinarios o extraordinarios (apelación, queja, casación). Plazos y fundamentación técnica." }
-    ];
+  const etapasFijas = [
+    { numero: 1, nombre: "Etapa inicial", descripcion: "Redacción de demanda, poder especial, medidas cautelares urgentes, anexos documentales y solicitud de gratuidad (si corresponde)." },
+    { numero: 2, nombre: "Etapa de Contestación", descripcion: "Respuesta al traslado de la demanda, planteamiento de excepciones, reconvención (si aplica) y ofrecimiento de prueba de contrario." },
+    { numero: 3, nombre: "Etapa probatoria", descripcion: "Producción de prueba: testimonial, pericial, documental, informes, absolución de posiciones. Control de audiencias y alegatos." },
+    { numero: 4, nombre: "Etapa Recursiva", descripcion: "Interposición de recursos ordinarios o extraordinarios (apelación, queja, casación). Plazos y fundamentación técnica." }
+  ];
 
-    let html = '';
-    for (const etapa of etapas) {
-      // generamos un identificador amigable para la URL placeholder, mostramos que se podrá cargar el modelo
-      const idPlaceholder = `modelo_${procesoNombre.replace(/\s/g, '_')}_etapa${etapa.numero}`;
+  let currentMateria = "", currentProceso = "";
+  let quillEditor = null;
+
+  // Mapeo de materia a su temática limpia
+  function getThematicFromMateria(materiaRaw) {
+    if (materiaRaw.includes("FAMILIA")) return "Familia";
+    if (materiaRaw.includes("CIVIL")) return "Civil";
+    if (materiaRaw.includes("LABORAL")) return "Laboral";
+    if (materiaRaw.includes("VIOLENCIA")) return "Violencia Familiar";
+    return "Otro";
+  }
+
+  // Configuración dinámica de opciones de categoría según etapa y si estamos en modo creación (para recursiva)
+  function populateCategoriaOptions(etapaNombre, isCreationMode = false, currentSavedValue = "") {
+    const selectCat = document.getElementById('categoriaModelo');
+    if (!selectCat) return;
+    
+    // Limpiar opciones actuales
+    selectCat.innerHTML = '<option value="">Seleccionar</option>';
+    
+    let opciones = [];
+    if (etapaNombre === "Etapa inicial") {
+      opciones = ["Demanda"];
+    } else if (etapaNombre === "Etapa de Contestación") {
+      opciones = ["Contestación"];
+    } else if (etapaNombre === "Etapa probatoria") {
+      opciones = ["Presentación de prueba", "Escrito genérico", "Producción de prueba"];
+    } else if (etapaNombre === "Etapa Recursiva") {
+      // Para etapa recursiva: ofrecer las tres opciones específicas
+      opciones = ["Reposición", "Reposición con apelación", "Apelación"];
+    } else {
+      opciones = ["Demanda", "Contestación", "Recurso de Apelación", "Medida cautelar", "Escrito genérico", "Otro"];
+    }
+    
+    opciones.forEach(opt => {
+      const option = document.createElement('option');
+      option.value = opt;
+      option.textContent = opt;
+      if (currentSavedValue && currentSavedValue === opt) option.selected = true;
+      selectCat.appendChild(option);
+    });
+    
+    // Si no hay valor guardado y estamos en modo creación, seleccionar el primero de la lista
+    if (!currentSavedValue && isCreationMode && opciones.length > 0) {
+      selectCat.value = opciones[0];
+    } else if (currentSavedValue && selectCat.querySelector(`option[value="${currentSavedValue}"]`)) {
+      selectCat.value = currentSavedValue;
+    } else if (currentSavedValue) {
+      // si el valor guardado no está en las nuevas opciones (ej: por edición anterior), agregarlo
+      const extraOption = document.createElement('option');
+      extraOption.value = currentSavedValue;
+      extraOption.textContent = currentSavedValue;
+      selectCat.appendChild(extraOption);
+      selectCat.value = currentSavedValue;
+    }
+  }
+
+  // Inicializar Quill
+  function initQuillEditor() {
+    if (!quillEditor) {
+      quillEditor = new Quill('#bodyEditorQuill', {
+        theme: 'snow',
+        placeholder: 'Escriba el contenido del escrito (formato libre) ...',
+        modules: {
+          toolbar: [
+            [{ 'header': [1, 2, 3, false] }],
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ 'color': [] }, { 'background': [] }],
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+            [{ 'align': [] }],
+            ['link', 'clean']
+          ]
+        }
+      });
+    }
+  }
+
+  // CRUD Firebase
+  async function fetchModeloEtapa(materia, proceso, etapaNombre) {
+    try {
+      const snapshot = await modelosEtapaCollection.where("materia", "==", materia).where("proceso", "==", proceso).where("etapa", "==", etapaNombre).limit(1).get();
+      if (!snapshot.empty) return { id: snapshot.docs[0].id, ...snapshot.docs[0].data() };
+      return null;
+    } catch (error) { console.error(error); return null; }
+  }
+
+  async function saveModeloEtapa(modeloData, docId = null) {
+    try {
+      if (docId) await modelosEtapaCollection.doc(docId).update(modeloData);
+      else await modelosEtapaCollection.add(modeloData);
+      return true;
+    } catch (error) { console.error(error); alert("Error al guardar: " + error.message); return false; }
+  }
+
+  async function deleteModeloEtapa(docId) {
+    try { await modelosEtapaCollection.doc(docId).delete(); return true; } 
+    catch (error) { console.error(error); alert("Error al eliminar: " + error.message); return false; }
+  }
+
+  // Render panel derecho
+  async function renderizarPanelConEtapas(materiaNombre, procesoNombre) {
+    const contenedorEtapas = document.getElementById('etapasDinamicasContainer');
+    if (!contenedorEtapas) return;
+    contenedorEtapas.innerHTML = '<div class="loading-spinner">Cargando modelos por etapa...</div>';
+    
+    const resultados = await Promise.all(etapasFijas.map(async (etapa) => {
+      const modelo = await fetchModeloEtapa(materiaNombre, procesoNombre, etapa.nombre);
+      return { etapa, modelo };
+    }));
+    
+    let html = '<div class="etapa-container">';
+    for (const item of resultados) {
+      const etapa = item.etapa;
+      const modelo = item.modelo;
       html += `
-        <div class="etapa-card">
+        <div class="etapa-card" data-etapa="${etapa.nombre}">
           <div class="etapa-numero">Etapa ${etapa.numero}</div>
           <div class="etapa-titulo">${etapa.nombre}</div>
           <div class="descripcion-etapa">${etapa.descripcion}</div>
-          <div class="modelo-url-area">
-            <span class="etiqueta-url">📎 URL DEL MODELO</span>
-            <span class="url-placeholder" id="${idPlaceholder}">
-              [ 🔗 pendiente de vinculación · ${procesoNombre} - ${etapa.nombre.toLowerCase()} ]
-            </span>
-            <span style="font-size:0.7rem; color:#7f9cbb;">(próximamente se añadirá enlace directo al modelo de escrito)</span>
+          <div class="modelo-info">
+            ${modelo ? `<span class="modelo-titulo">📄 ${escapeHtml(modelo.titulo || 'Sin título')}</span>` : `<span class="modelo-titulo" style="background:#f0f2f5; color:#7f8c8d;">✖ Ningún modelo asociado</span>`}
+            <div class="botones-modelo">
+              ${modelo ? `
+                <button class="btn-modelo btn-editar" data-materia="${materiaNombre}" data-proceso="${procesoNombre}" data-etapa="${etapa.nombre}" data-modeloid="${modelo.id}" data-accion="editar">✏️ Editar</button>
+                <button class="btn-modelo btn-imprimir" data-modeloid="${modelo.id}" data-accion="imprimir">🖨️ Imprimir</button>
+                <button class="btn-modelo btn-eliminar" data-modeloid="${modelo.id}" data-accion="eliminar">🗑️ Eliminar</button>
+              ` : `
+                <button class="btn-modelo btn-crear" data-materia="${materiaNombre}" data-proceso="${procesoNombre}" data-etapa="${etapa.nombre}" data-accion="crear">➕ Crear modelo</button>
+              `}
+            </div>
           </div>
         </div>
       `;
     }
-
-    // añadimos bloque informativo de ayuda para la futura asignación de URLs
-    html += `
-      <div class="mensaje-guia">
-        <strong>✍️ Sobre los modelos de escritos:</strong> Para cada etapa se reserva un espacio único de URL. 
-        El sistema está preparado para vincular, por ejemplo, “modelo_inicial_divorcio.pdf”, “contestacion_demanda_desalojo.docx”, etc.
-        Podrá actualizar cada enlace más tarde reemplazando el texto “pendiente” por la ruta definitiva.
-      </div>
-    `;
-    return html;
+    html += '</div><div class="mensaje-guia"><strong>✍️ Gestión de modelos por etapa:</strong> Cada etapa guarda su propio escrito. Usa "Crear modelo" para redactar con el editor enriquecido. En creación, la temática se fija automáticamente según la materia y la categoría se adapta a la etapa (en recursiva: reposición, reposición con apelación, apelación).</div>';
+    contenedorEtapas.innerHTML = html;
+    
+    // Eventos botones
+    document.querySelectorAll('.btn-modelo').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const accion = btn.getAttribute('data-accion');
+        const materia = btn.getAttribute('data-materia');
+        const proceso = btn.getAttribute('data-proceso');
+        const etapa = btn.getAttribute('data-etapa');
+        const modelId = btn.getAttribute('data-modeloid');
+        if (accion === 'crear') abrirModalParaCrear(materia, proceso, etapa);
+        else if (accion === 'editar') await abrirModalParaEditar(modelId, materia, proceso, etapa);
+        else if (accion === 'eliminar') {
+          if (confirm("¿Eliminar este modelo permanentemente?")) {
+            if (await deleteModeloEtapa(modelId)) await renderizarPanelConEtapas(currentMateria, currentProceso);
+          }
+        } else if (accion === 'imprimir') await imprimirModeloPorId(modelId);
+      });
+    });
   }
 
-  // ---------- RENDERIZAR PANEL IZQUIERDO (con numeración natural por materia) ----------
+  // Modal creación (con autocompletado y campos bloqueados)
+  function abrirModalParaCrear(materia, proceso, etapa) {
+    document.getElementById('modeloDocId').value = '';
+    document.getElementById('tituloModelo').value = '';
+    document.getElementById('leyModelo').value = '';
+    if (quillEditor) quillEditor.setContents([]);
+    document.getElementById('materiaHidden').value = materia;
+    document.getElementById('procesoHidden').value = proceso;
+    document.getElementById('etapaHidden').value = etapa;
+    document.getElementById('isEditingFlag').value = 'false';
+    
+    // Temática automática según materia (bloqueada)
+    const thematicValue = getThematicFromMateria(materia);
+    const thematicSelect = document.getElementById('thematicModelo');
+    thematicSelect.value = thematicValue;
+    thematicSelect.disabled = true;
+    
+    // Cargar opciones de categoría según etapa (modo creación)
+    populateCategoriaOptions(etapa, true, "");
+    
+    document.getElementById('modalTitleModelo').innerText = `Nuevo modelo - ${etapa} (${proceso})`;
+    document.getElementById('modalModelo').style.display = 'flex';
+  }
+
+  async function abrirModalParaEditar(modelId, materia, proceso, etapa) {
+    try {
+      const docSnap = await modelosEtapaCollection.doc(modelId).get();
+      if (!docSnap.exists) { alert("El modelo ya no existe."); return; }
+      const data = docSnap.data();
+      document.getElementById('modeloDocId').value = modelId;
+      document.getElementById('tituloModelo').value = data.titulo || '';
+      document.getElementById('leyModelo').value = data.ley || '';
+      document.getElementById('materiaHidden').value = materia;
+      document.getElementById('procesoHidden').value = proceso;
+      document.getElementById('etapaHidden').value = etapa;
+      document.getElementById('isEditingFlag').value = 'true';
+      
+      // En edición: cargar temática guardada pero permitir cambios (habilitar select)
+      const thematicSelect = document.getElementById('thematicModelo');
+      thematicSelect.disabled = false;
+      if (data.thematic) thematicSelect.value = data.thematic;
+      else thematicSelect.value = getThematicFromMateria(materia);
+      
+      // Cargar opciones de categoría según etapa, modo edición con valor guardado
+      populateCategoriaOptions(etapa, false, data.categoria || "");
+      
+      if (quillEditor) quillEditor.clipboard.dangerouslyPasteHTML(data.cuerpo || '');
+      document.getElementById('modalTitleModelo').innerText = `Editar: ${data.titulo || 'modelo'}`;
+      document.getElementById('modalModelo').style.display = 'flex';
+    } catch (error) { console.error(error); alert("Error al cargar datos"); }
+  }
+
+  async function imprimirModeloPorId(modelId) {
+    try {
+      const docSnap = await modelosEtapaCollection.doc(modelId).get();
+      if (!docSnap.exists) return;
+      const data = docSnap.data();
+      const printWindow = window.open('', '_blank');
+      printWindow.document.write(`
+        <html><head><title>${data.titulo || 'Modelo legal'}</title>
+        <style>body{font-family: 'Inter', Arial; padding:2rem;} h1{color:#1e4a6b;} .meta{background:#f4f7fb; padding:10px; border-radius:12px;}</style>
+        </head><body>
+        <h1>${escapeHtml(data.titulo)}</h1>
+        <div class="meta"><strong>Materia:</strong> ${escapeHtml(data.materia)} | <strong>Proceso:</strong> ${escapeHtml(data.proceso)} | <strong>Etapa:</strong> ${escapeHtml(data.etapa)}<br>
+        <strong>Temática:</strong> ${escapeHtml(data.thematic)} | <strong>Categoría:</strong> ${escapeHtml(data.categoria)} | <strong>Ley:</strong> ${escapeHtml(data.ley || '-')}</div>
+        <hr><div>${data.cuerpo || ''}</div></body></html>
+      `);
+      printWindow.document.close();
+      printWindow.print();
+    } catch(e) { console.error(e); alert("Error al imprimir"); }
+  }
+
+  async function guardarModeloDesdeModal(event) {
+    event.preventDefault();
+    const titulo = document.getElementById('tituloModelo').value.trim();
+    const thematic = document.getElementById('thematicModelo').value;
+    const categoria = document.getElementById('categoriaModelo').value;
+    const ley = document.getElementById('leyModelo').value.trim();
+    const materia = document.getElementById('materiaHidden').value;
+    const proceso = document.getElementById('procesoHidden').value;
+    const etapa = document.getElementById('etapaHidden').value;
+    const cuerpo = quillEditor ? quillEditor.root.innerHTML : '';
+    if (!titulo || !thematic || !categoria || !cuerpo) {
+      alert("Debe completar Título, Temática, Categoría y el contenido del escrito.");
+      return;
+    }
+    const modeloData = { titulo, thematic, categoria, ley, materia, proceso, etapa, cuerpo, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
+    const docId = document.getElementById('modeloDocId').value || null;
+    if (await saveModeloEtapa(modeloData, docId)) {
+      cerrarModalModelo();
+      if (currentMateria && currentProceso) await renderizarPanelConEtapas(currentMateria, currentProceso);
+      else await renderizarPanelConEtapas(materia, proceso);
+    }
+  }
+
+  function cerrarModalModelo() { document.getElementById('modalModelo').style.display = 'none'; }
+
+  function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+
+  // Sidebar
   function construirSidebar() {
     const contenedor = document.getElementById('contenedorMaterias');
     if (!contenedor) return;
-
     let htmlFinal = '';
     for (let idxMateria = 0; idxMateria < listaMaterias.length; idxMateria++) {
       const materia = listaMaterias[idxMateria];
-      const materiaId = `materia_${idxMateria}`;
-      htmlFinal += `
-        <div class="materia-bloque" data-materia="${materia.nombre}">
-          <div class="materia-titulo">${materia.nombre}</div>
-          <ul class="lista-procesos" id="lista-${materiaId}">
-      `;
-      // agregar cada proceso con su numeración automática (CSS counter)
+      htmlFinal += `<div class="materia-bloque"><div class="materia-titulo">${materia.nombre}</div><ul class="lista-procesos">`;
       for (let p = 0; p < materia.procesos.length; p++) {
-        const nombreProc = materia.procesos[p];
-        const keyProceso = `${materia.nombre}|${nombreProc}`;
-        htmlFinal += `
-          <li class="proceso-enlace" data-proceso-completo="${nombreProc}" data-materia-origen="${materia.nombre}" data-key="${keyProceso}">
-            ${nombreProc}
-          </li>
-        `;
+        htmlFinal += `<li class="proceso-enlace" data-proceso-completo="${materia.procesos[p].replace(/"/g, '&quot;')}" data-materia-origen="${materia.nombre}">${materia.procesos[p]}</li>`;
       }
       htmlFinal += `</ul></div>`;
     }
     contenedor.innerHTML = htmlFinal;
-
-    // asignar evento de click a cada proceso .proceso-enlace
-    const procesosItems = document.querySelectorAll('.proceso-enlace');
-    procesosItems.forEach(item => {
-      item.addEventListener('click', (e) => {
-        // remover clase activa de todos
+    document.querySelectorAll('.proceso-enlace').forEach(item => {
+      item.addEventListener('click', async () => {
         document.querySelectorAll('.proceso-enlace').forEach(el => el.classList.remove('activo'));
         item.classList.add('activo');
-
-        const procesoNombre = item.getAttribute('data-proceso-completo');
-        const materiaOrigen = item.getAttribute('data-materia-origen');
-        if (procesoNombre) {
-          actualizarPanelDerecho(procesoNombre, materiaOrigen);
-        }
+        currentMateria = item.getAttribute('data-materia-origen');
+        currentProceso = item.getAttribute('data-proceso-completo');
+        document.getElementById('procesoSeleccionadoNombre').innerText = currentProceso;
+        document.getElementById('subMateriaProceso').innerText = `Materia: ${currentMateria} · Modelos de escritos por etapa procesal`;
+        await renderizarPanelConEtapas(currentMateria, currentProceso);
       });
     });
-
-    // si hay algún proceso, seleccionamos el primero por defecto (Familia - primer proceso)
-    if (procesosItems.length > 0) {
-      const primerProceso = procesosItems[0];
-      primerProceso.classList.add('activo');
-      const nombreProc = primerProceso.getAttribute('data-proceso-completo');
-      const materiaPadre = primerProceso.getAttribute('data-materia-origen');
-      if (nombreProc) actualizarPanelDerecho(nombreProc, materiaPadre);
-    } else {
-      // fallback mensaje
-      document.getElementById('etapasDinamicasContainer').innerHTML = `<div class="mensaje-guia">No se encontraron procesos definidos. Verifique estructura.</div>`;
-    }
+    const primer = document.querySelector('.proceso-enlace');
+    if (primer) primer.click();
   }
 
-  // actualiza el panel derecho mostrando las 4 etapas + URLs placeholder dinámicas según proceso seleccionado
-  function actualizarPanelDerecho(procesoNombre, materiaNombre) {
-    const nombreProcesoEl = document.getElementById('procesoSeleccionadoNombre');
-    const subMateriaEl = document.getElementById('subMateriaProceso');
-    const contenedorEtapas = document.getElementById('etapasDinamicasContainer');
-
-    if (!nombreProcesoEl || !subMateriaEl || !contenedorEtapas) return;
-
-    nombreProcesoEl.innerText = procesoNombre;
-    subMateriaEl.innerText = `Materia: ${materiaNombre} · Modelos de escritos por etapa procesal`;
-
-    const etapasHtml = generarEtapasConUrls(procesoNombre, materiaNombre);
-    contenedorEtapas.innerHTML = etapasHtml;
-
-    // opcional: mantener scroll al inicio del panel para mejor UX
-    const panelEscritos = document.querySelector('.panel-escritos');
-    if (panelEscritos) panelEscritos.scrollTop = 0;
-  }
-
-  //  ---- función complementaria para simular que en un futuro se pueden cargar URLs desde una base externa.
-  //      Se deja como placeholder avanzado, pero el requisito pide mostrar el espacio para "luego dare la url del modelo"
-  //      ya se muestra cada etapa con su zona de URL. Todo correcto.
-  //      Además cumple con "sin iconos": no se usó librería de iconos, solo texto plano y emojis mínimos en títulos (opcionales pero no dependen de librerías)
-  //      Se asegura que ninguna dependencia externa de iconos se cargue (sin lucide, sin fontawesome).
-  //      Estilo basado en el expediente anterior: tipografía, contenedores dinámicos, colores fieles.
-  
-  // Inicialización al cargar DOM
   document.addEventListener('DOMContentLoaded', () => {
+    initQuillEditor();
     construirSidebar();
-
-    // Agregar un pequeño helper visual opcional: resaltar procesos enumerados según materia.
-    // Respetamos la enumeración con CSS counter (1. Divorcio, 2. Alimentos... etc) por cada lista particular.
-    // El contador se reinicia automáticamente en cada materia gracias al counter-reset en .lista-procesos.
-    // Ya está implementado.
+    const modal = document.getElementById('modalModelo');
+    document.getElementById('closeModalBtnModelo').addEventListener('click', cerrarModalModelo);
+    document.getElementById('cancelModalBtn').addEventListener('click', cerrarModalModelo);
+    window.addEventListener('click', (e) => { if (e.target === modal) cerrarModalModelo(); });
+    document.getElementById('etapaModelForm').addEventListener('submit', guardarModeloDesdeModal);
   });
 </script>
 </body>
