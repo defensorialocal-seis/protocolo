@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
+  <title>Protocolo Actuacion Defensoria</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+
+    :root{
+      --bg:#f4f9fe; --surface:#fff; --line:#dbe7f3;
+      --sky-1:#e6f3fe; --sky-2:#cfe5f8; --sky-line:#bcd9f2; --sky-ink:#14395f;
+      --ink:#14293f; --muted:#5f7288; --accent:#3b82c4; --danger:#d92d20;
+      --font-display:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif;
+      --font-body:'Figtree',system-ui,-apple-system,'Segoe UI',sans-serif;
+      --bar-h:64px;
+      --filter-h:92px;
+      --gap:clamp(10px,1.6vw,18px);
+      --pad:clamp(12px,3vw,28px);
+      --ease:all .2s ease;
+    }
+
+    html,body{height:100%}
+    body{
+      font-family:var(--font-body);
+      background:var(--bg);
+      color:var(--ink);
+      height:100dvh;
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
+      -webkit-font-smoothing:antialiased;
+    }
+    button,input{font-family:inherit}
+    :focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+    /* ===== BARRA SUPERIOR ===== */
+    .top-bar{
+      height:calc(var(--bar-h) + env(safe-area-inset-top,0px));
+      padding:env(safe-area-inset-top,0px) var(--pad) 0;
+      background:rgba(255,255,255,.92);
+      color:var(--ink);
+      border-bottom:1px solid var(--line);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-shrink:0;
+      z-index:50;
+    }
+    .header-left{display:flex;align-items:center;gap:14px;position:relative;min-width:0}
+    .header-title{display:flex;flex-direction:column;line-height:1.2;min-width:0}
+    .header-title strong{
+      font-family:var(--font-display);font-weight:700;font-size:clamp(.92rem,2.4vw,1.05rem);
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    }
+    .header-title span{font-size:.74rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+    /* ===== CONTENIDO PRINCIPAL ===== */
+    .main-content{
+      flex:1;min-height:0;
+      display:flex;flex-direction:column;
+      overflow-y:auto;overflow-x:hidden;
+      padding:var(--pad);
+      padding-bottom:calc(var(--filter-h) + env(safe-area-inset-bottom,0px));
+      scroll-padding-bottom:var(--filter-h);
+    }
+    .main-content.iframe-mode{
+      padding:0 0 calc(var(--filter-h) + env(safe-area-inset-bottom,0px));
+      overflow:hidden;background:var(--surface);
+    }
+    #dynamicContainer{flex:1 0 auto;display:flex;flex-direction:column}
+    .iframe-mode #dynamicContainer{flex:1 1 0;min-height:0}
+
+    /* ===== TARJETAS ===== */
+    .content-grid{
+      flex:1 0 auto;
+      display:grid;gap:var(--gap);width:100%;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      grid-auto-rows:minmax(132px,1fr);
+    }
+    .content-grid.filtering{grid-auto-rows:clamp(132px,22vh,190px);align-content:start}
+    @media (min-width:768px){
+      .content-grid{grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:minmax(150px,1fr)}
+    }
+    @media (min-width:1100px){
+      .content-grid{grid-template-columns:repeat(5,minmax(0,1fr))}
+    }
+    @media (max-width:340px){
+      .content-grid{grid-template-columns:1fr}
+    }
+    @media (max-width:767px){
+      .content-card.wide{grid-column:1 / -1}
+    }
+
+    .content-card{
+      position:relative;overflow:hidden;
+      display:flex;flex-direction:column;justify-content:space-between;gap:16px;
+      padding:clamp(14px,2vw,22px);
+      border-radius:24px;color:var(--sky-ink);cursor:pointer;
+      background:#d6eafb;
+      border:1px solid var(--sky-line);
+      box-shadow:0 8px 20px -12px rgba(60,120,180,.45);
+      transition:transform .2s ease,box-shadow .2s ease;
+    }
+    .content-card.hidden{display:none}
+    .content-card:hover{background:#cbe3f8;transform:translateY(-4px);box-shadow:0 16px 28px -14px rgba(60,120,180,.6)}
+    .content-card:active{transform:scale(.98)}
+
+    .card-foot{flex:1;display:flex;flex-direction:column;justify-content:space-between;gap:14px}
+    .card-arrow{align-self:flex-end}
+    .content-card h3{
+      font-family:var(--font-display);font-weight:700;
+      font-size:clamp(1rem,2.6vw,1.2rem);line-height:1.15;letter-spacing:-.01em;text-align:left;
+    }
+    .card-arrow{
+      width:30px;height:30px;border-radius:50%;flex-shrink:0;
+      background:rgba(255,255,255,.8);display:grid;place-items:center;transition:var(--ease);
+    }
+    .card-arrow svg{width:15px;height:15px;stroke:var(--sky-ink);fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+    .content-card:hover .card-arrow{background:var(--sky-ink)}
+    .content-card:hover .card-arrow svg{stroke:#fff}
+
+    /* ===== PANEL IFRAME ===== */
+    .iframe-panel{display:flex;flex-direction:column;background:var(--surface);width:100%;flex:1;min-height:0;height:100%}
+    .iframe-header{
+      display:flex;justify-content:space-between;align-items:center;gap:12px;
+      padding:12px var(--pad);border-bottom:1px solid var(--line);flex-shrink:0;
+    }
+    .iframe-header h3{
+      font-family:var(--font-display);font-size:clamp(1rem,3vw,1.2rem);font-weight:700;color:var(--ink);
+      min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+    }
+    .back-btn{
+      background:var(--sky-1);border:1px solid var(--sky-line);border-radius:40px;padding:9px 18px;
+      font-size:.84rem;font-weight:600;cursor:pointer;color:var(--sky-ink);transition:var(--ease);flex-shrink:0;
+    }
+    .back-btn:hover{background:var(--sky-2)}
+    .iframe-container{flex:1;min-height:0;width:100%;background:#fafcff}
+    iframe{width:100%;height:100%;border:none;display:block}
+    .preparation-message{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;padding:2rem;color:var(--muted)}
+    .preparation-message svg{stroke:#94a3b8}
+    .preparation-message h3{margin:.6rem 0 .3rem;font-family:var(--font-display);font-weight:700;color:var(--ink)}
+
+    /* ===== FILTRO FLOTANTE (se mantiene) ===== */
+    .chat-filter{
+      position:fixed;left:50%;transform:translateX(-50%);
+      bottom:calc(14px + env(safe-area-inset-bottom,0px));
+      width:min(calc(100% - 24px),680px);
+      display:flex;align-items:center;gap:8px;
+      padding:6px 6px 6px 18px;
+      background:rgba(255,255,255,.94);
+      -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+      border:1px solid var(--line);border-radius:60px;
+      box-shadow:0 10px 28px rgba(60,120,180,.18);
+      z-index:100;
+    }
+    .chat-filter:focus-within{border-color:var(--accent);box-shadow:0 10px 28px rgba(59,130,196,.28)}
+    .chat-filter>svg{width:18px;height:18px;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;flex-shrink:0}
+    .chat-filter input{
+      flex:1;min-width:0;border:none;outline:none;background:transparent;
+      font-size:16px;padding:12px 4px;color:var(--ink);
+    }
+    .chat-filter input::placeholder{color:var(--muted);opacity:.75}
+    .chat-filter button{
+      background:var(--accent);border:none;border-radius:40px;padding:12px 22px;
+      color:#fff;font-weight:600;font-size:.9rem;cursor:pointer;transition:var(--ease);
+    }
+    .chat-filter button:hover{background:#2f6fae}
+
+    /* ===== RESPONSIVO ===== */
+    @media (max-width:768px){
+      .header-left{gap:10px}
+    }
+    @media (max-width:420px){
+      .content-card{border-radius:20px}
+      .chat-filter button{padding:12px 16px}
+    }
+
+    .main-content::-webkit-scrollbar{width:6px}
+    .main-content::-webkit-scrollbar-thumb{background:#c3cddc;border-radius:10px}
+
+    @media (prefers-reduced-motion:reduce){
+      *{transition:none !important;animation:none !important}
+    }
+  </style>
+</head>
+<body>
+
+  <header class="top-bar">
+    <div class="header-left">
+      <div class="header-title">
+        <strong>Protocolo de Actuación Judicial</strong>
+        <span>Defensoría Civil y Comercial 6</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content" id="mainContent">
+    <div id="dynamicContainer"></div>
+  </main>
+
+  <div class="chat-filter" id="filterBar">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+    <input type="text" id="filterInput" placeholder="Buscar tema (atención, plazos, leyes...)" autocomplete="off" aria-label="Buscar tema">
+    <button id="filterBtn">Buscar</button>
+  </div>
+
+  <script>
+    // === Rutas, filtro de búsqueda y vista en iframe ===
+    const externalUrls = {
+      atencion_publico: "publico.html",
+      documentos_previos: "previos.html",
+      subrogacion: "subrogancias.html",
+      antes_tramitar: "expedientes.html",
+      escribir_documentos: "escritos.html",
+      opiniones_tecnicas: "dictamen.html",
+      leyes_utiles: "normativa.html",
+      situaciones_especiales: "casos.html",
+      plazos_vencimientos: "plazos.html",
+      modelos_usar: "modelos.html",
+      modos_intervenir: "modo.html",
+      mapa_defensorias: "mapa.html",
+      firma_digital_stamper: "firma.html",
+      meui: "meui.html",
+      cejume: "cejume.html"
+    };
+
+    // Tarjetas: clave, título, palabras clave de búsqueda, tono de color
+    const cards = [
+      ["atencion_publico", "Cómo atender al público", "atencion publico trato personas paciencia escucha activa", 1],
+      ["documentos_previos", "Qué revisar antes de empezar", "documentos previos revisar papeles checklist legajo", 1],
+      ["subrogacion", "Subrogación", "subrogación suplencia ausencia temporal reemplazo", 2],
+      ["antes_tramitar", "Antes de mover un expediente", "antes de tramitar revisar expediente competencia firmas", 2],
+      ["escribir_documentos", "Cómo escribir documentos", "escribir documentos claros simples estructura redacción", 3],
+      ["opiniones_tecnicas", "Opinión técnica: Dictamen", "opiniones tecnicas analisis conclusiones fundamentar dictamen", 3],
+      ["leyes_utiles", "Leyes que vas a usar", "leyes utiles normas consulta rapida codigos", 4],
+      ["situaciones_especiales", "Situaciones especiales", "situaciones especiales urgencias excepciones vulnerabilidad", 5],
+      ["plazos_vencimientos", "Plazos y Vencimientos", "plazos vencimientos fechas caducidad términos perentorio cómputo", 5],
+      ["modelos_usar", "Modelos para usar", "modelos formatos plantillas ejemplos documentos escritos redacción", 3],
+      ["modos_intervenir", "Modos de Intervenir", "modos intervenir estrategias abordaje intervención herramientas acompañamiento", 4],
+      ["mapa_defensorias", "Mapa de Defensorías", "mapa defensorías ubicaciones contactos georreferencia sedes territoriales", 1],
+      ["firma_digital_stamper", "Firma Digital y Stamper", "firma digital stamper certificado electrónico firmar documentos", 2],
+      ["meui", "MEUI", "meui expediente electrónico gestión judicial sistema informático", 4],
+      ["cejume", "CEJUME", "cejume centro judicial mediación justicia restaurativa", 5]
+    ];
+
+    const mainContent = document.getElementById('mainContent');
+    const dynamicContainer = document.getElementById('dynamicContainer');
+    const filterInput = document.getElementById('filterInput');
+    const filterBtn = document.getElementById('filterBtn');
+
+    let currentIframeActive = false;
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
+    }
+
+    function closeIframeView() {
+      if (!currentIframeActive) return false;
+      mainContent.classList.remove('iframe-mode');
+      rebuildGrid();
+      currentIframeActive = false;
+      return true;
+    }
+
+    function rebuildAndFilter() {
+      rebuildGrid();
+      if (filterInput.value.trim() !== "") applyFilterOnGrid();
+      else {
+        document.querySelectorAll('.content-card').forEach(c => c.classList.remove('hidden'));
+        const noResultsMsg = document.getElementById('noResultsMsg');
+        if (noResultsMsg) noResultsMsg.remove();
+      }
+    }
+
+    function rebuildGrid() {
+      const arrow = '<svg viewBox="0 0 24 24"><path d="M7 17L17 7M8 7h9v9"/></svg>';
+      dynamicContainer.innerHTML = `
+        <div class="content-grid" id="contentGrid">
+          ${cards.map(([key, title, kw, tone]) => `
+            <article class="content-card" data-key="${key}" data-tone="${tone}" data-keywords="${kw}" tabindex="0" role="button">
+              <div class="card-foot"><h3>${title}</h3><span class="card-arrow">${arrow}</span></div>
+            </article>`).join('')}
+        </div>
+      `;
+      attachCardEvents();
+      markWideCard();
+    }
+
+    // En móvil (2 columnas), si queda un número impar de tarjetas visibles,
+    // la última ocupa todo el ancho para no dejar huecos.
+    function markWideCard() {
+      const visible = [...document.querySelectorAll('.content-card:not(.hidden)')];
+      document.querySelectorAll('.content-card').forEach(c => c.classList.remove('wide'));
+      if (visible.length > 1 && visible.length % 2 === 1) visible[visible.length - 1].classList.add('wide');
+    }
+
+    function attachCardEvents() {
+      document.querySelectorAll('.content-card').forEach(card => {
+        card.removeEventListener('click', cardClickHandler);
+        card.addEventListener('click', cardClickHandler);
+        card.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
+        });
+      });
+    }
+
+    function cardClickHandler(e) {
+      const card = e.currentTarget;
+      const key = card.dataset.key;
+      const title = card.querySelector('h3')?.innerText || "Protocolo";
+      showFullContent(key && externalUrls[key] ? key : 'atencion_publico', title);
+    }
+
+    function showFullContent(key, title) {
+      const url = externalUrls[key];
+      mainContent.classList.add('iframe-mode');
+      dynamicContainer.innerHTML = '';
+      const panel = document.createElement('div');
+      panel.className = 'iframe-panel';
+      if (url && url.trim()) {
+        panel.innerHTML = `
+          <div class="iframe-header">
+            <h3>${escapeHtml(title)}</h3>
+            <button class="back-btn" id="closeIframeBtn">← Volver</button>
+          </div>
+          <div class="iframe-container">
+            <iframe src="${escapeHtml(url)}" title="${escapeHtml(title)}" sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-modals"></iframe>
+          </div>
+        `;
+      } else {
+        panel.innerHTML = `
+          <div class="iframe-header">
+            <h3>${escapeHtml(title)}</h3>
+            <button class="back-btn" id="closeIframeBtn">← Volver</button>
+          </div>
+          <div class="preparation-message">
+            <div>
+              <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                <polyline points="15 3 21 3 21 9"/>
+                <line x1="10" y1="14" x2="21" y2="3"/>
+              </svg>
+              <h3>Contenido en preparación</h3>
+              <p>Próximamente disponible <strong>${escapeHtml(title)}</strong>.</p>
+            </div>
+          </div>
+        `;
+      }
+      dynamicContainer.appendChild(panel);
+      currentIframeActive = true;
+      const closeBtn = document.getElementById('closeIframeBtn');
+      if (closeBtn) closeBtn.addEventListener('click', () => {
+        closeIframeView();
+        if (filterInput.value.trim()) applyFilterOnGrid();
+      });
+    }
+
+    function applyFilterOnGrid() {
+      const grid = document.getElementById('contentGrid');
+      if (!grid || currentIframeActive) return;
+      const query = filterInput.value.toLowerCase().trim();
+      const cardEls = document.querySelectorAll('.content-card');
+      let visible = 0;
+      cardEls.forEach(card => {
+        const title = card.querySelector('h3').textContent.toLowerCase();
+        const keywords = card.dataset.keywords?.toLowerCase() || '';
+        const match = !query || title.includes(query) || keywords.includes(query);
+        card.classList.toggle('hidden', !match);
+        if (match) visible++;
+      });
+      grid.classList.toggle('filtering', !!query);
+      markWideCard();
+      let noMsg = document.getElementById('noResultsMsg');
+      if (visible === 0 && query) {
+        if (!noMsg) {
+          noMsg = document.createElement('p');
+          noMsg.id = 'noResultsMsg';
+          noMsg.style.cssText = 'text-align:center; color:var(--muted); margin-top:24px; font-size:.95rem;';
+          noMsg.textContent = 'No se encontró el tema. Prueba con otras palabras.';
+          grid.after(noMsg);
+        }
+      } else if (noMsg) noMsg.remove();
+    }
+
+    function handleFilterAndClose() {
+      if (currentIframeActive) {
+        closeIframeView();
+        if (filterInput.value.trim()) applyFilterOnGrid();
+      } else applyFilterOnGrid();
+    }
+
+    function init() {
+      rebuildGrid();
+      filterInput.value = '';
+      applyFilterOnGrid();
+      currentIframeActive = false;
+      mainContent.classList.remove('iframe-mode');
+
+      filterInput.addEventListener('input', handleFilterAndClose);
+      filterBtn.addEventListener('click', handleFilterAndClose);
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          if (currentIframeActive) {
+            closeIframeView();
+            if (filterInput.value.trim()) applyFilterOnGrid();
+          }
+        }
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
