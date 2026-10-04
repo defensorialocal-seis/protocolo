@@ -1,397 +1,145 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-  <title>Expedientes según materia</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>Reglas para procesos judiciales | Defensoría Oficial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600;6..72,700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #f0f5fa;
-      color: #0a2b3e;
-      line-height: 1.4;
-      overflow-x: hidden;
-    }
+  :root {
+    --tinta: #14324b; --tinta-2: #22394d; --apagado: #5d7388; --borde: #dbe3ea;
+    --ambar: #f0a020; --ambar-suave: #fff3dc; --acento: #14324b;
+    --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+    --sans: 'Public Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --radio: 14px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body { font-family: var(--sans); background: #fff; color: var(--tinta); line-height: 1.6;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  :focus-visible { outline: 3px solid var(--ambar); outline-offset: 2px; border-radius: 6px; }
 
-    .app-container {
-      display: flex;
-      width: 100%;
-      min-height: 100vh;
-    }
+  .cabecera { border-bottom: 1px solid var(--borde); }
+  .cabecera-interior { max-width: 1280px; margin: 0 auto; padding: clamp(1.1rem, 2.5vw, 1.75rem) clamp(1rem, 4vw, 2.5rem); }
+  .cabecera h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(1.6rem, 3.6vw, 2.4rem); line-height: 1.1; letter-spacing: -.01em; }
+  .cabecera p { margin-top: .3rem; color: var(--apagado); font-size: clamp(.9rem, 1.4vw, 1rem); }
 
-    .main-grid {
-      display: grid;
-      grid-template-columns: 360px 1fr;
-      gap: 2rem;
-      padding: 2rem;
-      width: 100%;
-      max-width: 1600px;
-      margin: 0 auto;
-    }
+  .estructura { max-width: 1280px; margin: 0 auto; padding: clamp(1rem, 3vw, 2rem) clamp(1rem, 4vw, 2.5rem) 3rem;
+    display: grid; grid-template-columns: minmax(260px, 340px) minmax(0, 1fr); gap: clamp(1.25rem, 3vw, 2.5rem); align-items: start; }
+  .categorias { position: sticky; top: 1rem; display: flex; flex-direction: column; gap: .5rem; list-style: none; }
+  .tarjeta-categoria { width: 100%; text-align: left; background: #fff; border: 1px solid var(--borde); border-left: 5px solid var(--acento);
+    border-radius: var(--radio); padding: .85rem 1rem; display: grid; gap: .2rem; transition: background .15s, box-shadow .15s; -webkit-tap-highlight-color: transparent; }
+  .tarjeta-categoria:hover { background: #fafcfe; }
+  .categoria-titulo { font-weight: 600; font-size: .95rem; line-height: 1.3; color: var(--acento); }
+  .categoria-etiqueta { font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--apagado); }
+  .categoria-desc { font-size: .8rem; color: var(--apagado); line-height: 1.4; }
+  .tarjeta-categoria[aria-current="true"] { background: var(--acento); border-color: var(--acento); box-shadow: 0 8px 22px -10px var(--acento); }
+  .tarjeta-categoria[aria-current="true"] .categoria-titulo { color: #fff; }
+  .tarjeta-categoria[aria-current="true"] .categoria-etiqueta, .tarjeta-categoria[aria-current="true"] .categoria-desc { color: rgba(255,255,255,.85); }
 
-    /* COLUMNA IZQUIERDA */
-    .sidebar {
-      background: transparent;
-      overflow-y: auto;
-      padding-right: 0.5rem;
-    }
+  .columna-detalle { background: #fff; border: 1px solid var(--borde); border-radius: 22px; overflow: hidden; min-height: 60vh; scroll-margin-top: 5rem; }
+  .encabezado-panel { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; padding: clamp(1.25rem, 3vw, 2.25rem);
+    border-top: 6px solid var(--acento); border-bottom: 1px solid var(--borde); background: linear-gradient(#fff, #fafcfe); }
+  #tituloDetalle { font-family: var(--serif); font-weight: 600; font-size: clamp(1.5rem, 3.2vw, 2.3rem); line-height: 1.15; }
+  #subtituloDetalle { margin-top: .5rem; color: var(--apagado); font-size: clamp(.9rem, 1.4vw, 1rem); }
+  .btn-informacion { background: transparent; border: 1.5px solid var(--tinta); border-radius: 999px; padding: .55rem 1.1rem; font-weight: 600; font-size: .9rem; white-space: nowrap; transition: background .15s, color .15s; }
+  .btn-informacion:hover { background: var(--tinta); color: #fff; }
+  .btn-informacion:active { transform: scale(.97); }
 
-    .titulo-principal {
-      font-size: 1.7rem;
-      font-weight: 800;
-      color: #1e4a6b;
-      margin-bottom: 1.8rem;
-      text-transform: uppercase;
-      border-bottom: 3px solid #ff9800;
-      padding-bottom: 12px;
-      letter-spacing: -0.3px;
-    }
+  .cabecera-interior { display: flex; align-items: center; justify-content: space-between; gap: 1rem 2rem; flex-wrap: wrap; }
+  .cabecera-texto p { margin-top: .3rem; }
+  .buscador { flex: 0 1 360px; width: 100%; position: relative; }
+  .buscador input { width: 100%; padding: .65rem 1rem .65rem 2.5rem; border: 1.5px solid var(--borde); border-radius: 999px; background: #fafcfe; font: inherit; font-size: .95rem; transition: border-color .15s, background .15s; }
+  .buscador input:focus { outline: none; border-color: var(--tinta); background: #fff; box-shadow: 0 0 0 3px var(--ambar-suave); }
+  .buscador svg { position: absolute; left: .9rem; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: var(--apagado); pointer-events: none; }
+  .categorias { max-height: calc(100vh - 2rem); overflow-y: auto; padding-right: 4px; scrollbar-width: thin; }
+  .grupo { margin-top: .7rem; font-size: .75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--acento); }
+  .grupo:first-child { margin-top: 0; }
+  .tarjeta-categoria { padding: .7rem 1rem; }
+  .sin-resultados { padding: 1rem .2rem; color: var(--apagado); font-size: .95rem; }
 
-    .categoria-card {
-      background: white;
-      border-radius: 18px;
-      margin-bottom: 1.2rem;
-      border: 1px solid #dce9f0;
-      overflow: hidden;
-      transition: all 0.2s ease;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
-    }
+  .contenido { padding: clamp(1.25rem, 3vw, 2.25rem); max-width: 80ch; display: grid; gap: 1rem; animation: cambio .28s ease; }
+  @keyframes cambio { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .steps-list { list-style: none; display: grid; gap: .65rem; counter-reset: n; }
+  .steps-list li { counter-increment: n; display: grid; grid-template-columns: auto 1fr; gap: .8rem; align-items: baseline; padding: .85rem 1.1rem; background: #fafcfe; border: 1px solid var(--borde); border-left: 5px solid var(--acento); border-radius: 12px; color: var(--tinta-2); line-height: 1.5; font-size: clamp(.95rem, 1.3vw, 1.02rem); }
+  .steps-list li::before { content: counter(n); font-family: var(--serif); font-weight: 700; font-size: 1.1rem; color: var(--acento); min-width: 1.3em; }
+  .li-texto { display: block; }
+  .norm-block, .alerta-box { background: var(--ambar-suave); border-left: 5px solid var(--ambar); border-radius: 0 var(--radio) var(--radio) 0; padding: .9rem 1.15rem; font-size: .97rem; color: var(--tinta-2); line-height: 1.5; }
+  strong { font-weight: 600; color: var(--tinta); }
+  dialog { border: 0; border-radius: 24px; padding: 0; width: min(560px, calc(100% - 2rem)); max-height: calc(100% - 2rem); margin: auto; color: var(--tinta); box-shadow: 0 30px 80px -20px rgba(10,30,50,.5); }
+  dialog::backdrop { background: rgba(10,30,50,.65); backdrop-filter: blur(3px); }
+  .modal-contenido { padding: clamp(1.25rem, 4vw, 2rem); display: grid; gap: 1rem; }
+  .modal-contenido h4 { font-family: var(--serif); font-size: 1.5rem; font-weight: 600; line-height: 1.2; padding-right: 2.5rem; }
+  .modal-contenido p, .modal-contenido li { font-size: .97rem; color: var(--tinta-2); }
+  .modal-contenido ul { margin-left: 1.2rem; display: grid; gap: .4rem; }
+  .modal-insight { background: var(--ambar-suave); border-left: 5px solid var(--ambar); border-radius: 0 var(--radio) var(--radio) 0; padding: 1rem 1.15rem; display: grid; gap: .5rem; }
+  .cerrar { position: absolute; top: .75rem; right: .75rem; width: 2.5rem; height: 2.5rem; border-radius: 50%; border: 0; background: #f3f6f9; font-size: 1.5rem; line-height: 1; }
+  .cerrar:hover { background: var(--borde); }
 
-    .categoria-header {
-      padding: 1rem 1.2rem;
-      background: #ffffff;
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-weight: 800;
-      font-size: 1.05rem;
-      border-left: 5px solid #1e4a6b;
-      transition: background 0.2s;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .categoria-header:hover {
-      background: #f8fcff;
-    }
-
-    .categoria-header span:first-child {
-      color: #1e4a6b;
-      letter-spacing: -0.2px;
-    }
-
-    .chevron {
-      font-size: 1.2rem;
-      color: #ff9800;
-      transition: transform 0.2s;
-      font-weight: bold;
-    }
-
-    .chevron.open {
-      transform: rotate(180deg);
-    }
-
-    .procesos-lista {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.3s ease-out;
-      background: #fefefe;
-      border-top: 1px solid #eef2f7;
-    }
-
-    .procesos-lista.open {
-      max-height: 800px;
-      transition: max-height 0.4s ease-in;
-    }
-
-    .proceso-item {
-      padding: 0.85rem 1.2rem;
-      border-bottom: 1px solid #eef2f7;
-      cursor: pointer;
-      transition: all 0.15s;
-      position: relative;
-      font-size: 0.9rem;
-      font-weight: 500;
-      color: #2c3e4e;
-    }
-
-    .proceso-item:last-child {
-      border-bottom: none;
-    }
-
-    .proceso-item:hover {
-      background: #f0f7fe;
-      padding-left: 1.6rem;
-    }
-
-    .proceso-item:active {
-      background: #e6f0f8;
-    }
-
-    .proceso-item .norma-badge {
-      font-size: 0.65rem;
-      background: #eef2fa;
-      display: inline-block;
-      border-radius: 12px;
-      padding: 2px 8px;
-      margin-left: 8px;
-      font-weight: 400;
-      color: #2c7da0;
-    }
-
-    /* COLUMNA DERECHA (detalle) */
-    .detail-panel {
-      background: #ffffff;
-      border-radius: 24px;
-      padding: 2rem;
-      border: 1px solid #dce9f0;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
-      position: relative;
-      transition: all 0.2s;
-    }
-
-    .btn-recordar {
-      position: absolute;
-      top: 24px;
-      right: 24px;
-      background: #ff9800;
-      color: white;
-      border: none;
-      padding: 6px 16px;
-      border-radius: 40px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background 0.2s;
-      z-index: 5;
-      font-family: 'Inter', sans-serif;
-    }
-
-    .btn-recordar:active {
-      background: #e68900;
-      transform: scale(0.97);
-    }
-
-    .detalle-titulo {
-      font-size: 1.6rem;
-      font-weight: 800;
-      color: #1e4a6b;
-      margin-bottom: 0.5rem;
-      padding-right: 90px;
-    }
-
-    .detalle-sub {
-      color: #64748b;
-      font-size: 0.85rem;
-      border-left: 3px solid #ff9800;
-      padding-left: 12px;
-      margin-bottom: 1.8rem;
-    }
-
-    .detalle-contenido {
-      overflow-y: auto;
-      max-height: 70vh;
-      padding-right: 6px;
-    }
-
-    /* estilos para listas numeradas estilo escritos */
-    .steps-list {
-      list-style: none;
-      counter-reset: step-counter;
-      margin-top: 0.5rem;
-    }
-
-    .steps-list li {
-      counter-increment: step-counter;
-      background: #f8fbff;
-      margin-bottom: 12px;
-      padding: 14px 18px 14px 55px;
-      border-radius: 14px;
-      position: relative;
-      font-size: 0.92rem;
-      line-height: 1.45;
-      border: 1px solid #eef2f7;
-    }
-
-    .steps-list li::before {
-      content: counter(step-counter);
-      position: absolute;
-      left: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: #2c7da0;
-      color: white;
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 0.8rem;
-    }
-
-    .norm-block {
-      background: #f0f7fc;
-      border-left: 4px solid #ff9800;
-      padding: 1rem 1.2rem;
-      border-radius: 16px;
-      margin: 1.2rem 0;
-      font-size: 0.85rem;
-    }
-
-    .alerta-box {
-      background: #fff4e5;
-      border-left: 5px solid #ff9800;
-      padding: 1rem;
-      border-radius: 14px;
-      margin: 1rem 0;
-    }
-
-    .badge-ley {
-      background: #eef2ff;
-      color: #1e4a6b;
-      font-size: 0.7rem;
-      font-weight: 600;
-      border-radius: 20px;
-      padding: 3px 10px;
-      display: inline-block;
-      margin-bottom: 8px;
-    }
-
-    hr {
-      margin: 1rem 0;
-      border-color: #e2edf5;
-    }
-
-    /* MODAL */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(10, 43, 62, 0.85);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 2000;
-      backdrop-filter: blur(3px);
-    }
-
-    .modal-card {
-      background: white;
-      max-width: 500px;
-      width: 90%;
-      border-radius: 32px;
-      padding: 1.8rem;
-      position: relative;
-    }
-
-    /* responsive */
-    @media (max-width: 850px) {
-      .main-grid {
-        grid-template-columns: 1fr;
-        gap: 1.2rem;
-        padding: 1rem;
-      }
-      .sidebar {
-        max-height: none;
-      }
-      .detalle-contenido {
-        max-height: 60vh;
-      }
-      .detalle-titulo {
-        font-size: 1.3rem;
-        padding-right: 70px;
-      }
-      .btn-recordar {
-        top: 16px;
-        right: 16px;
-      }
-      .detail-panel {
-        padding: 1.5rem;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .steps-list li {
-        font-size: 0.8rem;
-        padding: 10px 10px 10px 42px;
-      }
-      .steps-list li::before {
-        width: 26px;
-        height: 26px;
-        font-size: 0.7rem;
-        left: 10px;
-      }
-    }
-
-    .proceso-item.active-proceso {
-      background: #e6f0fa;
-      border-left: 4px solid #ff9800;
-      font-weight: 700;
-    }
-
-    footer {
-      text-align: center;
-      font-size: 0.7rem;
-      color: #7e8c8f;
-      margin-top: 2rem;
-    }
-  </style>
-  <script src="https://unpkg.com/lucide@latest"></script>
+  @media (max-width: 1024px) { .estructura { grid-template-columns: minmax(230px, 280px) minmax(0, 1fr); } .categoria-desc { display: none; } }
+  @media (max-width: 760px) {
+    .estructura { grid-template-columns: 1fr; gap: 1rem; }
+    .categorias { position: sticky; top: 0; z-index: 20; flex-direction: row; overflow-x: auto; gap: .5rem;
+      margin: 0 calc(-1 * clamp(1rem, 4vw, 2.5rem)); padding: .6rem clamp(1rem, 4vw, 2.5rem);
+      background: rgba(255,255,255,.95); backdrop-filter: blur(8px); border-bottom: 1px solid var(--borde); scroll-snap-type: x proximity; scrollbar-width: none; }
+    .categorias::-webkit-scrollbar { display: none; }
+    .categorias li { flex: 0 0 auto; scroll-snap-align: start; }
+    .tarjeta-categoria { width: auto; border-left-width: 1px; border-bottom: 4px solid var(--acento); padding: .55rem .9rem; border-radius: 12px; }
+    .categoria-titulo { font-size: .85rem; white-space: nowrap; }
+    .categoria-etiqueta { display: none; }
+    .columna-detalle { min-height: 0; border-radius: 18px; scroll-margin-top: 4.5rem; }
+    .grid-dos-columnas { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 560px) { .encabezado-panel { flex-direction: column; } }
+  @media (min-width: 1500px) { html { font-size: 17px; } }
+  @media print { .categorias, .btn-informacion { display: none; } .columna-detalle { border: 0; } }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+  @media (max-width: 760px) { .grupo, .sin-resultados { display: none; } .categoria-desc { display: none; } .categorias { max-height: none; } }
+</style>
 </head>
 <body>
-<div class="app-container">
-  <div class="main-grid">
-    <!-- COLUMNA IZQUIERDA: categorías colapsables -->
-    <aside class="sidebar">
-      <h2 class="titulo-principal">Reglas para procesos judiciales</h2>
-      <div id="categoriasContainer"></div>
-      <footer>Jurisprudencia + Leyes vigentes<br>Defensoría Oficial - Guía operativa</footer>
-    </aside>
 
-    <!-- COLUMNA DERECHA: detalle dinámico -->
-    <div class="detail-panel">
-      <button class="btn-recordar" id="btnAbrirModal">📌 RECORDÁ ESTO</button>
-      <div id="detalleDinamico">
-        <div class="detalle-titulo">Expedientes por materia</div>
-        <div class="detalle-sub">Seleccione un proceso para ver los pasos y normativa aplicable</div>
-        <div class="detalle-contenido">
-          <div class="norm-block">
-            <i data-lucide="scale" class="lucide-icon" style="width:20px;display:inline-block; vertical-align:middle"></i> 
-            <strong>Guía de actuación para Auxiliares de la Defensoría Oficial.</strong><br>Contiene protocolos, plazos, leyes especiales y criterios de intervención.
-          </div>
-          <p style="margin-top: 12px;">Utilice el panel izquierdo para explorar las materias: <strong>Familia, Violencia, Protección de personas, Civil y Leyes especiales</strong>. Cada ficha contiene instrucciones detalladas, pasos numerados y referencias legales.</p>
-        </div>
+<header class="cabecera">
+  <div class="cabecera-interior">
+    <div class="cabecera-texto">
+      <h1>Reglas para procesos judiciales</h1>
+      <p>Defensoría Oficial · Guía operativa · Jurisprudencia y leyes vigentes</p>
+    </div>
+    <label class="buscador">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input type="search" id="filtro" placeholder="Filtrar proceso..." aria-label="Filtrar proceso" autocomplete="off">
+    </label>
+  </div>
+</header>
+
+<div class="estructura">
+  <ul class="categorias" id="lista" aria-label="Procesos por materia"></ul>
+
+  <main class="columna-detalle" id="detalle" aria-live="polite">
+    <div class="encabezado-panel">
+      <div>
+        <h2 id="tituloDetalle"></h2>
+        <p id="subtituloDetalle"></p>
       </div>
+      <button class="btn-informacion" id="btnAbrirModal" type="button">Recordá esto</button>
     </div>
-  </div>
+    <div class="contenido" id="contenido"></div>
+  </main>
 </div>
 
-<!-- MODAL informativo -->
-<div class="modal-overlay" id="infoModal" onclick="toggleModal(false)">
-  <div class="modal-card" onclick="event.stopPropagation()">
-    <button style="position:absolute; top:12px; right:16px; background:none; border:none; font-size:1.8rem; cursor:pointer;" onclick="toggleModal(false)">&times;</button>
-    <div style="background:#eef4fa; border-left:5px solid #1e4a6b; padding:1rem; border-radius:16px;">
-      <h4 style="margin-bottom: 8px;">📌 Validez procesal y deberes</h4>
-      <p style="font-size:0.85rem;">Todos los procedimientos deben ajustarse al CPC (Ley XII-27), Ley Orgánica IV-N.15 y leyes especiales. La Defensoría garantiza el acceso a justicia de personas vulnerables. Ante cualquier duda, consulte normativa vigente y jurisprudencia.</p>
-    </div>
-    <div style="margin-top: 1rem; background:#fff4e5; border-left:5px solid #ff9800; padding:1rem; border-radius:16px;">
-      <p style="font-size:0.85rem;"><strong>📌 Recordatorio:</strong> Los plazos de gracia (Art.7 RPJ), la mediación previa obligatoria (Ley XII-19) y la gratuidad del ADN (Ley XII-31) son herramientas esenciales. Actuar siempre en resguardo del interés superior.</p>
-    </div>
+<dialog id="modal" aria-labelledby="modalTitulo">
+  <button class="cerrar" type="button" aria-label="Cerrar" id="cerrar">&times;</button>
+  <div class="modal-contenido">
+    <h4 id="modalTitulo">📌 Validez procesal y deberes</h4>
+    <p>Todos los procedimientos deben ajustarse al CPC (Ley XII-27), Ley Orgánica IV-N.15 y leyes especiales. La Defensoría garantiza el acceso a justicia de personas vulnerables. Ante cualquier duda, consulte normativa vigente y jurisprudencia.</p>
+    <div class="modal-insight"><strong>Recordatorio:</strong> Los plazos de gracia (Art.7 RPJ), la mediación previa obligatoria (Ley XII-19) y la gratuidad del ADN (Ley XII-31) son herramientas esenciales. Actuar siempre en resguardo del interés superior.</div>
   </div>
-</div>
+</dialog>
 
 <script>
   // ====================== CONTENIDOS DETALLADOS (extraídos de guiatramite) ======================
@@ -515,86 +263,64 @@
     ] }
   ];
 
-  let activeProcessKey = null;
+  const COLORES = ["#1e4a6b", "#2c7da0", "#8e44ad", "#27ae60", "#d35400", "#c0392b"];
+  const $ = id => document.getElementById(id);
+  const lista = $('lista'), modal = $('modal');
+  const limpiarNombre = t => t.replace(/^[^\p{L}\p{N}]+/u, '').trim();
+  let actual = null;
 
-  function buildSidebar() {
-    const container = document.getElementById('categoriasContainer');
+  function renderLista(q = '') {
+    const t = q.trim().toLowerCase();
     let html = '';
-    categoriasData.forEach((cat, idx) => {
-      const catId = `cat-${idx}`;
-      html += `<div class="categoria-card">
-        <div class="categoria-header" data-cat="${catId}">
-          <span>${cat.nombre}</span>
-          <span class="chevron" id="chevron-${catId}">⌵</span>
-        </div>
-        <div class="procesos-lista" id="list-${catId}">
-          ${cat.procesos.map(proc => `<div class="proceso-item" data-key="${proc.key}" data-nombre="${proc.nombre}">${proc.nombre} <span class="norma-badge">${proc.subtitle}</span></div>`).join('')}
-        </div>
-      </div>`;
+    categoriasData.forEach((cat, i) => {
+      const procs = cat.procesos.filter(p => !t || (cat.nombre + ' ' + p.nombre + ' ' + p.subtitle).toLowerCase().includes(t));
+      if (!procs.length) return;
+      const c = COLORES[i % COLORES.length];
+      html += `<li class="grupo" style="--acento:${c}">${limpiarNombre(cat.nombre)}</li>`;
+      html += procs.map(p => `<li><button type="button" class="tarjeta-categoria" data-key="${p.key}" style="--acento:${c}" aria-current="${p.key === actual}">
+        <span class="categoria-titulo">${p.nombre}</span><span class="categoria-desc">${p.subtitle}</span></button></li>`).join('');
     });
-    container.innerHTML = html;
-
-    // acordeones
-    document.querySelectorAll('.categoria-header').forEach(header => {
-      header.addEventListener('click', (e) => {
-        const catId = header.getAttribute('data-cat');
-        const list = document.getElementById(`list-${catId}`);
-        const chevron = document.getElementById(`chevron-${catId}`);
-        if (list) {
-          list.classList.toggle('open');
-          if (chevron) chevron.classList.toggle('open');
-        }
-      });
-    });
-
-    // eventos procesos
-    document.querySelectorAll('.proceso-item').forEach(el => {
-      el.addEventListener('click', () => {
-        const key = el.getAttribute('data-key');
-        const proceso = findProcesoByKey(key);
-        if (proceso) {
-          activeProcessKey = key;
-          renderDetail(proceso);
-          highlightActive(el);
-        }
-      });
-    });
-    if (categoriasData[0]?.procesos[0]) renderDetail(categoriasData[0].procesos[0]);
+    lista.innerHTML = html || '<li class="sin-resultados">No se encontraron resultados.</li>';
   }
 
   function findProcesoByKey(key) {
-    for (let cat of categoriasData) {
-      const found = cat.procesos.find(p => p.key === key);
-      if (found) return found;
-    }
+    for (const cat of categoriasData) { const f = cat.procesos.find(p => p.key === key); if (f) return f; }
     return null;
   }
+  const colorDe = key => COLORES[categoriasData.findIndex(c => c.procesos.some(p => p.key === key)) % COLORES.length];
 
-  function renderDetail(proceso) {
-    const detailDiv = document.getElementById('detalleDinamico');
-    if (!proceso.render) return;
-    const content = proceso.render();
-    detailDiv.innerHTML = content;
-    if (window.lucide) lucide.createIcons();
-    // reajustar scroll si es necesario
+  function seleccionar(key, scroll) {
+    const p = findProcesoByKey(key);
+    if (!p || !p.render) return;
+    actual = key;
+    const tmp = document.createElement('div');
+    tmp.innerHTML = p.render();
+    tmp.querySelectorAll('i[data-lucide]').forEach(i => i.remove());
+    const t = tmp.querySelector('.detalle-titulo'), s = tmp.querySelector('.detalle-sub'), c = tmp.querySelector('.detalle-contenido');
+    $('tituloDetalle').textContent = limpiarNombre(t ? t.textContent : p.nombre);
+    $('subtituloDetalle').textContent = s ? s.textContent : p.subtitle;
+    $('detalle').style.setProperty('--acento', colorDe(key));
+    const cont = $('contenido');
+    cont.style.animation = 'none'; cont.offsetHeight; cont.style.animation = '';
+    cont.innerHTML = c ? c.innerHTML.replace(/<li>(.*?)<\/li>/gs, '<li><span class="li-texto">$1</span></li>') : '';
+    renderLista($('filtro').value);
+    history.replaceState(null, '', '#' + key);
+    if (scroll) {
+      const b = lista.querySelector('[aria-current="true"]');
+      if (b) b.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+      if (matchMedia('(max-width:760px)').matches) $('detalle').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }
 
-  function highlightActive(activeElement) {
-    document.querySelectorAll('.proceso-item').forEach(el => el.classList.remove('active-proceso'));
-    activeElement.classList.add('active-proceso');
-  }
+  lista.addEventListener('click', e => { const b = e.target.closest('[data-key]'); if (b) seleccionar(b.dataset.key, true); });
+  $('filtro').addEventListener('input', e => renderLista(e.target.value));
+  $('btnAbrirModal').addEventListener('click', () => modal.showModal());
+  $('cerrar').addEventListener('click', () => modal.close());
+  modal.addEventListener('click', e => { if (e.target === modal) modal.close(); });
 
-  function toggleModal(show) {
-    const modal = document.getElementById('infoModal');
-    modal.style.display = show ? 'flex' : 'none';
-  }
-
-  window.onload = () => {
-    buildSidebar();
-    if (window.lucide) lucide.createIcons();
-    const btnModal = document.getElementById('btnAbrirModal');
-    if (btnModal) btnModal.addEventListener('click', () => toggleModal(true));
-  };
+  renderLista();
+  const inicial = decodeURIComponent(location.hash.slice(1));
+  seleccionar(findProcesoByKey(inicial) ? inicial : categoriasData[0].procesos[0].key, false);
 </script>
 </body>
 </html>

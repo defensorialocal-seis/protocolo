@@ -2,11 +2,12 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
   <title>Modelos por etapa | Defensoría</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600;6..72,700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
@@ -14,419 +15,136 @@
   <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
   <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #eef3f8;
-      color: #0a2f44;
-      line-height: 1.45;
-    }
-    .app-layout {
-      display: flex;
-      width: 100%;
-      min-height: 100vh;
-    }
-    .grid-dos-paneles {
-      display: grid;
-      grid-template-columns: 340px 1fr;
-      gap: 1.8rem;
-      padding: 2rem;
-      width: 100%;
-      max-width: 1500px;
-      margin: 0 auto;
-    }
-    .panel-materias {
-      background: transparent;
-      overflow-y: auto;
-      padding-right: 0.25rem;
-    }
-    .titulo-herramienta {
-      font-size: 1.5rem;
-      font-weight: 700;
-      letter-spacing: -0.3px;
-      color: #1e4a6b;
-      margin-bottom: 1.5rem;
-      border-bottom: 3px solid #ff9800;
-      padding-bottom: 10px;
-    }
-    .materia-bloque {
-      background: white;
-      border-radius: 20px;
-      margin-bottom: 1.5rem;
-      border: 1px solid #d9e4ec;
-      overflow: hidden;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
-    }
-    .materia-titulo {
-      background: #ffffff;
-      padding: 0.9rem 1.2rem;
-      font-weight: 700;
-      font-size: 1rem;
-      border-left: 5px solid #ff9800;
-      color: #1e4a6b;
-      border-bottom: 1px solid #ecf3f8;
-      cursor: pointer;
-      transition: 0.15s;
-    }
-    .materia-titulo:hover {
-      background: #f9fafc;
-    }
-    .materia-titulo.activa {
-      background: #eef4fb;
-      border-left-color: #e67e22;
-    }
-    .lista-procesos {
-      list-style: none;
-      padding: 0.4rem 0;
-    }
-    .proceso-enlace {
-      display: block;
-      padding: 0.6rem 1rem 0.6rem 1.5rem;
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: #2c4b64;
-      border-bottom: 1px solid #edf2f7;
-      cursor: pointer;
-      transition: all 0.15s;
-      position: relative;
-    }
-    .proceso-enlace:hover {
-      background: #f3f9ff;
-      padding-left: 1.8rem;
-    }
-    .proceso-enlace.activo {
-      background: #eef4fb;
-      border-left: 3px solid #ff9800;
-      font-weight: 700;
-      color: #0a2f44;
-    }
-    .panel-escritos {
-      background: #ffffff;
-      border-radius: 28px;
-      padding: 1.5rem 1.8rem;
-      border: 1px solid #dce9f0;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03);
-    }
-    .cabecera-proceso {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      border-bottom: 2px solid #ffeedb;
-      margin-bottom: 1.5rem;
-      padding-bottom: 0.75rem;
-    }
-    .info-proceso {
-      flex: 1;
-    }
-    .nombre-proceso-grande {
-      font-size: 1.3rem;
-      font-weight: 700;
-      letter-spacing: -0.2px;
-      color: #1e4a6b;
-    }
-    .subtitulo-materia {
-      font-size: 0.75rem;
-      color: #6c8dae;
-      margin-top: 4px;
-    }
-    .search-input {
-      padding: 6px 12px;
-      border-radius: 40px;
-      border: 1px solid #cbdbe6;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.8rem;
-      width: 220px;
-      background: white;
-      transition: 0.2s;
-    }
-    .search-input:focus {
-      outline: none;
-      border-color: #ff9800;
-      box-shadow: 0 0 0 2px rgba(255,152,0,0.2);
-    }
-    .etapa-container {
-      margin-top: 0.5rem;
-    }
-    .etapa-card {
-      background: #fbfeff;
-      border-radius: 20px;
-      margin-bottom: 1.5rem;
-      border: 1px solid #e4edf5;
-      padding: 1rem 1.2rem;
-      transition: all 0.1s;
-    }
-    .etapa-numero {
-      font-weight: 800;
-      font-size: 1rem;
-      color: #ff9800;
-      margin-bottom: 0.2rem;
-      display: inline-block;
-      border-bottom: 2px solid #ffd9a3;
-      padding-right: 8px;
-    }
-    .etapa-titulo {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #1e4a6b;
-      margin: 4px 0 6px 0;
-    }
-    .descripcion-etapa {
-      color: #3d5f7c;
-      font-size: 0.8rem;
-      line-height: 1.45;
-      margin-bottom: 12px;
-    }
-    .modelo-info {
-      background: #f6fafd;
-      border-radius: 16px;
-      padding: 0.7rem 1rem;
-      margin-top: 10px;
-      border: 1px solid #e2ecf5;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-    .modelo-titulo {
-      font-weight: 600;
-      color: #1e4a6b;
-      background: white;
-      padding: 4px 12px;
-      border-radius: 40px;
-      font-size: 0.8rem;
-      border: 1px solid #cde3ef;
-      word-break: break-word;
-      max-width: 60%;
-    }
-    .botones-modelo {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    .btn-mostrar {
-      background: #3b82f6;
-      color: white;
-      border: none;
-      padding: 5px 12px;
-      border-radius: 40px;
-      font-weight: 600;
-      font-size: 0.7rem;
-      cursor: pointer;
-      transition: 0.1s;
-    }
-    .btn-mostrar:hover {
-      background: #2563eb;
-      transform: translateY(-1px);
-    }
-    .btn-crear {
-      background: #ff9800;
-      color: white;
-      border: none;
-      padding: 5px 12px;
-      border-radius: 40px;
-      font-weight: 600;
-      font-size: 0.7rem;
-      cursor: pointer;
-      transition: 0.1s;
-    }
-    .btn-crear:hover {
-      transform: translateY(-1px);
-      filter: brightness(0.95);
-    }
-    .mensaje-guia {
-      background: #fef6e8;
-      border-left: 5px solid #ff9800;
-      padding: 0.8rem 1rem;
-      border-radius: 20px;
-      margin-top: 1.5rem;
-      font-size: 0.75rem;
-      color: #5b6e7e;
-    }
-    footer {
-      text-align: center;
-      font-size: 0.65rem;
-      margin-top: 2rem;
-      color: #8ba0b0;
-      border-top: 1px solid #e2edf5;
-      padding-top: 1rem;
-    }
-    /* MODALES */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.6);
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-    }
-    .modal-content {
-      background: white;
-      padding: 22px;
-      border-radius: 28px;
-      width: 90%;
-      max-width: 850px;
-      max-height: 90vh;
-      overflow-y: auto;
-      box-shadow: 0 20px 35px rgba(0,0,0,0.2);
-    }
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 18px;
-      border-bottom: 2px solid #ffeedb;
-      padding-bottom: 8px;
-    }
-    .close-btn {
-      background: none;
-      border: none;
-      font-size: 26px;
-      cursor: pointer;
-      color: #888;
-    }
-    .form-group {
-      margin-bottom: 16px;
-    }
-    .form-group label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: 600;
-      font-size: 0.85rem;
-      color: #1e4a6b;
-    }
-    .form-group input, .form-group select {
-      width: 100%;
-      padding: 8px 12px;
-      border: 1px solid #cbdbe6;
-      border-radius: 14px;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.85rem;
-      background: white;
-    }
-    .form-group select:disabled {
-      background: #f0f2f5;
-      color: #5a6e7c;
-    }
-    .form-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 12px;
-      margin-top: 20px;
-    }
-    .btn-save, .btn-cancel-modal {
-      border: none;
-      padding: 8px 18px;
-      border-radius: 40px;
-      font-weight: 600;
-      font-size: 0.8rem;
-      cursor: pointer;
-    }
-    .btn-save {
-      background: #ff9800;
-      color: white;
-    }
-    .btn-cancel-modal {
-      background: #e2e8f0;
-      color: #2c4b64;
-    }
-    #bodyEditorQuill {
-      min-height: 220px;
-      background: white;
-      border-radius: 14px;
-      border: 1px solid #cbdbe6;
-    }
-    .loading-spinner {
-      text-align: center;
-      padding: 2rem;
-      color: #ff9800;
-      font-size: 0.9rem;
-    }
-    /* Modal de ver documento */
-    .documento-completo {
-      line-height: 1.5;
-      font-size: 0.9rem;
-    }
-    .doc-meta {
-      background: #f4f9fe;
-      padding: 0.8rem;
-      border-radius: 16px;
-      margin-bottom: 1rem;
-      font-size: 0.8rem;
-    }
-    .doc-contenido {
-      border-top: 1px solid #e2edf5;
-      padding-top: 1rem;
-    }
-    .acciones-documento {
-      display: flex;
-      justify-content: flex-end;
-      gap: 12px;
-      margin-top: 20px;
-      flex-wrap: wrap;
-    }
-    .btn-editar-doc, .btn-imprimir-doc {
-      border: none;
-      padding: 6px 18px;
-      border-radius: 40px;
-      font-weight: 600;
-      font-size: 0.8rem;
-      cursor: pointer;
-      transition: 0.1s;
-    }
-    .btn-editar-doc {
-      background: #10b981;
-      color: white;
-    }
-    .btn-editar-doc:hover { background: #059669; }
-    .btn-imprimir-doc {
-      background: #6c757d;
-      color: white;
-    }
-    .btn-imprimir-doc:hover { background: #5a6268; }
-    @media (max-width: 820px) {
-      .grid-dos-paneles {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-        padding: 1rem;
-      }
-      .search-input {
-        width: 100%;
-      }
-    }
+  :root {
+    --tinta: #14324b; --tinta-2: #22394d; --apagado: #5d7388; --borde: #dbe3ea;
+    --ambar: #f0a020; --ambar-suave: #fff3dc; --acento: #14324b;
+    --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+    --sans: 'Public Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --radio: 14px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body { font-family: var(--sans); background: #fff; color: var(--tinta); line-height: 1.6;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
+  button, input, select { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+  :focus-visible { outline: 3px solid var(--ambar); outline-offset: 2px; border-radius: 6px; }
+
+  .cabecera { border-bottom: 1px solid var(--borde); }
+  .cabecera-interior { max-width: 1280px; margin: 0 auto; padding: clamp(1.1rem, 2.5vw, 1.75rem) clamp(1rem, 4vw, 2.5rem); }
+  .cabecera h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(1.6rem, 3.6vw, 2.4rem); line-height: 1.1; letter-spacing: -.01em; }
+
+  .estructura { max-width: 1280px; margin: 0 auto; padding: clamp(1rem, 3vw, 2rem) clamp(1rem, 4vw, 2.5rem) 3rem;
+    display: grid; grid-template-columns: minmax(260px, 340px) minmax(0, 1fr); gap: clamp(1.25rem, 3vw, 2.5rem); align-items: start; }
+  .categorias { position: sticky; top: 1rem; display: flex; flex-direction: column; gap: .5rem; list-style: none;
+    max-height: calc(100vh - 2rem); overflow-y: auto; padding-right: 4px; scrollbar-width: thin; }
+  .grupo-materia { margin-top: .6rem; font-size: .75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--acento); }
+  .grupo-materia:first-child { margin-top: 0; }
+  .tarjeta-categoria { width: 100%; text-align: left; background: #fff; border: 1px solid var(--borde); border-left: 5px solid var(--acento);
+    border-radius: var(--radio); padding: .75rem 1rem; display: grid; transition: background .15s, box-shadow .15s; -webkit-tap-highlight-color: transparent; }
+  .tarjeta-categoria:hover { background: #fafcfe; }
+  .categoria-titulo { font-weight: 600; font-size: .95rem; line-height: 1.3; color: var(--acento); }
+  .tarjeta-categoria.activo { background: var(--acento); border-color: var(--acento); box-shadow: 0 8px 22px -10px var(--acento); }
+  .tarjeta-categoria.activo .categoria-titulo { color: #fff; }
+  .sin-resultados { padding: .3rem .2rem; color: var(--apagado); font-size: .9rem; font-style: italic; }
+
+  .columna-detalle { background: #fff; border: 1px solid var(--borde); border-radius: 22px; overflow: hidden; min-height: 60vh; scroll-margin-top: 5rem; }
+  .encabezado-panel { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; padding: clamp(1.25rem, 3vw, 2.25rem);
+    border-top: 6px solid var(--acento); border-bottom: 1px solid var(--borde); background: linear-gradient(#fff, #fafcfe); }
+  #procesoSeleccionadoNombre { font-family: var(--serif); font-weight: 600; font-size: clamp(1.5rem, 3.2vw, 2.3rem); line-height: 1.15; }
+  #subMateriaProceso { margin-top: .5rem; color: var(--apagado); font-size: clamp(.9rem, 1.4vw, 1rem); }
+  .btn-nuevo-modelo { background: var(--tinta); color: #fff; border: 1.5px solid var(--tinta); border-radius: 999px; padding: .55rem 1.1rem;
+    font-weight: 600; font-size: .9rem; white-space: nowrap; transition: background .15s, color .15s; }
+  .btn-nuevo-modelo:hover { background: #fff; color: var(--tinta); }
+  .btn-nuevo-modelo:active { transform: scale(.97); }
+
+  .contenido { padding: clamp(1.25rem, 3vw, 2.25rem); max-width: 80ch; display: grid; gap: 1.25rem; }
+  .search-input { width: 100%; padding: .65rem 1rem; border: 1.5px solid var(--borde); border-radius: 999px; background: #fafcfe; font-size: .95rem; }
+  .search-input:focus { outline: none; border-color: var(--tinta); background: #fff; box-shadow: 0 0 0 3px var(--ambar-suave); }
+  .etapas { list-style: none; display: grid; gap: .8rem; }
+  .etapa-card { padding: 1rem 1.15rem; background: #fafcfe; border: 1px solid var(--borde); border-left: 5px solid var(--acento); border-radius: 12px; animation: cambio .28s ease; }
+  @keyframes cambio { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .etapa-numero { display: block; font-size: .75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--acento); }
+  .etapa-titulo { font-family: var(--serif); font-weight: 600; font-size: clamp(1.15rem, 1.8vw, 1.3rem); line-height: 1.3; margin: .15rem 0 .3rem; }
+  .descripcion-etapa { font-size: .97rem; line-height: 1.5; color: var(--tinta-2); }
+  .modelo-info { margin-top: .8rem; padding-top: .8rem; border-top: 1px solid var(--borde); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .6rem; }
+  .modelo-titulo { font-weight: 600; font-size: .88rem; background: #fff; border: 1px solid var(--borde); border-radius: 999px; padding: .3rem .85rem; word-break: break-word; max-width: 100%; }
+  .modelo-titulo.vacio { color: var(--apagado); font-weight: 500; background: #f3f6f9; }
+  .botones-modelo { display: flex; gap: .5rem; flex-wrap: wrap; }
+  .btn-mostrar, .btn-crear { border-radius: 999px; padding: .4rem 1rem; font-weight: 600; font-size: .85rem; transition: background .15s, color .15s; }
+  .btn-mostrar { background: transparent; border: 1.5px solid var(--acento); color: var(--acento); }
+  .btn-mostrar:hover { background: var(--acento); color: #fff; }
+  .btn-crear { background: var(--ambar-suave); border: 1.5px solid var(--ambar); color: var(--tinta); }
+  .btn-crear:hover { background: var(--ambar); }
+  .resumen { background: var(--ambar-suave); border-left: 5px solid var(--ambar); border-radius: 0 var(--radio) var(--radio) 0; padding: .9rem 1.15rem; font-size: .95rem; color: var(--tinta-2); }
+  .loading-spinner { text-align: center; padding: 2rem; color: var(--apagado); }
+
+  /* Modales */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(10,30,50,.65); backdrop-filter: blur(3px); justify-content: center; align-items: center; z-index: 1000; padding: 1rem; }
+  .modal-content { background: #fff; padding: clamp(1.25rem, 4vw, 2rem); border-radius: 24px; width: 100%; max-width: 850px; max-height: 100%; overflow-y: auto; box-shadow: 0 30px 80px -20px rgba(10,30,50,.5); }
+  .modal-header { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1.1rem; padding-bottom: .8rem; border-bottom: 1px solid var(--borde); }
+  .modal-header h2 { font-family: var(--serif); font-weight: 600; font-size: 1.5rem; line-height: 1.2; }
+  .close-btn { flex: none; width: 2.5rem; height: 2.5rem; border-radius: 50%; border: 0; background: #f3f6f9; font-size: 1.5rem; line-height: 1; color: var(--tinta); }
+  .close-btn:hover { background: var(--borde); }
+  .form-group { margin-bottom: 1rem; }
+  .form-group label { display: block; margin-bottom: .3rem; font-weight: 600; font-size: .88rem; }
+  .form-group input, .form-group select { width: 100%; padding: .6rem .9rem; border: 1.5px solid var(--borde); border-radius: 12px; background: #fff; font-size: .95rem; }
+  .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--tinta); box-shadow: 0 0 0 3px var(--ambar-suave); }
+  .form-group select:disabled { background: #f3f6f9; color: var(--apagado); }
+  .ql-container { font-family: var(--sans); font-size: .97rem; }
+  .ql-toolbar.ql-snow { border: 1.5px solid var(--borde); border-radius: 12px 12px 0 0; background: #fafcfe; }
+  #bodyEditorQuill { min-height: 220px; background: #fff; border: 1.5px solid var(--borde); border-top: 0; border-radius: 0 0 12px 12px; }
+  .form-actions, .acciones-documento { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: .6rem; margin-top: 1.25rem; }
+  .btn-save, .btn-cancel-modal, .btn-editar-doc, .btn-imprimir-doc { border-radius: 999px; padding: .55rem 1.2rem; font-weight: 600; font-size: .9rem; border: 1.5px solid var(--tinta); transition: background .15s, color .15s; }
+  .btn-save, .btn-editar-doc { background: var(--tinta); color: #fff; }
+  .btn-save:hover, .btn-editar-doc:hover { background: #0d2336; }
+  .btn-cancel-modal, .btn-imprimir-doc { background: transparent; color: var(--tinta); }
+  .btn-cancel-modal:hover, .btn-imprimir-doc:hover { background: #f3f6f9; }
+  .documento-completo { font-size: .97rem; line-height: 1.6; }
+  .doc-meta { background: #fafcfe; border: 1px solid var(--borde); border-left: 5px solid var(--ambar); border-radius: 12px; padding: .9rem 1.1rem; margin-bottom: 1rem; font-size: .9rem; display: grid; gap: .2rem; }
+  .doc-contenido { border-top: 1px solid var(--borde); padding-top: 1rem; }
+
+  @media (max-width: 1024px) { .estructura { grid-template-columns: minmax(230px, 280px) minmax(0, 1fr); } }
+  @media (max-width: 760px) {
+    .estructura { grid-template-columns: 1fr; gap: 1rem; }
+    .categorias { position: sticky; top: 0; z-index: 20; flex-direction: row; overflow-x: auto; gap: .5rem; max-height: none;
+      margin: 0 calc(-1 * clamp(1rem, 4vw, 2.5rem)); padding: .6rem clamp(1rem, 4vw, 2.5rem);
+      background: rgba(255,255,255,.95); backdrop-filter: blur(8px); border-bottom: 1px solid var(--borde); scroll-snap-type: x proximity; scrollbar-width: none; }
+    .categorias::-webkit-scrollbar { display: none; }
+    .categorias li { flex: 0 0 auto; scroll-snap-align: start; }
+    .grupo-materia, .sin-resultados { display: none; }
+    .tarjeta-categoria { width: auto; border-left-width: 1px; border-bottom: 4px solid var(--acento); padding: .55rem .9rem; border-radius: 12px; }
+    .categoria-titulo { font-size: .85rem; white-space: nowrap; }
+    .columna-detalle { min-height: 0; border-radius: 18px; scroll-margin-top: 4.5rem; }
+  }
+  @media (max-width: 560px) { .encabezado-panel { flex-direction: column; } }
+  @media (min-width: 1500px) { html { font-size: 17px; } }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
   </style>
 </head>
 <body>
-<div class="app-layout">
-  <div class="grid-dos-paneles">
-    <aside class="panel-materias">
-      <h1 class="titulo-herramienta">Redacción de Documentos</h1>
-      <div id="contenedorMaterias"></div>
-      <footer>Procesos existentes · Gestión unificada</footer>
-    </aside>
-    <div class="panel-escritos" id="panelEscritos">
-      <div class="cabecera-proceso">
-        <div class="info-proceso">
-          <div class="nombre-proceso-grande" id="procesoSeleccionadoNombre">Seleccione un proceso</div>
-          <div class="subtitulo-materia" id="subMateriaProceso">Los procesos se crean al guardar un modelo</div>
-        </div>
-        <input type="text" id="searchModelos" class="search-input" placeholder="🔍 Buscar modelo...">
+<header class="cabecera">
+  <div class="cabecera-interior"><h1>Redacción de documentos</h1></div>
+</header>
+
+<div class="estructura">
+  <ul class="categorias" id="contenedorMaterias" aria-label="Procesos por materia"></ul>
+
+  <main class="columna-detalle" id="panelEscritos" aria-live="polite">
+    <div class="encabezado-panel cabecera-proceso">
+      <div class="info-proceso">
+        <h2 id="procesoSeleccionadoNombre">Seleccione un proceso</h2>
+        <p id="subMateriaProceso">Los procesos se crean al guardar un modelo</p>
       </div>
+      <button class="btn-nuevo-modelo" id="btnNuevoModeloGlobal" type="button">+ Nuevo modelo</button>
+    </div>
+    <div class="contenido">
+      <input type="search" id="searchModelos" class="search-input" placeholder="Buscar modelo..." aria-label="Buscar modelo" autocomplete="off">
       <div id="etapasDinamicasContainer">
-        <div class="mensaje-guia">◆ Seleccione un proceso del menú izquierdo.</div>
+        <div class="resumen">Seleccione un proceso del listado.</div>
       </div>
     </div>
-  </div>
+  </main>
 </div>
 
 <!-- MODAL para crear/editar modelo -->
@@ -547,6 +265,7 @@
     { numero: 4, nombre: "Etapa Recursiva", descripcion: "Interposición de recursos ordinarios o extraordinarios (apelación, queja, casación)." }
   ];
 
+  const COLORES = { "FAMILIA": "#1e4a6b", "CIVIL": "#2c7da0", "LABORAL": "#d35400", "VIOLENCIA FAMILIAR": "#8e44ad" };
   let currentMateria = "", currentProceso = "";
   let quillEditor = null;
   let currentDocumentoData = null;
@@ -591,31 +310,23 @@
     if (!contenedor) return;
     const procesosPorMateria = await obtenerProcesosUnicos();
     let html = '';
-    const materiasNombre = {
-      "FAMILIA": "⚖️ FAMILIA",
-      "CIVIL": "⚖️ CIVIL",
-      "LABORAL": "⚖️ LABORAL",
-      "VIOLENCIA FAMILIAR": "⚖️ VIOLENCIA FAMILIAR"
-    };
     for (const [materiaKey, procesos] of Object.entries(procesosPorMateria)) {
-      html += `<div class="materia-bloque" data-materia="${materiaKey}">
-        <div class="materia-titulo">${materiasNombre[materiaKey] || materiaKey}</div>
-        <ul class="lista-procesos">`;
-      if (procesos.length === 0) {
-        html += `<li class="proceso-enlace vacio" style="color:#aaa; font-style:italic;">Sin procesos aún</li>`;
-      } else {
-        procesos.forEach(proc => {
-          html += `<li class="proceso-enlace" data-materia="${materiaKey}" data-proceso="${escapeHtmlAttr(proc)}">${escapeHtml(proc)}</li>`;
-        });
-      }
-      html += `</ul></div>`;
+      const color = COLORES[materiaKey] || '#14324b';
+      html += `<li class="grupo-materia" style="--acento:${color}">${escapeHtml(materiaKey)}</li>`;
+      if (!procesos.length) html += `<li class="sin-resultados vacio">Sin procesos aún</li>`;
+      else procesos.forEach(proc => {
+        html += `<li><button type="button" class="tarjeta-categoria proceso-enlace" style="--acento:${color}" data-materia="${escapeHtmlAttr(materiaKey)}" data-proceso="${escapeHtmlAttr(proc)}"><span class="categoria-titulo">${escapeHtml(proc)}</span></button></li>`;
+      });
     }
     contenedor.innerHTML = html;
 
     document.querySelectorAll('.proceso-enlace:not(.vacio)').forEach(el => {
-      el.addEventListener('click', async () => {
+      el.addEventListener('click', async (ev) => {
         document.querySelectorAll('.proceso-enlace').forEach(e => e.classList.remove('activo'));
         el.classList.add('activo');
+        const panel = document.getElementById('panelEscritos');
+        panel.style.setProperty('--acento', COLORES[el.getAttribute('data-materia')] || '#14324b');
+        if (ev.isTrusted && matchMedia('(max-width:760px)').matches) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
         currentMateria = el.getAttribute('data-materia');
         currentProceso = el.getAttribute('data-proceso');
         document.getElementById('procesoSeleccionadoNombre').innerText = currentProceso;
@@ -624,10 +335,11 @@
         await renderizarPanelConEtapas(currentMateria, currentProceso, '');
       });
     });
-    const primerProceso = document.querySelector('.proceso-enlace:not(.vacio)');
+    const previo = [...document.querySelectorAll('.proceso-enlace')].find(e => e.dataset.materia === currentMateria && e.dataset.proceso === currentProceso);
+    const primerProceso = previo || document.querySelector('.proceso-enlace:not(.vacio)');
     if (primerProceso) primerProceso.click();
     else {
-      document.getElementById('etapasDinamicasContainer').innerHTML = '<div class="mensaje-guia">◆ No hay procesos creados. Comience creando un nuevo modelo (+ Nuevo modelo).</div>';
+      document.getElementById('etapasDinamicasContainer').innerHTML = '<div class="resumen">No hay procesos creados. Comience con "+ Nuevo modelo".</div>';
     }
   }
 
@@ -673,33 +385,30 @@
       return { etapa, modelo };
     }));
     
-    let html = '<div class="etapa-container">';
+    let html = '', visibles = 0;
     for (const item of resultados) {
-      const etapa = item.etapa;
-      let modelo = item.modelo;
-      if (filtroTexto && modelo) {
-        const pasaFiltro = filtrarModelosSegunBusqueda([modelo], filtroTexto).length > 0;
-        if (!pasaFiltro) modelo = null;
-      }
+      const etapa = item.etapa, modelo = item.modelo;
+      if (filtroTexto && !(modelo && filtrarModelosSegunBusqueda([modelo], filtroTexto).length)) continue;
+      visibles++;
+      const m = escapeHtmlAttr(materiaNombre), p = escapeHtmlAttr(procesoNombre), e = escapeHtmlAttr(etapa.nombre);
       html += `
-        <div class="etapa-card" data-etapa="${etapa.nombre}">
-          <div class="etapa-numero">Etapa ${etapa.numero}</div>
-          <div class="etapa-titulo">${etapa.nombre}</div>
-          <div class="descripcion-etapa">${etapa.descripcion}</div>
+        <li class="etapa-card" data-etapa="${e}">
+          <span class="etapa-numero">Etapa ${etapa.numero}</span>
+          <h3 class="etapa-titulo">${etapa.nombre}</h3>
+          <p class="descripcion-etapa">${etapa.descripcion}</p>
           <div class="modelo-info">
-            ${modelo ? `<span class="modelo-titulo">📄 ${escapeHtml(modelo.titulo || 'Sin título')}</span>` : `<span class="modelo-titulo" style="background:#f0f2f5; color:#7f8c8d;">✖ Ningún modelo asociado</span>`}
+            ${modelo ? `<span class="modelo-titulo">📄 ${escapeHtml(modelo.titulo || 'Sin título')}</span>` : `<span class="modelo-titulo vacio">Ningún modelo asociado</span>`}
             <div class="botones-modelo">
-              ${modelo ? `
-                <button class="btn-mostrar" data-modeloid="${modelo.id}" data-materia="${materiaNombre}" data-proceso="${procesoNombre}" data-etapa="${etapa.nombre}">Mostrar</button>
-              ` : `
-                <button class="btn-crear" data-materia="${materiaNombre}" data-proceso="${procesoNombre}" data-etapa="${etapa.nombre}" data-accion="crear">+ Crear modelo</button>
-              `}
+              ${modelo
+                ? `<button type="button" class="btn-mostrar" data-modeloid="${modelo.id}" data-materia="${m}" data-proceso="${p}" data-etapa="${e}">Mostrar</button>`
+                : `<button type="button" class="btn-crear" data-materia="${m}" data-proceso="${p}" data-etapa="${e}" data-accion="crear">+ Crear modelo</button>`}
             </div>
           </div>
-        </div>
-      `;
+        </li>`;
     }
-    html += '</div><div class="mensaje-guia"><strong>✍️ Gestión unificada:</strong> Use "Mostrar" para ver, editar o imprimir el documento.</div>';
+    html = visibles
+      ? '<ol class="etapas">' + html + '</ol><div class="resumen" style="margin-top:1.25rem"><strong>Gestión unificada:</strong> use "Mostrar" para ver, editar o imprimir el documento.</div>'
+      : '<div class="resumen">No se encontraron modelos con esa búsqueda.</div>';
     contenedorEtapas.innerHTML = html;
 
     document.querySelectorAll('.btn-mostrar').forEach(btn => {
@@ -790,7 +499,7 @@
     const ventana = window.open('', '_blank');
     ventana.document.write(`
       <html><head><title>${escapeHtml(data.titulo)}</title>
-      <style>body{font-family: 'Inter', Arial; padding:2rem;} h1{color:#1e4a6b;} .meta{background:#f4f7fb; padding:10px; border-radius:12px;}</style>
+      <style>body{font-family: Georgia, 'Times New Roman', serif; padding:2rem;} h1{color:#1e4a6b;} .meta{background:#f4f7fb; padding:10px; border-radius:12px;}</style>
       </head><body>
       <h1>${escapeHtml(data.titulo)}</h1>
       <div class="meta"><strong>Materia:</strong> ${escapeHtml(data.materia)} | <strong>Proceso:</strong> ${escapeHtml(data.proceso)} | <strong>Etapa:</strong> ${escapeHtml(data.etapa)}<br>
@@ -883,12 +592,7 @@
     initQuillEditor();
     construirSidebarDinamico();
     
-    const btnNuevoGlobal = document.createElement('button');
-    btnNuevoGlobal.id = 'btnNuevoModeloGlobal';
-    btnNuevoGlobal.className = 'btn-nuevo-modelo';
-    btnNuevoGlobal.innerText = '+ Nuevo modelo';
-    document.querySelector('.cabecera-proceso').appendChild(btnNuevoGlobal);
-    btnNuevoGlobal.addEventListener('click', () => abrirModalParaCrear('', '', 'Etapa inicial'));
+    document.getElementById('btnNuevoModeloGlobal').addEventListener('click', () => abrirModalParaCrear(currentMateria, currentProceso, 'Etapa inicial'));
     
     document.getElementById('closeModalBtnModelo').addEventListener('click', cerrarModalModelo);
     document.getElementById('cancelModalBtn').addEventListener('click', cerrarModalModelo);
@@ -902,6 +606,7 @@
       if (e.target === document.getElementById('modalVerDocumento')) cerrarVerModal();
     });
     
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { cerrarModalModelo(); cerrarVerModal(); } });
     const searchInput = document.getElementById('searchModelos');
     searchInput.addEventListener('input', (e) => {
       if (currentMateria && currentProceso) {

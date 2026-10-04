@@ -1,545 +1,272 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-  <title>Atención al público - Defensoría</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>Atención al público · Defensoría</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600;6..72,700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#14324b; --ink-2:#2f4b63; --muted:#5d7388; --paper:#fff; --card:#fff;
+  --line:#dbe3ea; --amber:#f0a020; --amber-soft:#fff3dc; --blue-soft:#e8f1f8;
+  --c:#14324b;
+  --serif:'Newsreader',Georgia,'Times New Roman',serif;
+  --sans:'Public Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --r:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:var(--sans);background:var(--paper);color:var(--ink);line-height:1.6;font-size:1rem;
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--amber);outline-offset:2px;border-radius:6px}
 
-    html, body {
-      height: 100%;
-      width: 100%;
-      overflow-x: hidden;
-    }
+/* Encabezado */
+.top{background:#fff;border-bottom:1px solid var(--line)}
+.top-in{max-width:1280px;margin:0 auto;padding:clamp(1.1rem,2.5vw,1.75rem) clamp(1rem,4vw,2.5rem)}
+.top h1{font-family:var(--serif);font-weight:600;font-size:clamp(1.6rem,3.6vw,2.4rem);line-height:1.1;letter-spacing:-.01em;color:var(--ink)}
+.btn-recordar{background:transparent;color:var(--ink);border:1.5px solid var(--ink);border-radius:999px;padding:.55rem 1.1rem;font-weight:600;font-size:.9rem;
+  white-space:nowrap;transition:background .15s,color .15s}
+.btn-recordar:hover{background:var(--ink);color:#fff}
+.btn-recordar:active{transform:scale(.97)}
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #f4f7fc;
-      color: #0a2b3e;
-      line-height: 1.4;
-    }
+/* Estructura */
+.layout{max-width:1280px;margin:0 auto;padding:clamp(1rem,3vw,2rem) clamp(1rem,4vw,2.5rem) 3rem;
+  display:grid;grid-template-columns:minmax(260px,340px) minmax(0,1fr);gap:clamp(1.25rem,3vw,2.5rem);align-items:start}
 
-    /* Contenedor principal: en escritorio usa grid de dos columnas */
-    .app-wrapper {
-      display: flex;
-      width: 100%;
-      min-height: 100vh;
-    }
+/* Navegación de temas */
+.nav{position:sticky;top:1rem;display:flex;flex-direction:column;gap:.5rem;list-style:none}
+.tema{width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--c);
+  border-radius:var(--r);padding:.85rem 1rem;display:grid;grid-template-columns:auto 1fr;gap:.15rem .75rem;
+  transition:background .15s,box-shadow .15s,border-color .15s}
+.tema:hover{background:#fafcfe}
+.tema .n{grid-row:1/3;font-family:var(--serif);font-weight:700;font-size:1.5rem;line-height:1;color:var(--c);padding-top:.1rem;min-width:1.2ch}
+.tema .t{font-weight:600;font-size:.95rem;line-height:1.3}
+.tema .d{font-size:.8rem;color:var(--muted);line-height:1.4}
+.tema[aria-current="true"]{background:var(--c);border-color:var(--c);box-shadow:0 8px 22px -10px var(--c)}
+.tema[aria-current="true"] .n,.tema[aria-current="true"] .t{color:#fff}
+.tema[aria-current="true"] .d{color:rgba(255,255,255,.82)}
 
-    .container {
-      display: grid;
-      grid-template-columns: 1fr 1.2fr;
-      gap: 2rem;
-      padding: 2rem;
-      width: 100%;
-      max-width: 1600px;
-      margin: 0 auto;
-    }
+/* Panel de detalle */
+.panel{background:var(--card);border:1px solid var(--line);border-radius:22px;overflow:hidden;min-height:60vh;scroll-margin-top:5rem}
+.panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;padding:clamp(1.25rem,3vw,2.25rem);border-bottom:1px solid var(--line);border-top:6px solid var(--c);background:linear-gradient(#fff,#fafcfe)}
+.panel-head h2{font-family:var(--serif);font-weight:600;font-size:clamp(1.5rem,3.2vw,2.3rem);line-height:1.15;color:var(--ink);letter-spacing:-.005em}
+.panel-head p{margin-top:.5rem;color:var(--muted);font-size:clamp(.9rem,1.4vw,1rem)}
+.panel-body{padding:clamp(1.25rem,3vw,2.25rem);max-width:78ch}
+.panel-body.wide{max-width:none}
+.panel-body.swap{animation:swap .28s ease}
+@keyframes swap{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
-    /* COLUMNA IZQUIERDA (módulos) */
-    .columna-izquierda {
-      overflow-y: visible;
-      padding-right: 1rem;
-    }
+.panel-body p{margin-bottom:1rem;font-size:clamp(1rem,1.3vw,1.0625rem);color:#22394d}
+.panel-body h3{font-family:var(--serif);font-weight:600;font-size:clamp(1.2rem,2vw,1.45rem);margin:1.75rem 0 .5rem;color:var(--ink)}
+.panel-body ul,.panel-body ol{margin:0 0 1rem 1.25rem}
+.panel-body li{margin-bottom:.55rem;padding-left:.25rem;color:#22394d}
+.panel-body li::marker{color:var(--c);font-weight:700}
+.panel-body strong{color:var(--ink);font-weight:600}
 
-    .titulo-principal {
-      font-size: 1.6rem;
-      font-weight: 800;
-      color: #1e4a6b;
-      margin-bottom: 2rem;
-      text-transform: uppercase;
-      line-height: 1.2;
-      border-bottom: 3px solid #ff9800;
-      padding-bottom: 10px;
-    }
+.nota{background:var(--blue-soft);border-left:5px solid var(--ink);border-radius:0 var(--r) var(--r) 0;padding:1rem 1.15rem;margin:1.25rem 0}
+.nota p:last-child{margin-bottom:0}
+.nota p+p{margin-top:.6rem}
+.nota.aviso{background:#fdeee4;border-color:#c4501a}
+.nota.ok{background:var(--amber-soft);border-color:var(--amber)}
 
-    .tarjeta-perfil {
-      background: white;
-      border-radius: 15px;
-      padding: 1.5rem;
-      margin-bottom: 1.2rem;
-      border: 1px solid #dce9f0;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      -webkit-tap-highlight-color: transparent;
-    }
+.panel-body .lista{list-style:none;counter-reset:p;display:grid;gap:.65rem;margin:0}
+.panel-body .lista li{counter-increment:p;position:relative;margin:0;padding:.9rem 1rem .9rem 3.4rem;background:#fafcfe;border:1px solid var(--line);border-radius:12px;font-size:clamp(.97rem,1.3vw,1.04rem);line-height:1.5;color:#22394d}
+.panel-body .lista li::before{content:counter(p);position:absolute;left:.85rem;top:.8rem;width:1.9rem;height:1.9rem;border-radius:50%;background:var(--c);color:#fff;display:grid;place-items:center;font-weight:700;font-size:.85rem}
 
-    .tarjeta-perfil:active {
-      transform: scale(0.99);
-      background: #fefefe;
-    }
+/* Modal */
+dialog{border:0;border-radius:24px;padding:0;width:min(560px,calc(100% - 2rem));max-height:calc(100% - 2rem);margin:auto;color:var(--ink);box-shadow:0 30px 80px -20px rgba(10,30,50,.5)}
+dialog::backdrop{background:rgba(10,30,50,.65);backdrop-filter:blur(3px)}
+.modal-in{padding:clamp(1.25rem,4vw,2rem);display:grid;gap:1rem}
+.modal-in h2{font-family:var(--serif);font-size:1.6rem;font-weight:600}
+.modal-in h3{font-family:var(--serif);font-size:1.15rem;margin-bottom:.3rem}
+.modal-in p{font-size:.97rem}
+.cerrar{position:absolute;top:.75rem;right:.75rem;width:2.5rem;height:2.5rem;border-radius:50%;border:0;background:var(--paper);font-size:1.5rem;line-height:1}
+.cerrar:hover{background:var(--line)}
 
-    .perfil-titulo {
-      font-size: 1.2rem;
-      font-weight: 800;
-      margin-bottom: 0.5rem;
-      display: block;
-    }
+/* Tablet */
+@media (max-width:1024px){
+  .layout{grid-template-columns:minmax(230px,280px) minmax(0,1fr)}
+  .tema .d{display:none}
+  .tema{align-items:center}
+  .tema .n{grid-row:auto}
+}
 
-    /* Colores destacados */
-    .color-principios { color: #1e4a6b; border-left: 6px solid #1e4a6b; padding-left: 12px; }
-    .color-1 { color: #2c7da0; border-left: 6px solid #2c7da0; padding-left: 12px; }
-    .color-2 { color: #8e44ad; border-left: 6px solid #8e44ad; padding-left: 12px; }
-    .color-3 { color: #27ae60; border-left: 6px solid #27ae60; padding-left: 12px; }
-    .color-4 { color: #d35400; border-left: 6px solid #d35400; padding-left: 12px; }
-
-    /* COLUMNA DERECHA (detalles dinámicos) */
-    .columna-derecha {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      background: #ffffff;
-      border-radius: 20px;
-      padding: 2rem;
-      border: 1px solid #dce9f0;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-    }
-
-    .btn-recordar {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: #ff9800;
-      color: white;
-      border: none;
-      padding: 8px 15px;
-      border-radius: 8px;
-      font-size: 0.75rem;
-      font-weight: 800;
-      cursor: pointer;
-      z-index: 10;
-      transition: background 0.2s;
-      white-space: nowrap;
-    }
-
-    .btn-recordar:active {
-      background: #e68900;
-      transform: scale(0.97);
-    }
-
-    .principios-scroll {
-      flex: 1;
-      overflow-y: auto;
-      margin-top: 1rem;
-      max-height: 60vh;
-    }
-
-    /* Lista numerada de pasos */
-    .lista-pasos {
-      list-style: none;
-      counter-reset: paso-counter;
-      animation: fadeIn 0.4s ease;
-    }
-
-    .lista-pasos li {
-      counter-increment: paso-counter;
-      background: #f8fbff;
-      margin-bottom: 10px;
-      padding: 12px 15px 12px 50px;
-      border-radius: 10px;
-      position: relative;
-      font-size: 0.95rem;
-      line-height: 1.4;
-      border: 1px solid #eef2f7;
-      word-break: break-word;
-    }
-
-    .lista-pasos li::before {
-      content: counter(paso-counter);
-      position: absolute;
-      left: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: #2c7da0;
-      color: white;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 0.85rem;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateX(20px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-
-    /* MODAL */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(10, 43, 62, 0.85);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      backdrop-filter: blur(2px);
-    }
-
-    .modal-content {
-      background: white;
-      padding: 2rem 1.8rem;
-      border-radius: 25px;
-      max-width: 550px;
-      width: 90%;
-      position: relative;
-      margin: 1rem;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-
-    /* ========== RESPONSIVE MÓVIL: VISIBILIDAD TOTAL ========== */
-    @media (max-width: 800px) {
-      .container {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-        padding: 1rem;
-        overflow: visible;
-      }
-
-      .columna-izquierda {
-        padding-right: 0;
-        overflow: visible;
-        width: 100%;
-      }
-
-      .columna-derecha {
-        width: 100%;
-        padding: 1.5rem 1rem;
-        padding-top: 3.2rem; /* espacio para el botón flotante */
-        margin-bottom: 0.5rem;
-      }
-
-      .btn-recordar {
-        top: 12px;
-        right: 12px;
-        padding: 6px 12px;
-        font-size: 0.7rem;
-      }
-
-      .titulo-principal {
-        font-size: 1.4rem;
-        margin-bottom: 1.2rem;
-      }
-
-      .tarjeta-perfil {
-        padding: 1rem;
-        margin-bottom: 0.9rem;
-      }
-
-      .perfil-titulo {
-        font-size: 1.1rem;
-      }
-
-      .tarjeta-perfil p {
-        font-size: 0.8rem;
-      }
-
-      #tituloDerecho {
-        font-size: 1.25rem;
-        line-height: 1.3;
-        padding-right: 10px;
-      }
-
-      #subtituloDerecho {
-        font-size: 0.8rem;
-        margin-bottom: 10px;
-      }
-
-      .lista-pasos li {
-        font-size: 0.85rem;
-        padding: 10px 12px 10px 45px;
-        margin-bottom: 8px;
-      }
-
-      .lista-pasos li::before {
-        width: 26px;
-        height: 26px;
-        font-size: 0.75rem;
-        left: 10px;
-      }
-
-      .principios-scroll {
-        max-height: none;
-        overflow-y: visible;
-      }
-    }
-
-    /* Ajuste para pantallas muy pequeñas */
-    @media (max-width: 480px) {
-      .container {
-        padding: 0.75rem;
-        gap: 1rem;
-      }
-
-      .columna-derecha {
-        padding: 1.2rem 0.8rem;
-        padding-top: 3rem;
-      }
-
-      .btn-recordar {
-        top: 8px;
-        right: 8px;
-        padding: 5px 10px;
-        font-size: 0.65rem;
-      }
-
-      .titulo-principal {
-        font-size: 1.25rem;
-      }
-
-      .perfil-titulo {
-        font-size: 1rem;
-      }
-
-      .lista-pasos li {
-        font-size: 0.8rem;
-        padding: 8px 10px 8px 40px;
-      }
-
-      .lista-pasos li::before {
-        width: 24px;
-        height: 24px;
-        font-size: 0.7rem;
-        left: 8px;
-      }
-    }
-
-    /* Utilidades */
-    .scroll-smooth {
-      scroll-behavior: smooth;
-    }
-  </style>
+/* Móvil: temas en tira horizontal */
+@media (max-width:760px){
+  .layout{grid-template-columns:1fr;gap:1rem}
+  .nav{position:sticky;top:0;z-index:20;flex-direction:row;overflow-x:auto;gap:.5rem;
+    margin:0 calc(-1 * clamp(1rem,4vw,2.5rem));padding:.6rem clamp(1rem,4vw,2.5rem);
+    background:rgba(255,255,255,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);
+    scroll-snap-type:x proximity;scrollbar-width:none}
+  .nav::-webkit-scrollbar{display:none}
+  .nav li{flex:0 0 auto;scroll-snap-align:start}
+  .tema{width:auto;border-left-width:1px;border-bottom:4px solid var(--c);padding:.55rem .9rem;display:flex;gap:.5rem;align-items:center;border-radius:12px}
+  .tema .n{font-size:1.05rem}
+  .tema .t{font-size:.85rem;white-space:nowrap}
+  .panel{min-height:0;border-radius:18px;scroll-margin-top:4.5rem}
+}
+@media (max-width:560px){
+  .panel-head{flex-direction:column}
+}
+@media (min-width:1500px){html{font-size:17px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
 </head>
 <body>
 
-<div class="app-wrapper">
-  <div class="container" id="mainContainer">
-    <!-- COLUMNA IZQUIERDA: TODOS LOS MÓDULOS VISIBLES EN MÓVIL Y ESCRITORIO -->
-    <div class="columna-izquierda">
-      <h1 class="titulo-principal">Reglas a seguir en la atención al público</h1>
-      
-      <div class="tarjeta-perfil" data-protocolo="principios">
-        <span class="perfil-titulo color-principios">Principios Básicos</span>
-        <p>Normas fundamentales de ética y responsabilidad judicial.</p>
-      </div>
-
-      <div class="tarjeta-perfil" data-protocolo="atencion">
-        <span class="perfil-titulo color-1">Trastorno de Atención / Autismo</span>
-        <p>Fomentar la predictibilidad y claridad en el proceso legal.</p>
-      </div>
-
-      <div class="tarjeta-perfil" data-protocolo="adicciones">
-        <span class="perfil-titulo color-2">Problema de Adicciones</span>
-        <p>Atención libre de estigmas con enfoque en derechos humanos.</p>
-      </div>
-
-      <div class="tarjeta-perfil" data-protocolo="discapacidad">
-        <span class="perfil-titulo color-3">Personas con Discapacidad</span>
-        <p>Garantizar accesibilidad universal y ajustes razonables.</p>
-      </div>
-
-      <div class="tarjeta-perfil" data-protocolo="mayores">
-        <span class="perfil-titulo color-4">Persona Adulto Mayor</span>
-        <p>Prioridad de paso y comunicación adaptada a sus tiempos.</p>
-      </div>
-    </div>
-
-    <!-- COLUMNA DERECHA: DETALLES -->
-    <div class="columna-derecha" id="columnaDetalles">
-      <button class="btn-recordar" id="btnRecordar">RECORDÁ ESTO</button>
-      
-      <div id="headerDinamico">
-        <h2 id="tituloDerecho" style="color: #1e4a6b; font-size: 1.4rem; margin-bottom: 5px;">Cargando...</h2>
-        <p id="subtituloDerecho" style="color: #7f8c8d; font-size: 0.9rem; margin-bottom: 15px;"></p>
-      </div>
-
-      <div class="principios-scroll" id="contenidoDerecho">
-        <!-- Contenido dinámico -->
-      </div>
-    </div>
+<header class="top">
+  <div class="top-in">
+    <h1>Atención al público</h1>
   </div>
+</header>
+
+<div class="layout">
+  <ul class="nav" id="nav" aria-label="Protocolos"></ul>
+
+  <main class="panel" id="panel" aria-live="polite">
+    <div class="panel-head">
+      <div>
+        <h2 id="tituloDerecho">Cargando…</h2>
+        <p id="subtituloDerecho"></p>
+      </div>
+      <button class="btn-recordar" id="btnRecordar" type="button">Recordá esto</button>
+    </div>
+    <div class="panel-body" id="contenidoDerecho"></div>
+  </main>
 </div>
 
-<div class="modal-overlay" id="modalInfo" onclick="toggleModal(false)">
-  <div class="modal-content" onclick="stopPropagation(event)">
-    <button style="position:absolute; top:12px; right:16px; background:none; border:none; font-size:1.8rem; cursor:pointer; color:#95a5a6; line-height:1;" onclick="toggleModal(false)">&times;</button>
-    <div style="background:#eef4fa; border-left:5px solid #1e6f5c; padding:1.2rem; margin-bottom:1.5rem; border-radius:12px;">
-      <h4 style="color:#1a5d6c; margin-bottom:8px;">Excelencia Técnica</h4>
-      <p style="font-size:0.9rem; line-height:1.5;">Su asesoramiento es una herramienta de justicia. Una palabra mal empleada puede afectar el derecho a la defensa de un ciudadano.</p>
+<dialog id="modalInfo" aria-labelledby="modalTitulo">
+  <button class="cerrar" type="button" id="cerrarModal" aria-label="Cerrar">&times;</button>
+  <div class="modal-in">
+    <h2 id="modalTitulo">Recordá esto</h2>
+    <div class="nota">
+      <h3>Excelencia técnica</h3>
+      <p>Su asesoramiento es una herramienta de justicia. Una palabra mal empleada puede afectar el derecho a la defensa de un ciudadano.</p>
     </div>
-    <div style="background:#fff4e5; border-left:5px solid #ff9800; padding:1.2rem; border-radius:12px;">
-      <h4 style="color:#a35200; margin-bottom:8px;">Deber de Consulta</h4>
-      <p style="font-size:0.9rem; line-height:1.5;">La Defensoría es un equipo. Ante dudas procesales complejas, recurra siempre a sus superiores. La responsabilidad es compartida.</p>
+    <div class="nota ok">
+      <h3>Deber de consulta</h3>
+      <p>La Defensoría es un equipo. Ante dudas procesales complejas, recurra siempre a sus superiores. La responsabilidad es compartida.</p>
     </div>
   </div>
-</div>
+</dialog>
 
 <script>
-  // Datos de protocolos
-  const protocolos = {
-    principios: {
-      titulo: "10 Principios Básicos de Atención",
-      pasos: [
-        "Puntualidad: Inicie la atención en el horario previsto respetando el tiempo del ciudadano.",
-        "Identificación: Preséntese con nombre y cargo, explicando su rol en la Defensoría.",
-        "Trato Digno: Use siempre el trato de 'Usted' y mantenga una postura profesional y formal.",
-        "Escucha Activa: Permita que el consultante relate su situación sin interrupciones constantes.",
-        "Lenguaje Comprensible: Traduzca los términos jurídicos a palabras que el ciudadano entienda.",
-        "Confidencialidad: Asegure que toda la información brindada está protegida por el secreto profesional.",
-        "Veracidad: Brinde información real sobre las posibilidades del caso, sin generar falsas esperanzas.",
-        "Constancia Escrita: Entregue siempre un comprobante o guía de pasos a seguir por escrito.",
-        "Empatía Judicial: Comprenda el estado de vulnerabilidad del ciudadano sin perder la objetividad.",
-        "Responsabilidad: Registre cada atención en el sistema interno para garantizar la trazabilidad."
-      ]
-    },
-    atencion: {
-      titulo: "Protocolo: Trastorno de Atención / Autismo",
-      pasos: [
-        "Elimine ruidos o distracciones visuales innecesarias en el box de atención.",
-        "Utilice lenguaje literal; evite ironías, sarcasmos o metáforas jurídicas complejas.",
-        "Eructure la información de manera cronológica (inicio, nudo y desenlace del trámite).",
-        "Proporcione un esquema visual o escrito de los pasos que el ciudadano debe seguir.",
-        "Divida las instrucciones largas en pasos únicos y secuenciales.",
-        "Permita silencios prolongados para que el consultante procese la información recibida.",
-        "Evite el contacto físico innecesario y respete el espacio personal del ciudadano.",
-        "Anticipe posibles cambios en el proceso para reducir la ansiedad del consultante.",
-        "Verifique la comprensión pidiendo que repita el paso más importante con sus palabras.",
-        "Registre en el sistema cualquier ajuste comunicativo realizado para futuras consultas."
-      ]
-    },
-    adicciones: {
-      titulo: "Protocolo: Problema de Adicciones",
-      pasos: [
-        "Muestre una actitud de escucha empática, sin emitir juicios de valor sobre su situación.",
-        "Establezca límites claros y respetuosos sobre el tiempo y alcance de la consulta.",
-        "Utilice un tono de voz firme pero calmado, especialmente en situaciones de crisis.",
-        "Priorice la resolución de la duda jurídica inmediata antes de indagar en otros aspectos.",
-        "Evite tecnicismos que puedan interpretarse como una barrera o desprecio.",
-        "Informe sobre el derecho a la confidencialidad de los datos sensibles compartidos.",
-        "Tenga a mano contactos actualizados de centros de asistencia social y salud.",
-        "No prometa resultados procesales que dependan exclusivamente de terceros.",
-        "Si el ciudadano está alterado, ofrezca un breve intervalo de espera antes de continuar.",
-        "Documente con precisión los compromisos asumidos por la Defensoría y el usuario."
-      ]
-    },
-    discapacidad: {
-      titulo: "Protocolo: Personas con Discapacidad",
-      pasos: [
-        "Pregunte directamente si requiere algún apoyo o ajuste específico para la comunicación.",
-        "Si utiliza silla de ruedas, sitúese a su altura visual para evitar la condescendencia.",
-        "Para discapacidad auditiva: hable de frente, despacio y sin obstruir su boca.",
-        "Ofrezca siempre soporte por escrito de las fechas de audiencias o presentaciones.",
-        "Garantice que el espacio de atención esté libre de obstáculos físicos.",
-        "Si hay acompañante, diríjase siempre a la persona con discapacidad, no a su asistente.",
-        "Utilice herramientas de lectura de pantalla o contraste alto si el usuario lo solicita.",
-        "Sea paciente con los tiempos de desplazamiento o firma de documentación.",
-        "Identifíquese claramente y describa el rol de cada persona presente en la oficina.",
-        "Asegure la entrega de folletería en formatos accesibles o lectura fácil."
-      ]
-    },
-    mayores: {
-      titulo: "Protocolo: Persona Adulto Mayor",
-      pasos: [
-        "Llámelo por su nombre y mantenga un trato formal (Usted) y digno en todo momento.",
-        "Utilice un volumen de voz adecuado, evitando gritar pero asegurando claridad sonora.",
-        "Redacte las indicaciones con letra imprenta grande y legible en los formularios.",
-        "Explique el significado de términos como 'notificación', 'traslado' o 'sentencia'.",
-        "Asegúrese de que el consultante esté cómodamente sentado durante la entrevista.",
-        "Valide la identidad del ciudadano con calma, sin apresurar el manejo de documentos.",
-        "Resuma al final de la consulta: ¿Qué hicimos hoy? y ¿Qué falta hacer?",
-        "Consulte si desea que la información sea compartida con algún familiar de confianza.",
-        "Verifique que el ciudadano se retire con los turnos y direcciones anotados claramente.",
-        "Demuestre interés genuino; el adulto mayor valora el tiempo de escucha y respeto."
-      ]
-    }
-  };
+const protocolos = [
+  { id:"principios", c:"#14324b", corto:"Principios básicos", desc:"Normas fundamentales de ética y responsabilidad judicial.",
+    titulo:"10 principios básicos de atención", titulado:true,
+    pasos:[
+      "Puntualidad: Inicie la atención en el horario previsto respetando el tiempo del ciudadano.",
+      "Identificación: Preséntese con nombre y cargo, explicando su rol en la Defensoría.",
+      "Trato Digno: Use siempre el trato de 'Usted' y mantenga una postura profesional y formal.",
+      "Escucha Activa: Permita que el consultante relate su situación sin interrupciones constantes.",
+      "Lenguaje Comprensible: Traduzca los términos jurídicos a palabras que el ciudadano entienda.",
+      "Confidencialidad: Asegure que toda la información brindada está protegida por el secreto profesional.",
+      "Veracidad: Brinde información real sobre las posibilidades del caso, sin generar falsas esperanzas.",
+      "Constancia Escrita: Entregue siempre un comprobante o guía de pasos a seguir por escrito.",
+      "Empatía Judicial: Comprenda el estado de vulnerabilidad del ciudadano sin perder la objetividad.",
+      "Responsabilidad: Registre cada atención en el sistema interno para garantizar la trazabilidad."
+    ]},
+  { id:"atencion", c:"#2c7da0", corto:"Atención / Autismo", desc:"Fomentar la predictibilidad y claridad en el proceso legal.",
+    titulo:"Protocolo: trastorno de atención / autismo",
+    pasos:[
+      "Elimine ruidos o distracciones visuales innecesarias en el box de atención.",
+      "Utilice lenguaje literal; evite ironías, sarcasmos o metáforas jurídicas complejas.",
+      "Estructure la información de manera cronológica (inicio, nudo y desenlace del trámite).",
+      "Proporcione un esquema visual o escrito de los pasos que el ciudadano debe seguir.",
+      "Divida las instrucciones largas en pasos únicos y secuenciales.",
+      "Permita silencios prolongados para que el consultante procese la información recibida.",
+      "Evite el contacto físico innecesario y respete el espacio personal del ciudadano.",
+      "Anticipe posibles cambios en el proceso para reducir la ansiedad del consultante.",
+      "Verifique la comprensión pidiendo que repita el paso más importante con sus palabras.",
+      "Registre en el sistema cualquier ajuste comunicativo realizado para futuras consultas."
+    ]},
+  { id:"adicciones", c:"#8e44ad", corto:"Adicciones", desc:"Atención libre de estigmas con enfoque en derechos humanos.",
+    titulo:"Protocolo: problema de adicciones",
+    pasos:[
+      "Muestre una actitud de escucha empática, sin emitir juicios de valor sobre su situación.",
+      "Establezca límites claros y respetuosos sobre el tiempo y alcance de la consulta.",
+      "Utilice un tono de voz firme pero calmado, especialmente en situaciones de crisis.",
+      "Priorice la resolución de la duda jurídica inmediata antes de indagar en otros aspectos.",
+      "Evite tecnicismos que puedan interpretarse como una barrera o desprecio.",
+      "Informe sobre el derecho a la confidencialidad de los datos sensibles compartidos.",
+      "Tenga a mano contactos actualizados de centros de asistencia social y salud.",
+      "No prometa resultados procesales que dependan exclusivamente de terceros.",
+      "Si el ciudadano está alterado, ofrezca un breve intervalo de espera antes de continuar.",
+      "Documente con precisión los compromisos asumidos por la Defensoría y el usuario."
+    ]},
+  { id:"discapacidad", c:"#27ae60", corto:"Discapacidad", desc:"Garantizar accesibilidad universal y ajustes razonables.",
+    titulo:"Protocolo: personas con discapacidad",
+    pasos:[
+      "Pregunte directamente si requiere algún apoyo o ajuste específico para la comunicación.",
+      "Si utiliza silla de ruedas, sitúese a su altura visual para evitar la condescendencia.",
+      "Para discapacidad auditiva: hable de frente, despacio y sin obstruir su boca.",
+      "Ofrezca siempre soporte por escrito de las fechas de audiencias o presentaciones.",
+      "Garantice que el espacio de atención esté libre de obstáculos físicos.",
+      "Si hay acompañante, diríjase siempre a la persona con discapacidad, no a su asistente.",
+      "Utilice herramientas de lectura de pantalla o contraste alto si el usuario lo solicita.",
+      "Sea paciente con los tiempos de desplazamiento o firma de documentación.",
+      "Identifíquese claramente y describa el rol de cada persona presente en la oficina.",
+      "Asegure la entrega de folletería en formatos accesibles o lectura fácil."
+    ]},
+  { id:"mayores", c:"#d35400", corto:"Adulto mayor", desc:"Prioridad de paso y comunicación adaptada a sus tiempos.",
+    titulo:"Protocolo: persona adulta mayor",
+    pasos:[
+      "Llámelo por su nombre y mantenga un trato formal (Usted) y digno en todo momento.",
+      "Utilice un volumen de voz adecuado, evitando gritar pero asegurando claridad sonora.",
+      "Redacte las indicaciones con letra imprenta grande y legible en los formularios.",
+      "Explique el significado de términos como 'notificación', 'traslado' o 'sentencia'.",
+      "Asegúrese de que el consultante esté cómodamente sentado durante la entrevista.",
+      "Valide la identidad del ciudadano con calma, sin apresurar el manejo de documentos.",
+      "Resuma al final de la consulta: ¿Qué hicimos hoy? y ¿Qué falta hacer?",
+      "Consulte si desea que la información sea compartida con algún familiar de confianza.",
+      "Verifique que el ciudadano se retire con los turnos y direcciones anotados claramente.",
+      "Demuestre interés genuino; el adulto mayor valora el tiempo de escucha y respeto."
+    ]}
+];
 
-  // Mostrar los pasos según el ID del protocolo
-  function mostrarPasos(id) {
-    const data = protocolos[id];
-    if (!data) return;
-    const contenedor = document.getElementById('contenidoDerecho');
-    document.getElementById('tituloDerecho').innerText = data.titulo;
-    document.getElementById('subtituloDerecho').innerText = "Reglas y responsabilidades para una atención de calidad:";
-    
-    const htmlPasos = data.pasos.map(paso => `<li>${paso}</li>`).join('');
-    contenedor.innerHTML = `<ul class="lista-pasos">${htmlPasos}</ul>`;
-  }
+const nav=document.getElementById('nav'), panel=document.getElementById('panel'),
+      body=document.getElementById('contenidoDerecho');
 
-  // Manejar clic en tarjeta (módulo de la izquierda)
-  function handlePerfilClick(event, tarjeta) {
-    event.stopPropagation();
-    const protocoloId = tarjeta.getAttribute('data-protocolo');
-    if (protocoloId && protocolos[protocoloId]) {
-      mostrarPasos(protocoloId);
-      // En móvil, opcionalmente podríamos hacer scroll suave a los detalles, pero NO obligatorio
-      // para no ocultar la izquierda. Dejamos que el usuario vea ambos.
-    }
-  }
+protocolos.forEach((p,i)=>{
+  const li=document.createElement('li');
+  li.innerHTML=`<button class="tema" type="button" data-id="${p.id}" style="--c:${p.c}">
+    <span class="n">${i+1}</span><span class="t">${p.corto}</span><span class="d">${p.desc}</span></button>`;
+  nav.appendChild(li);
+});
 
-  // Prevenir propagación en elementos internos
-  function stopPropagation(e) {
-    e.stopPropagation();
-  }
+function mostrar(id, desplazar){
+  const p=protocolos.find(x=>x.id===id); if(!p) return;
+  nav.querySelectorAll('.tema').forEach(b=>{
+    const on=b.dataset.id===id;
+    b.setAttribute('aria-current',on);
+    if(on && desplazar) b.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});
+  });
+  panel.style.setProperty('--c',p.c);
+  document.getElementById('tituloDerecho').textContent=p.titulo;
+  document.getElementById('subtituloDerecho').textContent='Reglas y responsabilidades para una atención de calidad';
+  const items=p.pasos.map(t=>{
+    const i=p.titulado?t.indexOf(': '):-1;
+    return i>0?`<li><strong>${t.slice(0,i)}:</strong> ${t.slice(i+2)}</li>`:`<li>${t}</li>`;
+  }).join('');
+  body.className='panel-body swap';
+  body.innerHTML=`<ol class="lista">${items}</ol>`;
+  history.replaceState(null,'','#'+id);
+  if(desplazar && window.matchMedia('(max-width:760px)').matches) panel.scrollIntoView({behavior:'smooth',block:'start'});
+}
 
-  // Control del modal
-  function toggleModal(show) {
-    const modal = document.getElementById('modalInfo');
-    modal.style.display = show ? 'flex' : 'none';
-  }
+nav.addEventListener('click',e=>{const b=e.target.closest('.tema'); if(b) mostrar(b.dataset.id,true);});
 
-  // Inicializar eventos en las tarjetas
-  function inicializarTarjetas() {
-    const tarjetas = document.querySelectorAll('.tarjeta-perfil');
-    tarjetas.forEach(tarjeta => {
-      // Limpiar eventos previos por si acaso
-      tarjeta.removeEventListener('click', tarjeta._listener);
-      tarjeta.removeEventListener('touchstart', tarjeta._touchListener);
-      
-      const clickHandler = (e) => handlePerfilClick(e, tarjeta);
-      const touchHandler = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        handlePerfilClick(e, tarjeta);
-      };
-      
-      tarjeta.addEventListener('click', clickHandler);
-      tarjeta.addEventListener('touchstart', touchHandler, { passive: false });
-      
-      tarjeta._listener = clickHandler;
-      tarjeta._touchListener = touchHandler;
-    });
-  }
+const dlg=document.getElementById('modalInfo');
+document.getElementById('btnRecordar').addEventListener('click',()=>dlg.showModal());
+document.getElementById('cerrarModal').addEventListener('click',()=>dlg.close());
+dlg.addEventListener('click',e=>{ if(e.target===dlg) dlg.close(); });
 
-  // Cargar inicial: mostrar principios básicos por defecto
-  window.onload = function() {
-    inicializarTarjetas();
-    mostrarPasos('principios');
-    
-    const btnRecordar = document.getElementById('btnRecordar');
-    if (btnRecordar) {
-      btnRecordar.addEventListener('click', (e) => {
-        e.stopPropagation();
-        toggleModal(true);
-      });
-    }
-  };
+const inicial=location.hash.slice(1);
+mostrar(protocolos.some(p=>p.id===inicial)?inicial:'principios',false);
 </script>
 </body>
 </html>

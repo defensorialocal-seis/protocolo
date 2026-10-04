@@ -1,384 +1,232 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-  <title>Plazos y Vencimientos</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>Plazos y Vencimientos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600;6..72,700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --tinta: #14324b;
+    --tinta-2: #22394d;
+    --apagado: #5d7388;
+    --borde: #dbe3ea;
+    --ambar: #f0a020;
+    --ambar-suave: #fff3dc;
+    --azul-suave: #e8f1f8;
+    --acento: #14324b;
+    --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+    --sans: 'Public Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --radio: 14px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: var(--sans); background: #fff; color: var(--tinta); line-height: 1.6;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  :focus-visible { outline: 3px solid var(--ambar); outline-offset: 2px; border-radius: 6px; }
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #eef2f7;
-      color: #0a2b3e;
-      line-height: 1.45;
-    }
+  /* Encabezado */
+  .cabecera { border-bottom: 1px solid var(--borde); }
+  .cabecera-interior {
+    max-width: 1280px; margin: 0 auto;
+    padding: clamp(1.1rem, 2.5vw, 1.75rem) clamp(1rem, 4vw, 2.5rem);
+  }
+  .cabecera h1 {
+    font-family: var(--serif); font-weight: 600;
+    font-size: clamp(1.6rem, 3.6vw, 2.4rem); line-height: 1.1; letter-spacing: -.01em;
+  }
 
-    .app-wrapper {
-      min-height: 100vh;
-      display: flex;
-      align-items: flex-start;
-      padding: 2rem 1.5rem;
-    }
+  /* Estructura */
+  .estructura {
+    max-width: 1280px; margin: 0 auto;
+    padding: clamp(1rem, 3vw, 2rem) clamp(1rem, 4vw, 2.5rem) 3rem;
+    display: grid; grid-template-columns: minmax(260px, 340px) minmax(0, 1fr);
+    gap: clamp(1.25rem, 3vw, 2.5rem); align-items: start;
+  }
 
-    /* contenedor principal dos columnas */
-    .dashboard {
-      display: grid;
-      grid-template-columns: 1fr 1.3fr;
-      gap: 2rem;
-      max-width: 1500px;
-      margin: 0 auto;
-      width: 100%;
-    }
+  /* Módulos (columna izquierda) */
+  .modulos {
+    position: sticky; top: 1rem;
+    display: flex; flex-direction: column; gap: .5rem; list-style: none;
+  }
+  .tarjeta-modulo {
+    width: 100%; text-align: left; background: #fff;
+    border: 1px solid var(--borde); border-left: 5px solid var(--acento);
+    border-radius: var(--radio); padding: .85rem 1rem;
+    display: grid; grid-template-columns: auto 1fr; gap: .15rem .75rem;
+    transition: background .15s, box-shadow .15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .tarjeta-modulo:hover { background: #fafcfe; }
+  .tarjeta-modulo .num {
+    grid-row: 1 / 3; font-family: var(--serif); font-weight: 700; font-size: 1.5rem; line-height: 1;
+    color: var(--acento); padding-top: .1rem; min-width: 1.2ch;
+  }
+  .tarjeta-modulo .modulo-titulo { font-weight: 600; font-size: .95rem; line-height: 1.3; }
+  .tarjeta-modulo .modulo-desc { font-size: .8rem; color: var(--apagado); line-height: 1.4; }
+  .tarjeta-modulo.activo {
+    background: var(--acento); border-color: var(--acento);
+    box-shadow: 0 8px 22px -10px var(--acento);
+  }
+  .tarjeta-modulo.activo .num,
+  .tarjeta-modulo.activo .modulo-titulo { color: #fff; }
+  .tarjeta-modulo.activo .modulo-desc { color: rgba(255,255,255,.82); }
 
-    /* COLUMNA IZQUIERDA (módulos) */
-    .modulos-panel {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
+  /* Panel de detalle (columna derecha) */
+  .contenedor-dinamico {
+    background: #fff; border: 1px solid var(--borde); border-radius: 22px;
+    overflow: hidden; min-height: 60vh; scroll-margin-top: 5rem;
+  }
+  .encabezado-panel {
+    padding: clamp(1.25rem, 3vw, 2.25rem);
+    border-top: 6px solid var(--acento); border-bottom: 1px solid var(--borde);
+    background: linear-gradient(#fff, #fafcfe);
+  }
+  .titulo-dinamico {
+    font-family: var(--serif); font-weight: 600;
+    font-size: clamp(1.5rem, 3.2vw, 2.3rem); line-height: 1.15; letter-spacing: -.005em;
+  }
+  .subtitulo-area { margin-top: .5rem; color: var(--apagado); font-size: clamp(.9rem, 1.4vw, 1rem); }
 
-    .titulo-seccion {
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: #1e4a6b;
-      letter-spacing: -0.2px;
-      border-left: 5px solid #ff9800;
-      padding-left: 1rem;
-      margin-bottom: 0.5rem;
-    }
+  .contenido-right { padding: clamp(1.25rem, 3vw, 2.25rem); max-width: 78ch; }
+  .contenido-right.cambio { animation: cambio .28s ease; }
+  @keyframes cambio { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .intro { margin-bottom: 1.25rem; color: var(--tinta-2); font-size: clamp(1rem, 1.3vw, 1.0625rem); }
 
+  /* Recursos legales */
+  .recursos-grid { display: grid; gap: .65rem; }
+  .recurso-card {
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .75rem 1rem;
+    padding: .9rem 1.1rem; text-decoration: none; color: inherit;
+    background: #fafcfe; border: 1px solid var(--borde); border-left: 5px solid var(--acento); border-radius: 12px;
+    transition: background .15s, border-color .15s;
+  }
+  .recurso-card:hover { background: #fff; border-color: var(--acento); }
+  .recurso-info h3 { font-family: var(--serif); font-weight: 600; font-size: 1.2rem; line-height: 1.25; color: var(--tinta); margin-bottom: .2rem; }
+  .recurso-info p { font-size: .88rem; color: var(--apagado); line-height: 1.45; }
+  .recurso-link {
+    border: 1.5px solid var(--tinta); border-radius: 999px; padding: .35rem .95rem;
+    font-weight: 600; font-size: .85rem; white-space: nowrap; transition: background .15s, color .15s;
+  }
+  .recurso-card:hover .recurso-link { background: var(--tinta); color: #fff; }
+
+  /* Calculadora */
+  .form-calc { display: grid; gap: 1.1rem; }
+  .input-group { display: grid; gap: .35rem; }
+  .input-group label { font-weight: 600; font-size: .92rem; color: var(--tinta); }
+  .input-group input {
+    padding: .7rem .9rem; border: 1px solid var(--borde); border-radius: 12px;
+    font: inherit; font-size: .97rem; color: var(--tinta-2); background: #fff;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .input-group input:focus { border-color: var(--ambar); outline: none; box-shadow: 0 0 0 3px rgba(240,160,32,.25); }
+  .botones-accion { display: flex; gap: .75rem; flex-wrap: wrap; margin-top: .25rem; }
+  .btn-primary, .btn-secondary {
+    border-radius: 999px; padding: .6rem 1.3rem; font-weight: 600; font-size: .92rem;
+    border: 1.5px solid var(--tinta); transition: background .15s, color .15s;
+  }
+  .btn-primary { background: var(--tinta); color: #fff; }
+  .btn-primary:hover { background: #0e2538; }
+  .btn-secondary { background: transparent; color: var(--tinta); }
+  .btn-secondary:hover { background: var(--tinta); color: #fff; }
+  .btn-primary:active, .btn-secondary:active { transform: scale(.97); }
+
+  .resultado-card {
+    margin-top: .5rem; padding: 1rem 1.15rem; line-height: 1.55; font-size: .97rem; color: var(--tinta-2);
+    background: var(--azul-suave); border-left: 5px solid var(--tinta); border-radius: 0 var(--radio) var(--radio) 0;
+  }
+  .resultado-card p + p { margin-top: .5rem; }
+  .resultado-card hr { margin: .8rem 0; border: 0; height: 1px; background: #c3d4e2; }
+  .error { color: #c4501a; font-weight: 600; }
+
+  .info-extra {
+    margin-top: 1.75rem; padding-top: .9rem; border-top: 1px solid var(--borde);
+    font-size: .85rem; color: var(--apagado);
+  }
+
+  /* Tablet */
+  @media (max-width: 1024px) {
+    .estructura { grid-template-columns: minmax(230px, 280px) minmax(0, 1fr); }
+    .tarjeta-modulo .modulo-desc { display: none; }
+    .tarjeta-modulo { align-items: center; }
+    .tarjeta-modulo .num { grid-row: auto; }
+  }
+
+  /* Móvil: módulos en tira horizontal */
+  @media (max-width: 760px) {
+    .estructura { grid-template-columns: 1fr; gap: 1rem; }
+    .modulos {
+      position: sticky; top: 0; z-index: 20; flex-direction: row; overflow-x: auto; gap: .5rem;
+      margin: 0 calc(-1 * clamp(1rem, 4vw, 2.5rem)); padding: .6rem clamp(1rem, 4vw, 2.5rem);
+      background: rgba(255,255,255,.95); backdrop-filter: blur(8px); border-bottom: 1px solid var(--borde);
+      scroll-snap-type: x proximity; scrollbar-width: none;
+    }
+    .modulos::-webkit-scrollbar { display: none; }
+    .modulos li { flex: 1 0 auto; scroll-snap-align: start; }
     .tarjeta-modulo {
-      background: white;
-      border-radius: 1.5rem;
-      padding: 1.5rem 1.2rem;
-      transition: all 0.2s ease;
-      cursor: pointer;
-      border: 1px solid #e2edf2;
-      box-shadow: 0 6px 12px -8px rgba(0, 0, 0, 0.05);
+      width: 100%; border-left-width: 1px; border-bottom: 4px solid var(--acento);
+      padding: .55rem .9rem; display: flex; gap: .5rem; align-items: center; border-radius: 12px;
     }
-
-    .tarjeta-modulo:active {
-      transform: scale(0.98);
-      background-color: #fefeff;
-    }
-
-    .tarjeta-modulo.activo {
-      border-left: 6px solid #ff9800;
-      background: linear-gradient(105deg, #ffffff 0%, #fef9ef 100%);
-      box-shadow: 0 12px 20px -12px rgba(0, 0, 0, 0.12);
-    }
-
-    .modulo-icono {
-      font-size: 2.2rem;
-      display: inline-block;
-      margin-bottom: 8px;
-    }
-
-    .modulo-titulo {
-      font-size: 1.35rem;
-      font-weight: 800;
-      margin: 0.3rem 0 0.4rem 0;
-      color: #1e4663;
-    }
-
-    .modulo-desc {
-      font-size: 0.85rem;
-      color: #5f7f9c;
-      line-height: 1.4;
-    }
-
-    /* COLUMNA DERECHA (contenido dinámico) */
-    .contenedor-dinamico {
-      background: #ffffff;
-      border-radius: 1.8rem;
-      border: 1px solid #e0ecf3;
-      box-shadow: 0 12px 28px -10px rgba(0, 0, 0, 0.06);
-      padding: 1.8rem 2rem 2rem 2rem;
-      position: relative;
-      transition: all 0.2s;
-    }
-
-    .subtitulo-area {
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      color: #ff8c42;
-      font-weight: 700;
-      margin-bottom: 0.45rem;
-    }
-
-    .titulo-dinamico {
-      font-size: 1.7rem;
-      font-weight: 800;
-      color: #1e4a6b;
-      border-bottom: 3px solid #ff9800;
-      display: inline-block;
-      padding-bottom: 6px;
-      margin-bottom: 1.4rem;
-    }
-
-    /* Estilos para recursos legales (tarjetas de ley) */
-    .recursos-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      margin-top: 1rem;
-    }
-
-    .recurso-card {
-      background: #f8fcff;
-      border-radius: 1.2rem;
-      padding: 1.2rem 1.4rem;
-      transition: all 0.2s;
-      border: 1px solid #dde9f0;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-    }
-
-    .recurso-card:hover {
-      background: #ffffff;
-      border-color: #ffb347;
-      transform: translateX(6px);
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.02);
-    }
-
-    .recurso-info h3 {
-      font-size: 1.2rem;
-      font-weight: 800;
-      color: #1b4e6e;
-      margin-bottom: 6px;
-    }
-
-    .recurso-info p {
-      font-size: 0.8rem;
-      color: #5f7f99;
-    }
-
-    .recurso-link {
-      background: #ff9800;
-      color: white;
-      padding: 6px 14px;
-      border-radius: 40px;
-      font-weight: 600;
-      font-size: 0.75rem;
-      transition: background 0.2s;
-      white-space: nowrap;
-    }
-
-    .recurso-link:hover {
-      background: #e68900;
-    }
-
-    /* Estilos para calculadora */
-    .calc-wrapper {
-      margin-top: 0.5rem;
-    }
-
-    .form-calc {
-      display: flex;
-      flex-direction: column;
-      gap: 1.2rem;
-    }
-
-    .input-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .input-group label {
-      font-weight: 700;
-      font-size: 0.85rem;
-      color: #2c5a74;
-      letter-spacing: -0.2px;
-    }
-
-    .input-group input,
-    .input-group textarea {
-      padding: 12px 14px;
-      border-radius: 14px;
-      border: 1px solid #cbdde6;
-      font-family: 'Inter', monospace;
-      font-size: 0.9rem;
-      background: #fff;
-      transition: 0.2s;
-    }
-
-    .input-group input:focus {
-      border-color: #ff9800;
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1);
-    }
-
-    .botones-accion {
-      display: flex;
-      gap: 1rem;
-      margin: 1rem 0 1.5rem;
-      flex-wrap: wrap;
-    }
-
-    .btn-primary {
-      background: linear-gradient(95deg, #1e6f5c, #2c7da0);
-      border: none;
-      padding: 12px 22px;
-      border-radius: 40px;
-      font-weight: 700;
-      font-size: 0.85rem;
-      color: white;
-      cursor: pointer;
-      transition: all 0.2s;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    }
-
-    .btn-primary:active {
-      transform: scale(0.96);
-    }
-
-    .btn-secondary {
-      background: #f4f7fc;
-      border: 1px solid #cbdde6;
-      padding: 12px 22px;
-      border-radius: 40px;
-      font-weight: 600;
-      font-size: 0.85rem;
-      color: #1e4a6b;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .btn-secondary:active {
-      background: #e9eff5;
-    }
-
-    .resultado-card {
-      background: #f0f6fa;
-      border-radius: 1.2rem;
-      padding: 1.3rem;
-      margin-top: 1.2rem;
-      border-left: 5px solid #ff9800;
-      font-size: 0.95rem;
-      line-height: 1.5;
-    }
-
-    .resultado-card hr {
-      margin: 12px 0;
-      border: 0;
-      height: 1px;
-      background: #cedeE8;
-    }
-
-    .fecha-destacada {
-      font-weight: 800;
-      color: #1f6392;
-    }
-
-    /* tooltip / info extra (opcional) */
-    .info-extra {
-      margin-top: 1.8rem;
-      padding-top: 0.8rem;
-      font-size: 0.7rem;
-      color: #7c9ab3;
-      border-top: 1px dashed #d4e2ec;
-      text-align: center;
-    }
-
-    /* responsive celular */
-    @media (max-width: 800px) {
-      .app-wrapper {
-        padding: 1rem;
-      }
-      .dashboard {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-      }
-      .contenedor-dinamico {
-        padding: 1.5rem;
-      }
-      .titulo-dinamico {
-        font-size: 1.4rem;
-      }
-      .recurso-card {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.7rem;
-      }
-      .recurso-link {
-        align-self: flex-start;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .tarjeta-modulo {
-        padding: 1rem;
-      }
-      .modulo-titulo {
-        font-size: 1.2rem;
-      }
-      .botones-accion {
-        flex-direction: column;
-      }
-      .btn-primary, .btn-secondary {
-        text-align: center;
-        justify-content: center;
-      }
-    }
-
-    /* animación sutil */
-    @keyframes fadeSlide {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .contenido-right {
-      animation: fadeSlide 0.3s ease-out;
-    }
-
-    /* sin selección molesta */
-    .tarjeta-modulo {
-      user-select: none;
-    }
-  </style>
+    .tarjeta-modulo .num { font-size: 1.05rem; }
+    .tarjeta-modulo .modulo-titulo { font-size: .85rem; white-space: nowrap; }
+    .contenedor-dinamico { min-height: 0; border-radius: 18px; scroll-margin-top: 4.5rem; }
+    .recurso-card { flex-direction: column; align-items: flex-start; }
+  }
+  @media (max-width: 480px) {
+    .botones-accion { flex-direction: column; }
+    .btn-primary, .btn-secondary { text-align: center; }
+  }
+  @media (min-width: 1500px) { html { font-size: 17px; } }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  }
+</style>
 </head>
 <body>
-<div class="app-wrapper">
-  <div class="dashboard">
-    <!-- COLUMNA IZQUIERDA : dos módulos principales -->
-    <div class="modulos-panel">
-      <div class="titulo-seccion">Herramientas adicionales</div>
-      
-      <!-- Módulo 1: Plazos (códigos y leyes) -->
-      <div class="tarjeta-modulo" id="moduloPlazos" data-tipo="legislacion">
-        <div class="modulo-icono">⚖️</div>
-        <div class="modulo-titulo">1. Plazos · Legislación</div>
-        <div class="modulo-desc">Códigos y leyes esenciales: Civil, Comercial, Procesal y normativa provincial Misionera.</div>
-      </div>
-      
-      <!-- Módulo 2: Vencimientos (calculadora) -->
-      <div class="tarjeta-modulo" id="moduloVencimientos" data-tipo="calculadora">
-        <div class="modulo-icono">⚖️</div>
-        <div class="modulo-titulo">2. Vencimientos · Calculadora</div>
-        <div class="modulo-desc">Cómputo de plazos en días hábiles, plazo de gracia y registro de normativa.</div>
-      </div>
-    </div>
 
-    <!-- COLUMNA DERECHA: contenido dinámico según módulo -->
-    <div class="contenedor-dinamico" id="contenedorDinamico">
-      <!-- Aquí se inyectará el contenido (Legislación o Calculadora) -->
-      <div id="dynamicContent" class="contenido-right">
-        <!-- carga inicial: por defecto módulo Plazos -->
-      </div>
-    </div>
+<header class="cabecera">
+  <div class="cabecera-interior">
+    <h1>Herramientas adicionales</h1>
   </div>
+</header>
+
+<div class="estructura">
+  <!-- COLUMNA IZQUIERDA : dos módulos principales -->
+  <ul class="modulos" aria-label="Herramientas">
+    <!-- Módulo 1: Plazos (códigos y leyes) -->
+    <li>
+      <button class="tarjeta-modulo" type="button" id="moduloPlazos" data-tipo="legislacion" style="--acento:#1e4a6b">
+        <span class="num">1</span>
+        <span class="modulo-titulo">Plazos · Legislación</span>
+        <span class="modulo-desc">Códigos y leyes esenciales: Civil, Comercial, Procesal y normativa provincial Misionera.</span>
+      </button>
+    </li>
+    <!-- Módulo 2: Vencimientos (calculadora) -->
+    <li>
+      <button class="tarjeta-modulo" type="button" id="moduloVencimientos" data-tipo="calculadora" style="--acento:#d35400">
+        <span class="num">2</span>
+        <span class="modulo-titulo">Vencimientos · Calculadora</span>
+        <span class="modulo-desc">Cómputo de plazos en días hábiles, plazo de gracia y registro de normativa.</span>
+      </button>
+    </li>
+  </ul>
+
+  <!-- COLUMNA DERECHA: contenido dinámico según módulo -->
+  <main class="contenedor-dinamico" id="contenedorDinamico" aria-live="polite">
+    <div class="encabezado-panel">
+      <h2 class="titulo-dinamico" id="tituloDinamico">Cargando...</h2>
+      <p class="subtitulo-area" id="subtituloArea"></p>
+    </div>
+    <div id="dynamicContent" class="contenido-right">
+      <!-- carga inicial: por defecto módulo Plazos -->
+    </div>
+  </main>
 </div>
 
 <script>
@@ -389,9 +237,7 @@
   // 1. Renderiza el módulo "Plazos" (códigos, leyes, igual que los enlaces del index original)
   function renderModuloLegislacion() {
     return `
-      <div class="subtitulo-area">Recursos de consulta forense</div>
-      <h2 class="titulo-dinamico">📌 Códigos y Leyes de Plazos</h2>
-      <p style="margin-bottom: 1rem; color: #2f5f7a; font-size: 0.9rem;">Acceso directo a normativa vigente para cómputo de plazos procesales y derecho sustancial.</p>
+      <p class="intro">Acceso directo a normativa vigente para cómputo de plazos procesales y derecho sustancial.</p>
       <div class="recursos-grid">
         <!-- Código Civil y Comercial index style -->
         <a class="recurso-card" href="https://admindefensoria6.github.io/CodigoCivilComercial/" target="_blank" rel="noopener noreferrer">
@@ -428,32 +274,30 @@
   // Se genera HTML y luego se asignan eventos
   function renderModuloCalculadora() {
     return `
-      <div class="subtitulo-area">Herramienta de cómputo judicial</div>
-      <h2 class="titulo-dinamico">📌 Calculadora de Vencimientos</h2>
       <div class="calc-wrapper">
         <div class="form-calc">
           <div class="input-group">
-            <label>📅 Fecha de Notificación / Proveído:</label>
+            <label for="fechaNotificacionCalc">📅 Fecha de Notificación / Proveído:</label>
             <input type="date" id="fechaNotificacionCalc" value="">
           </div>
           <div class="input-group">
-            <label>📅 Plazo en días hábiles:</label>
+            <label for="plazoDiasCalc">📅 Plazo en días hábiles:</label>
             <input type="number" id="plazoDiasCalc" min="1" value="5" step="1">
           </div>
           <div class="input-group">
-            <label>📅 Tipo de Escrito / Resolución / Sentencia:</label>
+            <label for="tipoEscritoCalc">📅 Tipo de Escrito / Resolución / Sentencia:</label>
             <input type="text" id="tipoEscritoCalc" placeholder="Ej: Contestación demanda, Recurso de apelación, Excepción previa">
           </div>
           <div class="input-group">
-            <label>📅 Normativa de referencia aplicable:</label>
+            <label for="normativaCalc">📅 Normativa de referencia aplicable:</label>
             <input type="text" id="normativaCalc" placeholder="Ej: Art. 347 CPC Misiones, Art. 158 CPCCN">
           </div>
           <div class="botones-accion">
-            <button class="btn-primary" id="btnCalcularVencimiento">🔎 Calcular vencimiento</button>
-            <button class="btn-secondary" id="btnImprimirCalculo">🖨️ Imprimir resultado</button>
+            <button class="btn-primary" type="button" id="btnCalcularVencimiento">🔎 Calcular vencimiento</button>
+            <button class="btn-secondary" type="button" id="btnImprimirCalculo">🖨️ Imprimir resultado</button>
           </div>
           <div id="resultadoVencimiento" class="resultado-card">
-            <p style="color: #5c7f9c;">Complete los datos y presione "Calcular vencimiento".</p>
+            <p>Complete los datos y presione "Calcular vencimiento".</p>
           </div>
         </div>
       </div>
@@ -471,29 +315,29 @@
     const tipoEscrito = document.getElementById('tipoEscritoCalc');
     const normativa = document.getElementById('normativaCalc');
     const resultadoDiv = document.getElementById('resultadoVencimiento');
-    
+
     if (!fechaInput || !plazoInput) {
-      if(resultadoDiv) resultadoDiv.innerHTML = '<p class="error" style="color:#c0392b;">Error: no se encontraron campos de la calculadora.</p>';
+      if (resultadoDiv) resultadoDiv.innerHTML = '<p class="error">Error: no se encontraron campos de la calculadora.</p>';
       return;
     }
-    
+
     const fechaStr = fechaInput.value;
     const plazoDias = parseInt(plazoInput.value);
     const tipoTexto = tipoEscrito ? tipoEscrito.value : '';
     const normativaTexto = normativa ? normativa.value : '';
-    
+
     if (!fechaStr || isNaN(plazoDias) || plazoDias <= 0) {
-      resultadoDiv.innerHTML = '<p style="color:#c0392b; font-weight:600;">📌 Complete fecha y plazo válido (mayor a 0).</p>';
+      resultadoDiv.innerHTML = '<p class="error">📌 Complete fecha y plazo válido (mayor a 0).</p>';
       return;
     }
-    
+
     // Lógica de cómputo días hábiles (excluye sábados/domingos) iniciando al día siguiente de la notificación.
     let fecha = new Date(fechaStr + 'T00:00:00');
     let diasRestantes = plazoDias;
-    
+
     // avanzar al día siguiente (por notificación luego del día)
     fecha.setDate(fecha.getDate() + 1);
-    
+
     while (diasRestantes > 0) {
       const diaSemana = fecha.getDay();
       if (diaSemana !== 0 && diaSemana !== 6) {
@@ -503,12 +347,12 @@
         fecha.setDate(fecha.getDate() + 1);
       }
     }
-    
+
     const fechaVencimiento = new Date(fecha);
     // formato español
     const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     const fechaVencimientoStr = fechaVencimiento.toLocaleDateString('es-ES', opciones);
-    
+
     // Cálculo del plazo de gracia: día hábil siguiente al vencimiento a las 08:59
     let fechaGracia = new Date(fechaVencimiento);
     fechaGracia.setDate(fechaGracia.getDate() + 1);
@@ -516,51 +360,48 @@
       fechaGracia.setDate(fechaGracia.getDate() + 1);
     }
     const fechaGraciaStr = fechaGracia.toLocaleDateString('es-ES', opciones);
-    
+
     const horaVencimiento = '12:00 hs.';
     const horaGracia = '08:59 hs.';
-    
+
     let htmlResultado = '';
     if (tipoTexto) htmlResultado += `<p><strong>📌 Tipo:</strong> ${tipoTexto}</p>`;
     if (normativaTexto) htmlResultado += `<p><strong>📖 Normativa:</strong> ${normativaTexto}</p>`;
     if (tipoTexto || normativaTexto) htmlResultado += `<hr>`;
-    
+
     htmlResultado += `
       <p>El plazo de <strong>${plazoDias}</strong> días hábiles vence el:</p>
       <p><strong><span style="color:#1f6e43; font-size:1.05rem;">📆 ${fechaVencimientoStr}</span></strong> a las <strong><span style="color:#1f6e43;">${horaVencimiento}</span></strong></p>
       <p style="margin-top: 12px;">⏳ Plazo de gracia (prórroga automática):</p>
       <p><strong><span style="color:#d35400;">${fechaGraciaStr}</span></strong> a las <strong><span style="color:#d35400;">${horaGracia}</span></strong></p>
       <hr>
-      <p style="font-size:0.8rem;">✅ Recuerde: el cómputo se realiza en días hábiles judiciales, sin considerar feriados automáticos. Siempre verifique feriados locales.</p>
+      <p style="font-size:0.85rem;">✅ Recuerde: el cómputo se realiza en días hábiles judiciales, sin considerar feriados automáticos. Siempre verifique feriados locales.</p>
     `;
-    
+
     resultadoDiv.innerHTML = htmlResultado;
   }
 
-  // función de impresión: imprime solo el contenido destacado (o toda la vista)
+  // función de impresión: imprime el resultado con el contexto de la consulta
   function imprimirResultado() {
-    // capturamos el bloque resultado o bien mostramos una ventana de impresión de la calculadora.
     const resultadoBloque = document.getElementById('resultadoVencimiento');
     if (!resultadoBloque) {
       window.print();
       return;
     }
-    // Estilo alternativo para impresión más limpia
-    const contenidoOriginal = document.body.innerHTML;
     const printContent = resultadoBloque.cloneNode(true);
     // También tomamos los datos principales de tipo y normativa para que tenga contexto
     const tipoEscrito = document.getElementById('tipoEscritoCalc')?.value || '';
     const normativaTexto = document.getElementById('normativaCalc')?.value || '';
     const fechaNotif = document.getElementById('fechaNotificacionCalc')?.value || '';
     const plazoValor = document.getElementById('plazoDiasCalc')?.value || '';
-    
+
     const ventanaPrint = window.open('', '_blank');
     ventanaPrint.document.write(`
       <html>
         <head><title>Vencimiento - Defensoría</title>
         <style>
-          body { font-family: 'Inter', Arial, sans-serif; padding: 2rem; max-width: 700px; margin: 0 auto; }
-          h2 { color: #1e4a6b; border-bottom: 2px solid #ff9800; }
+          body { font-family: 'Public Sans', Arial, sans-serif; padding: 2rem; max-width: 700px; margin: 0 auto; color: #14324b; }
+          h2 { color: #14324b; border-bottom: 2px solid #f0a020; }
           .card-result { background: #f9f9fb; padding: 1rem; border-radius: 16px; margin-top: 1rem; }
           .fecha { font-weight: bold; color: #1f6e43; }
         </style>
@@ -587,26 +428,21 @@
   function attachCalculadoraEvents() {
     const btnCalcular = document.getElementById('btnCalcularVencimiento');
     const btnImprimir = document.getElementById('btnImprimirCalculo');
-    
+
     if (btnCalcular) {
-      // remover eventos previos para evitar duplicados
-      const newBtn = btnCalcular.cloneNode(true);
-      btnCalcular.parentNode.replaceChild(newBtn, btnCalcular);
-      newBtn.addEventListener('click', (e) => {
+      btnCalcular.addEventListener('click', (e) => {
         e.preventDefault();
         calcularPlazoHandler();
       });
     }
-    
+
     if (btnImprimir) {
-      const newPrint = btnImprimir.cloneNode(true);
-      btnImprimir.parentNode.replaceChild(newPrint, btnImprimir);
-      newPrint.addEventListener('click', (e) => {
+      btnImprimir.addEventListener('click', (e) => {
         e.preventDefault();
         imprimirResultado();
       });
     }
-    
+
     // Si hay valores por defecto opcional: poner fecha actual para comodidad
     const fechaField = document.getElementById('fechaNotificacionCalc');
     if (fechaField && !fechaField.value) {
@@ -626,22 +462,30 @@
     // Actualizar estilos visuales de las tarjetas izquierdas
     const moduloLegis = document.getElementById('moduloPlazos');
     const moduloCalc = document.getElementById('moduloVencimientos');
+    const activa = moduleType === 'legislacion' ? moduloLegis : moduloCalc;
     if (moduloLegis && moduloCalc) {
-      if (moduleType === 'legislacion') {
-        moduloLegis.classList.add('activo');
-        moduloCalc.classList.remove('activo');
-      } else {
-        moduloCalc.classList.add('activo');
-        moduloLegis.classList.remove('activo');
-      }
+      moduloLegis.classList.toggle('activo', moduleType === 'legislacion');
+      moduloCalc.classList.toggle('activo', moduleType !== 'legislacion');
+      moduloLegis.setAttribute('aria-current', moduleType === 'legislacion');
+      moduloCalc.setAttribute('aria-current', moduleType !== 'legislacion');
+      // el panel toma el color del módulo activo
+      document.getElementById('contenedorDinamico').style.setProperty('--acento', activa.style.getPropertyValue('--acento'));
     }
-    
+
     const dynamicContainer = document.getElementById('dynamicContent');
     if (!dynamicContainer) return;
-    
+
+    const titulo = document.getElementById('tituloDinamico');
+    const subtitulo = document.getElementById('subtituloArea');
+    dynamicContainer.className = 'contenido-right cambio';
+
     if (moduleType === 'legislacion') {
+      subtitulo.innerText = 'Recursos de consulta forense';
+      titulo.innerText = '📌 Códigos y Leyes de Plazos';
       dynamicContainer.innerHTML = renderModuloLegislacion();
     } else {
+      subtitulo.innerText = 'Herramienta de cómputo judicial';
+      titulo.innerText = '📌 Calculadora de Vencimientos';
       dynamicContainer.innerHTML = renderModuloCalculadora();
       // Luego de renderizar, adjuntar eventos de la calculadora
       attachCalculadoraEvents();
@@ -652,37 +496,35 @@
   function initEventos() {
     const plazosCard = document.getElementById('moduloPlazos');
     const vencimientosCard = document.getElementById('moduloVencimientos');
-    
+    const enMovil = () => window.matchMedia('(max-width:760px)').matches;
+
+    const activar = (tarjeta, modulo) => {
+      setActiveModule(modulo);
+      tarjeta.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+      if (enMovil()) document.getElementById('contenedorDinamico').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+
     if (plazosCard) {
       plazosCard.addEventListener('click', (e) => {
         e.stopPropagation();
-        setActiveModule('legislacion');
+        activar(plazosCard, 'legislacion');
       });
-      plazosCard.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        setActiveModule('legislacion');
-      }, { passive: false });
     }
-    
+
     if (vencimientosCard) {
       vencimientosCard.addEventListener('click', (e) => {
         e.stopPropagation();
-        setActiveModule('calculadora');
+        activar(vencimientosCard, 'calculadora');
       });
-      vencimientosCard.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        setActiveModule('calculadora');
-      }, { passive: false });
     }
   }
 
   // Carga inicial: módulo Plazos (Legislación) activo por defecto
   function inicio() {
     initEventos();
-    // setear desde inicio legislación
     setActiveModule('legislacion');
   }
-  
+
   inicio();
 </script>
 </body>

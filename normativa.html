@@ -1,393 +1,241 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-  <title>Normativa aplicable</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>Normativa aplicable</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600;6..72,700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --tinta: #14324b;
+    --tinta-2: #22394d;
+    --apagado: #5d7388;
+    --borde: #dbe3ea;
+    --ambar: #f0a020;
+    --ambar-suave: #fff3dc;
+    --azul-suave: #e8f1f8;
+    --acento: #14324b;
+    --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+    --sans: 'Public Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --radio: 14px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: var(--sans); background: #fff; color: var(--tinta); line-height: 1.6;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  :focus-visible { outline: 3px solid var(--ambar); outline-offset: 2px; border-radius: 6px; }
 
-    html, body {
-      height: 100%;
-      width: 100%;
-      overflow-x: hidden;
-      background: #f4f7fc;
-    }
+  /* Encabezado */
+  .cabecera { border-bottom: 1px solid var(--borde); }
+  .cabecera-interior {
+    max-width: 1280px; margin: 0 auto;
+    padding: clamp(1.1rem, 2.5vw, 1.75rem) clamp(1rem, 4vw, 2.5rem);
+  }
+  .cabecera h1 {
+    font-family: var(--serif); font-weight: 600;
+    font-size: clamp(1.6rem, 3.6vw, 2.4rem); line-height: 1.1; letter-spacing: -.01em;
+  }
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #f4f7fc;
-      color: #0a2b3e;
-      line-height: 1.45;
-    }
+  /* Estructura */
+  .estructura {
+    max-width: 1280px; margin: 0 auto;
+    padding: clamp(1rem, 3vw, 2rem) clamp(1rem, 4vw, 2.5rem) 3rem;
+    display: grid; grid-template-columns: minmax(260px, 340px) minmax(0, 1fr);
+    gap: clamp(1.25rem, 3vw, 2.5rem); align-items: start;
+  }
 
-    .app-wrapper {
-      display: flex;
-      width: 100%;
-      min-height: 100vh;
-    }
+  /* Categorías (columna izquierda) */
+  .categorias {
+    position: sticky; top: 1rem;
+    display: flex; flex-direction: column; gap: .5rem; list-style: none;
+  }
+  .tarjeta-categoria {
+    width: 100%; text-align: left; background: #fff;
+    border: 1px solid var(--borde); border-left: 5px solid var(--acento);
+    border-radius: var(--radio); padding: .85rem 1rem;
+    display: grid; gap: .2rem;
+    transition: background .15s, box-shadow .15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .tarjeta-categoria:hover { background: #fafcfe; }
+  .tarjeta-categoria .categoria-titulo { font-weight: 600; font-size: .95rem; line-height: 1.3; color: var(--acento); }
+  .tarjeta-categoria .categoria-desc { font-size: .8rem; color: var(--apagado); line-height: 1.4; }
+  .tarjeta-categoria[aria-current="true"] {
+    background: var(--acento); border-color: var(--acento);
+    box-shadow: 0 8px 22px -10px var(--acento);
+  }
+  .tarjeta-categoria[aria-current="true"] .categoria-titulo { color: #fff; }
+  .tarjeta-categoria[aria-current="true"] .categoria-desc { color: rgba(255,255,255,.82); }
 
-    .container {
-      display: grid;
-      grid-template-columns: 1fr 1.2fr;
-      gap: 2rem;
-      padding: 2rem;
-      width: 100%;
-      max-width: 1600px;
-      margin: 0 auto;
-    }
+  /* Panel de detalle (columna derecha) */
+  .columna-detalle {
+    background: #fff; border: 1px solid var(--borde); border-radius: 22px;
+    overflow: hidden; min-height: 60vh; scroll-margin-top: 5rem;
+  }
+  .encabezado-panel {
+    display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem;
+    padding: clamp(1.25rem, 3vw, 2.25rem);
+    border-top: 6px solid var(--acento); border-bottom: 1px solid var(--borde);
+    background: linear-gradient(#fff, #fafcfe);
+  }
+  #categoriaDinamicaTitulo {
+    font-family: var(--serif); font-weight: 600;
+    font-size: clamp(1.5rem, 3.2vw, 2.3rem); line-height: 1.15; letter-spacing: -.005em;
+  }
+  #categoriaDinamicaSubtitulo { margin-top: .5rem; color: var(--apagado); font-size: clamp(.9rem, 1.4vw, 1rem); }
 
-    /* COLUMNA IZQUIERDA (categorías) */
-    .columna-categorias {
-      overflow-y: visible;
-      padding-right: 0.5rem;
-    }
+  .btn-informacion {
+    background: transparent; color: var(--tinta);
+    border: 1.5px solid var(--tinta); border-radius: 999px;
+    padding: .55rem 1.1rem; font-weight: 600; font-size: .9rem;
+    white-space: nowrap; transition: background .15s, color .15s;
+  }
+  .btn-informacion:hover { background: var(--tinta); color: #fff; }
+  .btn-informacion:active { transform: scale(.97); }
 
-    .titulo-principal {
-      font-size: 1.6rem;
-      font-weight: 800;
-      color: #1e4a6b;
-      margin-bottom: 2rem;
-      text-transform: uppercase;
-      line-height: 1.2;
-      border-bottom: 3px solid #ff9800;
-      padding-bottom: 10px;
-      letter-spacing: -0.3px;
-    }
+  .leyes-scroll { padding: clamp(1.25rem, 3vw, 2.25rem); max-width: 78ch; }
+  .lista-leyes { list-style: none; display: grid; gap: .65rem; }
+  .lista-leyes.cambio { animation: cambio .28s ease; }
+  @keyframes cambio { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
+  .ley-item {
+    padding: .95rem 1.1rem; background: #fafcfe;
+    border: 1px solid var(--borde); border-left: 5px solid var(--acento); border-radius: 12px;
+  }
+  .ley-titulo {
+    display: block; font-family: var(--serif); font-weight: 600;
+    font-size: clamp(1.1rem, 1.8vw, 1.25rem); line-height: 1.3; color: var(--tinta); margin-bottom: .35rem;
+  }
+  .ley-descripcion { font-size: clamp(.95rem, 1.3vw, 1.02rem); line-height: 1.5; color: var(--tinta-2); }
+
+  /* Modal */
+  dialog {
+    border: 0; border-radius: 24px; padding: 0;
+    width: min(560px, calc(100% - 2rem)); max-height: calc(100% - 2rem);
+    margin: auto; color: var(--tinta);
+    box-shadow: 0 30px 80px -20px rgba(10, 30, 50, .5);
+  }
+  dialog::backdrop { background: rgba(10, 30, 50, .65); backdrop-filter: blur(3px); }
+  .modal-contenido { padding: clamp(1.25rem, 4vw, 2rem); display: grid; gap: 1rem; }
+  .modal-contenido h4 { font-family: var(--serif); font-size: 1.5rem; font-weight: 600; line-height: 1.2; padding-right: 2.5rem; }
+  .modal-contenido p { font-size: .97rem; color: var(--tinta-2); }
+  .modal-insight {
+    background: var(--ambar-suave); border-left: 5px solid var(--ambar);
+    border-radius: 0 var(--radio) var(--radio) 0; padding: 1rem 1.15rem; font-size: .97rem; color: var(--tinta-2);
+  }
+  .modal-fuentes { font-size: .85rem; color: var(--apagado); border-top: 1px solid var(--borde); padding-top: .8rem; }
+  .cerrar {
+    position: absolute; top: .75rem; right: .75rem;
+    width: 2.5rem; height: 2.5rem; border-radius: 50%; border: 0;
+    background: #f3f6f9; font-size: 1.5rem; line-height: 1;
+  }
+  .cerrar:hover { background: var(--borde); }
+
+  /* Tablet */
+  @media (max-width: 1024px) {
+    .estructura { grid-template-columns: minmax(230px, 280px) minmax(0, 1fr); }
+    .tarjeta-categoria .categoria-desc { display: none; }
+    .tarjeta-categoria { align-items: center; }
+  }
+
+  /* Móvil: categorías en tira horizontal */
+  @media (max-width: 760px) {
+    .estructura { grid-template-columns: 1fr; gap: 1rem; }
+    .categorias {
+      position: sticky; top: 0; z-index: 20; flex-direction: row; overflow-x: auto; gap: .5rem;
+      margin: 0 calc(-1 * clamp(1rem, 4vw, 2.5rem)); padding: .6rem clamp(1rem, 4vw, 2.5rem);
+      background: rgba(255,255,255,.95); backdrop-filter: blur(8px); border-bottom: 1px solid var(--borde);
+      scroll-snap-type: x proximity; scrollbar-width: none;
+    }
+    .categorias::-webkit-scrollbar { display: none; }
+    .categorias li { flex: 0 0 auto; scroll-snap-align: start; }
     .tarjeta-categoria {
-      background: white;
-      border-radius: 18px;
-      padding: 1.5rem;
-      margin-bottom: 1.2rem;
-      border: 1px solid #e2edf2;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      -webkit-tap-highlight-color: transparent;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+      width: auto; border-left-width: 1px; border-bottom: 4px solid var(--acento);
+      padding: .55rem .9rem; border-radius: 12px;
     }
-
-    .tarjeta-categoria:active {
-      transform: scale(0.99);
-      background: #fefefe;
-      border-color: #cbdde6;
-    }
-
-    .categoria-titulo {
-      font-size: 1.2rem;
-      font-weight: 800;
-      margin-bottom: 0.5rem;
-      display: block;
-    }
-
-    .categoria-desc {
-      font-size: 0.86rem;
-      color: #4a6272;
-      line-height: 1.4;
-      margin-top: 4px;
-    }
-
-    /* Colores distintivos por categoría */
-    .cat-procesal { border-left: 6px solid #1e4a6b; padding-left: 14px; }
-    .cat-procesal .categoria-titulo { color: #1e4a6b; }
-    .cat-proteccion { border-left: 6px solid #2c7da0; padding-left: 14px; }
-    .cat-proteccion .categoria-titulo { color: #2c7da0; }
-    .cat-delitos { border-left: 6px solid #8e44ad; padding-left: 14px; }
-    .cat-delitos .categoria-titulo { color: #6c3483; }
-    .cat-honorarios { border-left: 6px solid #d35400; padding-left: 14px; }
-    .cat-honorarios .categoria-titulo { color: #b64900; }
-
-    /* COLUMNA DERECHA (detalle de leyes) */
-    .columna-detalle {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      background: #ffffff;
-      border-radius: 24px;
-      padding: 2rem;
-      border: 1px solid #e2edf2;
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.05);
-      transition: all 0.2s;
-    }
-
-    .btn-informacion {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: #ff9800;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 40px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      cursor: pointer;
-      z-index: 10;
-      transition: background 0.2s, transform 0.1s;
-      letter-spacing: 0.3px;
-      font-family: inherit;
-    }
-
-    .btn-informacion:active {
-      background: #e68900;
-      transform: scale(0.96);
-    }
-
-    .header-normativa {
-      margin-bottom: 1.5rem;
-      padding-right: 30px;
-    }
-
-    .header-normativa h2 {
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: #1e4a6b;
-      margin-bottom: 6px;
-      letter-spacing: -0.2px;
-    }
-
-    .header-normativa p {
-      color: #5d7a8c;
-      font-size: 0.85rem;
-      font-weight: 500;
-      border-left: 3px solid #ff9800;
-      padding-left: 12px;
-      margin-top: 6px;
-    }
-
-    .leyes-scroll {
-      flex: 1;
-      overflow-y: auto;
-      max-height: 60vh;
-      padding-right: 4px;
-    }
-
-    /* lista estilo limpio para leyes */
-    .lista-leyes {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      animation: fadeSlide 0.3s ease;
-    }
-
-    .ley-item {
-      background: #f9fcfd;
-      border-radius: 18px;
-      padding: 1.2rem 1.2rem 1.2rem 1.5rem;
-      border: 1px solid #e6f0f5;
-      transition: all 0.2s;
-    }
-
-    .ley-titulo {
-      font-weight: 800;
-      font-size: 1rem;
-      color: #1a4b66;
-      margin-bottom: 8px;
-      letter-spacing: -0.2px;
-      display: block;
-    }
-
-    .ley-descripcion {
-      font-size: 0.85rem;
-      color: #3f5c6e;
-      line-height: 1.45;
-    }
-
-    /* ya no existe .enlace-ley */
-
-    @keyframes fadeSlide {
-      from { opacity: 0; transform: translateX(12px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-
-    /* MODAL */
-    .modal-legal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(10, 43, 62, 0.86);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      backdrop-filter: blur(3px);
-    }
-
-    .modal-card {
-      background: white;
-      padding: 2rem 1.8rem;
-      border-radius: 28px;
-      max-width: 500px;
-      width: 90%;
-      position: relative;
-      margin: 1rem;
-      max-height: 85vh;
-      overflow-y: auto;
-      box-shadow: 0 25px 40px rgba(0,0,0,0.2);
-    }
-
-    .modal-card button.close-modal {
-      position: absolute;
-      top: 16px;
-      right: 20px;
-      background: none;
-      border: none;
-      font-size: 2rem;
-      line-height: 1;
-      cursor: pointer;
-      color: #8aaec0;
-      font-weight: 300;
-    }
-
-    .modal-card h4 {
-      font-size: 1.25rem;
-      font-weight: 800;
-      margin-bottom: 1rem;
-      color: #1e4a6b;
-    }
-
-    .modal-card p {
-      font-size: 0.9rem;
-      line-height: 1.5;
-      color: #2c3e4e;
-    }
-
-    .modal-insight {
-      background: #f1f7fb;
-      border-left: 4px solid #ff9800;
-      padding: 1rem;
-      margin-top: 1rem;
-      border-radius: 14px;
-    }
-
-    /* RESPONSIVE */
-    @media (max-width: 800px) {
-      .container {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-        padding: 1rem;
-      }
-      .columna-categorias, .columna-detalle {
-        width: 100%;
-        padding: 1rem;
-      }
-      .columna-detalle {
-        padding: 1.4rem;
-        padding-top: 3rem;
-      }
-      .btn-informacion {
-        top: 12px;
-        right: 12px;
-        font-size: 0.7rem;
-        padding: 6px 12px;
-      }
-      .titulo-principal {
-        font-size: 1.4rem;
-        margin-bottom: 1.2rem;
-      }
-      .tarjeta-categoria {
-        padding: 1rem;
-      }
-      .categoria-titulo {
-        font-size: 1rem;
-      }
-      .leyes-scroll {
-        max-height: none;
-        overflow-y: visible;
-      }
-      .header-normativa h2 {
-        font-size: 1.3rem;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .container {
-        gap: 1rem;
-        padding: 0.75rem;
-      }
-      .columna-detalle {
-        padding: 1rem;
-        padding-top: 2.8rem;
-      }
-      .ley-item {
-        padding: 1rem;
-      }
-      .ley-titulo {
-        font-size: 0.9rem;
-      }
-    }
-  </style>
+    .tarjeta-categoria .categoria-titulo { font-size: .85rem; white-space: nowrap; }
+    .columna-detalle { min-height: 0; border-radius: 18px; scroll-margin-top: 4.5rem; }
+  }
+  @media (max-width: 560px) { .encabezado-panel { flex-direction: column; } }
+  @media (min-width: 1500px) { html { font-size: 17px; } }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  }
+</style>
 </head>
 <body>
 
-<div class="app-wrapper">
-  <div class="container">
-    <!-- COLUMNA IZQUIERDA: CATEGORÍAS DE NORMATIVA -->
-    <div class="columna-categorias">
-      <h1 class="titulo-principal">Normativa aplicable</h1>
-      
-      <div class="tarjeta-categoria cat-procesal" data-categoria="procesal">
+<header class="cabecera">
+  <div class="cabecera-interior">
+    <h1>Normativa aplicable</h1>
+  </div>
+</header>
+
+<div class="estructura">
+  <!-- COLUMNA IZQUIERDA: CATEGORÍAS DE NORMATIVA -->
+  <ul class="categorias" aria-label="Categorías de normativa">
+    <li>
+      <button class="tarjeta-categoria cat-procesal" type="button" data-categoria="procesal" style="--acento:#1e4a6b">
         <span class="categoria-titulo">⚖️ Legislación procesal</span>
-        <p class="categoria-desc">Códigos procesales civiles, comerciales, familia y violencia familiar — Rigen los procedimientos judiciales y la organización del proceso.</p>
-      </div>
-
-      <div class="tarjeta-categoria cat-proteccion" data-categoria="proteccion">
+        <span class="categoria-desc">Códigos procesales civiles, comerciales, familia y violencia familiar — Rigen los procedimientos judiciales y la organización del proceso.</span>
+      </button>
+    </li>
+    <li>
+      <button class="tarjeta-categoria cat-proteccion" type="button" data-categoria="proteccion" style="--acento:#2c7da0">
         <span class="categoria-titulo">⚖️ Protección de personas</span>
-        <p class="categoria-desc">Salud mental, acogimiento familiar, derechos de niños, niñas, adolescentes y personas mayores — Marcos esenciales para la defensa de grupos vulnerables.</p>
-      </div>
-
-      <div class="tarjeta-categoria cat-delitos" data-categoria="delitos">
+        <span class="categoria-desc">Salud mental, acogimiento familiar, derechos de niños, niñas, adolescentes y personas mayores — Marcos esenciales para la defensa de grupos vulnerables.</span>
+      </button>
+    </li>
+    <li>
+      <button class="tarjeta-categoria cat-delitos" type="button" data-categoria="delitos" style="--acento:#8e44ad">
         <span class="categoria-titulo">⚖️ Integridad sexual</span>
-        <p class="categoria-desc">Protección integral a víctimas de delitos contra la integridad sexual y pensión graciable para menores afectados.</p>
-      </div>
-
-      <div class="tarjeta-categoria cat-honorarios" data-categoria="honorarios">
+        <span class="categoria-desc">Protección integral a víctimas de delitos contra la integridad sexual y pensión graciable para menores afectados.</span>
+      </button>
+    </li>
+    <li>
+      <button class="tarjeta-categoria cat-honorarios" type="button" data-categoria="honorarios" style="--acento:#d35400">
         <span class="categoria-titulo">⚖️ Honorarios profesionales</span>
-        <p class="categoria-desc">Ley XII N.° 4: normas generales sobre honorarios de abogados y procuradores en la provincia de Misiones.</p>
-      </div>
-    </div>
+        <span class="categoria-desc">Ley XII N.° 4: normas generales sobre honorarios de abogados y procuradores en la provincia de Misiones.</span>
+      </button>
+    </li>
+  </ul>
 
-    <!-- COLUMNA DERECHA: DETALLE DINÁMICO (LEYES) -->
-    <div class="columna-detalle" id="detalleNormativa">
-      <button class="btn-informacion" id="infoEstrategicaBtn">Información legal</button>
-      
-      <div class="header-normativa" id="detalleHeader">
+  <!-- COLUMNA DERECHA: DETALLE DINÁMICO (LEYES) -->
+  <main class="columna-detalle" id="detalleNormativa" aria-live="polite">
+    <div class="encabezado-panel" id="detalleHeader">
+      <div>
         <h2 id="categoriaDinamicaTitulo">Legislación procesal</h2>
         <p id="categoriaDinamicaSubtitulo">Normas de procedimiento aplicables en la Defensoría</p>
       </div>
-
-      <div class="leyes-scroll" id="contenidoLeyes">
-        <ul class="lista-leyes" id="listaNormativa"></ul>
-      </div>
+      <button class="btn-informacion" id="infoEstrategicaBtn" type="button">Información legal</button>
     </div>
-  </div>
+
+    <div class="leyes-scroll" id="contenidoLeyes">
+      <ul class="lista-leyes" id="listaNormativa"></ul>
+    </div>
+  </main>
 </div>
 
 <!-- MODAL "INFORMACIÓN LEGAL" (recordatorio estratégico) -->
-<div class="modal-legal" id="modalLegal" onclick="toggleModalLegal(false)">
-  <div class="modal-card" onclick="event.stopPropagation()">
-    <button class="close-modal" onclick="toggleModalLegal(false)">&times;</button>
-    <h4>📌 Uso estratégico de la normativa</h4>
+<dialog id="modalLegal" aria-labelledby="modalLegalTitulo">
+  <button class="cerrar" type="button" aria-label="Cerrar" onclick="toggleModalLegal(false)">&times;</button>
+  <div class="modal-contenido">
+    <h4 id="modalLegalTitulo">📌 Uso estratégico de la normativa</h4>
     <p>Contar con el marco legal actualizado es fundamental para el patrocinio jurídico eficaz. La correcta aplicación de estas leyes garantiza defensa técnica, evita nulidades y protege derechos fundamentales.</p>
     <div class="modal-insight">
-      <strong style="color:#d35400;">Recomendación:</strong> Siempre verificar la vigencia de las leyes y sus decretos reglamentarios. Ante casos complejos (violencia familiar, salud mental, niñez), priorizar la articulación con la ley nacional adherida y la perspectiva de derechos.
+      <strong>Recomendación:</strong> Siempre verificar la vigencia de las leyes y sus decretos reglamentarios. Ante casos complejos (violencia familiar, salud mental, niñez), priorizar la articulación con la ley nacional adherida y la perspectiva de derechos.
     </div>
-    <div style="margin-top: 16px; font-size: 0.75rem; color: #6f8f9f; border-top: 1px solid #e2edf2; padding-top: 12px;">
+    <div class="modal-fuentes">
       Fuentes oficiales: digestomisiones.gob.ar · Leyes provinciales y nacionales
     </div>
   </div>
-</div>
+</dialog>
 
 <script>
   // --------------------------------------------------------------
@@ -476,40 +324,48 @@
       </li>
     `).join('');
 
-    listaElement.innerHTML = `<ul class="lista-leyes">${leyesHtml}</ul>`;
+    listaElement.className = 'lista-leyes cambio';
+    listaElement.innerHTML = leyesHtml;
+
+    // Marca la categoría activa y toma su color para el panel
+    document.querySelectorAll('.tarjeta-categoria').forEach(t => {
+      const activa = t.getAttribute('data-categoria') === categoriaKey;
+      t.setAttribute('aria-current', activa);
+      if (activa) {
+        document.getElementById('detalleNormativa').style.setProperty('--acento', t.style.getPropertyValue('--acento'));
+      }
+    });
   }
 
   // Manejador de clic en tarjetas de categorías
   function setupCategorias() {
     const tarjetas = document.querySelectorAll('.tarjeta-categoria');
     tarjetas.forEach(tarjeta => {
-      const clickHandler = (e) => {
+      tarjeta.addEventListener('click', (e) => {
         e.stopPropagation();
         const categoria = tarjeta.getAttribute('data-categoria');
         if (categoria && normativaDB[categoria]) {
           renderizarNormativa(categoria);
-          tarjeta.style.transform = "scale(0.99)";
-          setTimeout(() => { tarjeta.style.transform = ""; }, 120);
+          tarjeta.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+          if (window.matchMedia('(max-width:760px)').matches) {
+            document.getElementById('detalleNormativa').scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
         }
-      };
-      tarjeta.addEventListener('click', clickHandler);
-      tarjeta.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        clickHandler(e);
-      }, { passive: false });
+      });
     });
   }
 
   // Modal de información legal
   const modalLegal = document.getElementById("modalLegal");
   function toggleModalLegal(show) {
-    modalLegal.style.display = show ? "flex" : "none";
+    if (show) { if (!modalLegal.open) modalLegal.showModal(); }
+    else { if (modalLegal.open) modalLegal.close(); }
   }
 
   function init() {
     renderizarNormativa('procesal');
     setupCategorias();
-    
+
     const btnInfo = document.getElementById("infoEstrategicaBtn");
     if (btnInfo) {
       btnInfo.addEventListener('click', (e) => {
@@ -517,6 +373,9 @@
         toggleModalLegal(true);
       });
     }
+
+    // Cerrar el modal al tocar fuera del recuadro
+    modalLegal.addEventListener('click', (e) => { if (e.target === modalLegal) toggleModalLegal(false); });
   }
 
   window.addEventListener('DOMContentLoaded', init);

@@ -1,393 +1,127 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-  <title>Mapa de Defensorías | Poder Judicial Misiones</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>Mapa de Defensorías | Poder Judicial Misiones</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600;6..72,700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --tinta: #14324b; --tinta-2: #22394d; --apagado: #5d7388; --borde: #dbe3ea;
+    --ambar: #f0a020; --ambar-suave: #fff3dc; --acento: #14324b;
+    --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+    --sans: 'Public Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --radio: 14px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body { font-family: var(--sans); background: #fff; color: var(--tinta); line-height: 1.6;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  a { color: var(--tinta); font-weight: 600; text-underline-offset: 3px; }
+  :focus-visible { outline: 3px solid var(--ambar); outline-offset: 2px; border-radius: 6px; }
 
-    html, body {
-      height: 100%;
-      width: 100%;
-      overflow-x: hidden;
-      scroll-behavior: smooth;
-    }
+  .cabecera { border-bottom: 1px solid var(--borde); }
+  .cabecera-interior { max-width: 1280px; margin: 0 auto; padding: clamp(1.1rem, 2.5vw, 1.75rem) clamp(1rem, 4vw, 2.5rem); }
+  .cabecera h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(1.6rem, 3.6vw, 2.4rem); line-height: 1.1; letter-spacing: -.01em; }
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #eef3fa;
-      color: #0a2b3e;
-      line-height: 1.45;
-    }
+  .estructura { max-width: 1280px; margin: 0 auto; padding: clamp(1rem, 3vw, 2rem) clamp(1rem, 4vw, 2.5rem) 3rem;
+    display: grid; grid-template-columns: minmax(260px, 340px) minmax(0, 1fr); gap: clamp(1.25rem, 3vw, 2.5rem); align-items: start; }
+  .categorias { position: sticky; top: 1rem; display: flex; flex-direction: column; gap: .5rem; list-style: none; }
+  .tarjeta-categoria { width: 100%; text-align: left; background: #fff; border: 1px solid var(--borde); border-left: 5px solid var(--acento);
+    border-radius: var(--radio); padding: .85rem 1rem; display: grid; gap: .2rem; transition: background .15s, box-shadow .15s; -webkit-tap-highlight-color: transparent; }
+  .tarjeta-categoria:hover { background: #fafcfe; }
+  .categoria-titulo { font-weight: 600; font-size: .95rem; line-height: 1.3; color: var(--acento); }
+  .categoria-etiqueta { font-size: .72rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--apagado); line-height: 1.35; }
+  .categoria-desc { font-size: .8rem; color: var(--apagado); line-height: 1.4; }
+  .tarjeta-categoria[aria-current="true"] { background: var(--acento); border-color: var(--acento); box-shadow: 0 8px 22px -10px var(--acento); }
+  .tarjeta-categoria[aria-current="true"] .categoria-titulo { color: #fff; }
+  .tarjeta-categoria[aria-current="true"] .categoria-etiqueta, .tarjeta-categoria[aria-current="true"] .categoria-desc { color: rgba(255,255,255,.85); }
 
-    .app-wrapper {
-      display: flex;
-      width: 100%;
-      min-height: 100vh;
-    }
+  .columna-detalle { background: #fff; border: 1px solid var(--borde); border-radius: 22px; overflow: hidden; min-height: 60vh; scroll-margin-top: 5rem; }
+  .encabezado-panel { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; padding: clamp(1.25rem, 3vw, 2.25rem);
+    border-top: 6px solid var(--acento); border-bottom: 1px solid var(--borde); background: linear-gradient(#fff, #fafcfe); }
+  #tituloDerecho { font-family: var(--serif); font-weight: 600; font-size: clamp(1.5rem, 3.2vw, 2.3rem); line-height: 1.15; }
+  #subtituloDerecho { margin-top: .5rem; color: var(--apagado); font-size: clamp(.9rem, 1.4vw, 1rem); }
+  .btn-informacion { background: transparent; border: 1.5px solid var(--tinta); border-radius: 999px; padding: .55rem 1.1rem; font-weight: 600; font-size: .9rem; white-space: nowrap; transition: background .15s, color .15s; }
+  .btn-informacion:hover { background: var(--tinta); color: #fff; }
+  .btn-informacion:active { transform: scale(.97); }
 
-    .container {
-      display: grid;
-      grid-template-columns: 1fr 1.25fr;
-      gap: 2rem;
-      padding: 2rem;
-      width: 100%;
-      max-width: 1500px;
-      margin: 0 auto;
-    }
+  .contenido { padding: clamp(1.25rem, 3vw, 2.25rem); max-width: 80ch; display: grid; gap: .8rem; animation: cambio .28s ease; }
+  @keyframes cambio { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .ley-item { padding: .95rem 1.1rem; background: #fafcfe; border: 1px solid var(--borde); border-left: 5px solid var(--acento); border-radius: 12px; color: var(--tinta-2); font-size: clamp(.95rem, 1.3vw, 1.02rem); line-height: 1.5; }
+  .ley-item h3 { font-family: var(--serif); font-weight: 600; font-size: clamp(1.1rem, 1.8vw, 1.25rem); line-height: 1.3; color: var(--tinta); margin-bottom: .35rem; }
+  .ley-item.nota { background: var(--ambar-suave); border-color: #f3dcae; border-left-color: var(--ambar); }
+  strong { font-weight: 600; color: var(--tinta); }
+  .lista-simple { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: .5rem; margin-top: .4rem; }
+  .lista-simple li { background: #fff; border: 1px solid var(--borde); border-radius: 10px; padding: .4rem .75rem; font-size: .92rem; }
+  .btn-mapa { display: inline-block; margin-top: .6rem; padding: .35rem .95rem; border: 1.5px solid var(--acento); border-radius: 999px; color: var(--acento); font-size: .85rem; text-decoration: none; transition: background .15s, color .15s; }
+  .btn-mapa:hover { background: var(--acento); color: #fff; }
 
-    /* COLUMNA IZQUIERDA (LISTADO DE DEFENSORÍAS) */
-    .columna-izquierda {
-      overflow-y: visible;
-      padding-right: 0.5rem;
-    }
+  dialog { border: 0; border-radius: 24px; padding: 0; width: min(560px, calc(100% - 2rem)); max-height: calc(100% - 2rem); margin: auto; color: var(--tinta); box-shadow: 0 30px 80px -20px rgba(10,30,50,.5); }
+  dialog::backdrop { background: rgba(10,30,50,.65); backdrop-filter: blur(3px); }
+  .modal-contenido { padding: clamp(1.25rem, 4vw, 2rem); display: grid; gap: 1rem; }
+  .modal-contenido h4 { font-family: var(--serif); font-size: 1.5rem; font-weight: 600; line-height: 1.2; padding-right: 2.5rem; }
+  .modal-contenido p { font-size: .97rem; color: var(--tinta-2); margin-top: .3rem; }
+  .modal-insight { background: var(--ambar-suave); border-left: 5px solid var(--ambar); border-radius: 0 var(--radio) var(--radio) 0; padding: 1rem 1.15rem; }
+  .modal-insight.azul { background: #e8f1f8; border-left-color: #2c7da0; }
+  .cerrar { position: absolute; top: .75rem; right: .75rem; width: 2.5rem; height: 2.5rem; border-radius: 50%; border: 0; background: #f3f6f9; font-size: 1.5rem; line-height: 1; }
+  .cerrar:hover { background: var(--borde); }
 
-    .titulo-principal {
-      font-size: 1.7rem;
-      font-weight: 800;
-      color: #1e4a6b;
-      margin-bottom: 1.8rem;
-      text-transform: uppercase;
-      letter-spacing: -0.3px;
-      border-bottom: 3px solid #ff9800;
-      padding-bottom: 12px;
-      display: inline-block;
-      width: 100%;
-    }
-
-    .tarjeta-defensoria {
-      background: white;
-      border-radius: 20px;
-      padding: 1.4rem;
-      margin-bottom: 1.2rem;
-      border: 1px solid #d9e5ef;
-      cursor: pointer;
-      transition: all 0.2s ease-in-out;
-      -webkit-tap-highlight-color: transparent;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-    }
-
-    .tarjeta-defensoria:hover {
-      transform: translateY(-2px);
-      border-color: #cbdde9;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
-    }
-
-    .tarjeta-defensoria:active {
-      transform: scale(0.99);
-      background: #fefefe;
-    }
-
-    .defensoria-titulo {
-      font-size: 1.2rem;
-      font-weight: 800;
-      margin-bottom: 0.5rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .defensoria-badge {
-      font-size: 1.25rem;
-    }
-
-    .defensoria-resumen {
-      font-size: 0.85rem;
-      color: #2c5a72;
-      line-height: 1.4;
-      margin-top: 6px;
-    }
-
-    /* colores de borde (identidad visual) */
-    .color-def-1 { border-left: 6px solid #1e4a6b; padding-left: 14px; }
-    .color-def-2 { border-left: 6px solid #2c7da0; padding-left: 14px; }
-    .color-def-3 { border-left: 6px solid #8e44ad; padding-left: 14px; }
-    .color-def-4 { border-left: 6px solid #27ae60; padding-left: 14px; }
-    .color-def-5 { border-left: 6px solid #d35400; padding-left: 14px; }
-
-    /* COLUMNA DERECHA (DETALLE DINÁMICO) */
-    .columna-derecha {
-      position: relative;
-      background: #ffffff;
-      border-radius: 28px;
-      padding: 2rem 1.8rem;
-      border: 1px solid #e0edf5;
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.05);
-      transition: all 0.2s;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .btn-recordar {
-      position: absolute;
-      top: 22px;
-      right: 24px;
-      background: #ff9800;
-      color: white;
-      border: none;
-      padding: 8px 18px;
-      border-radius: 40px;
-      font-size: 0.75rem;
-      font-weight: 800;
-      cursor: pointer;
-      z-index: 12;
-      transition: background 0.2s, transform 0.1s;
-      letter-spacing: 0.3px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-
-    .btn-recordar:active {
-      background: #e68900;
-      transform: scale(0.96);
-    }
-
-    #headerDinamico {
-      margin-bottom: 1.4rem;
-      padding-right: 90px;
-    }
-
-    #tituloDerecho {
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: #1e4a6b;
-      line-height: 1.25;
-      margin-bottom: 6px;
-    }
-
-    #subtituloDerecho {
-      color: #5a7b8c;
-      font-size: 0.85rem;
-      font-weight: 500;
-      border-left: 2px solid #ff9800;
-      padding-left: 10px;
-      margin-top: 5px;
-    }
-
-    .info-detalle-scroll {
-      flex: 1;
-      overflow-y: auto;
-      max-height: 62vh;
-      padding-right: 6px;
-    }
-
-    /* Secciones de información (parecido al estilo de pasos pero informativo) */
-    .info-seccion {
-      background: #f9fdfe;
-      border-radius: 18px;
-      padding: 1rem 1.2rem;
-      margin-bottom: 1.3rem;
-      border: 1px solid #e6f0f5;
-      transition: all 0.1s;
-    }
-
-    .info-seccion h4 {
-      font-size: 1rem;
-      font-weight: 800;
-      color: #1f5e7e;
-      margin-bottom: 0.7rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      letter-spacing: -0.2px;
-    }
-
-    .info-seccion p, .info-seccion li {
-      font-size: 0.9rem;
-      line-height: 1.5;
-      color: #1f3e4e;
-    }
-
-    .lista-geografica {
-      list-style: none;
-      padding-left: 0;
-    }
-
-    .lista-geografica li {
-      padding-left: 1.4rem;
-      position: relative;
-      margin-bottom: 0.5rem;
-      font-size: 0.88rem;
-    }
-
-    .lista-geografica li::before {
-      content: "▹";
-      position: absolute;
-      left: 0;
-      color: #ff9800;
-      font-weight: 600;
-    }
-
-    .badge-contacto {
-      background: #eef4fa;
-      border-radius: 12px;
-      padding: 0.5rem 0.8rem;
-      font-weight: 500;
-      display: inline-block;
-      margin-top: 5px;
-      font-size: 0.8rem;
-    }
-
-    hr {
-      margin: 10px 0;
-      border: none;
-      height: 1px;
-      background: linear-gradient(to right, #d4e2ec, transparent);
-    }
-
-    /* MODAL */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(10, 43, 62, 0.88);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 2000;
-      backdrop-filter: blur(3px);
-    }
-
-    .modal-content {
-      background: white;
-      padding: 2rem 2rem;
-      border-radius: 32px;
-      max-width: 500px;
-      width: 88%;
-      position: relative;
-      box-shadow: 0 25px 40px rgba(0,0,0,0.2);
-    }
-
-    .modal-content button.modal-close {
-      position: absolute;
-      top: 16px;
-      right: 20px;
-      background: none;
-      border: none;
-      font-size: 1.8rem;
-      cursor: pointer;
-      color: #95a5a6;
-    }
-
-    .tip-box {
-      background: #fef5e8;
-      border-left: 5px solid #ff9800;
-      padding: 1rem 1.2rem;
-      border-radius: 20px;
-      margin-bottom: 1rem;
-    }
-
-    .tip-box h4 {
-      color: #c25d00;
-      margin-bottom: 8px;
-    }
-
-    @media (max-width: 800px) {
-      .container {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-        padding: 1rem;
-      }
-      .columna-derecha {
-        padding: 1.5rem 1rem;
-        padding-top: 3.5rem;
-      }
-      .btn-recordar {
-        top: 14px;
-        right: 14px;
-        padding: 6px 12px;
-        font-size: 0.7rem;
-      }
-      #tituloDerecho {
-        font-size: 1.25rem;
-        padding-right: 10px;
-      }
-      .info-detalle-scroll {
-        max-height: 55vh;
-      }
-      .tarjeta-defensoria {
-        padding: 1rem;
-      }
-      .defensoria-titulo {
-        font-size: 1.05rem;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .container {
-        padding: 0.75rem;
-      }
-      .columna-derecha {
-        padding: 1.2rem 0.9rem;
-        padding-top: 3rem;
-      }
-      .info-seccion {
-        padding: 0.8rem 1rem;
-      }
-      .info-seccion h4 {
-        font-size: 0.9rem;
-      }
-    }
-  </style>
+  @media (max-width: 1024px) { .estructura { grid-template-columns: minmax(230px, 280px) minmax(0, 1fr); } .categoria-desc { display: none; } }
+  @media (max-width: 760px) {
+    .estructura { grid-template-columns: 1fr; gap: 1rem; }
+    .categorias { position: sticky; top: 0; z-index: 20; flex-direction: row; overflow-x: auto; gap: .5rem;
+      margin: 0 calc(-1 * clamp(1rem, 4vw, 2.5rem)); padding: .6rem clamp(1rem, 4vw, 2.5rem);
+      background: rgba(255,255,255,.95); backdrop-filter: blur(8px); border-bottom: 1px solid var(--borde); scroll-snap-type: x proximity; scrollbar-width: none; }
+    .categorias::-webkit-scrollbar { display: none; }
+    .categorias li { flex: 0 0 auto; scroll-snap-align: start; }
+    .tarjeta-categoria { width: auto; border-left-width: 1px; border-bottom: 4px solid var(--acento); padding: .55rem .9rem; border-radius: 12px; }
+    .categoria-titulo { font-size: .85rem; white-space: nowrap; }
+    .categoria-etiqueta { display: none; }
+    .columna-detalle { min-height: 0; border-radius: 18px; scroll-margin-top: 4.5rem; }
+  }
+  @media (max-width: 560px) { .encabezado-panel { flex-direction: column; } }
+  @media (min-width: 1500px) { html { font-size: 17px; } }
+  @media print { .categorias, .btn-informacion, .btn-mapa { display: none; } .columna-detalle { border: 0; } }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+</style>
 </head>
 <body>
 
-<div class="app-wrapper">
-  <div class="container">
-    <!-- COLUMNA IZQUIERDA: listado de defensorías (orden solicitado: primero Palacio, luego 7,8,9) -->
-    <div class="columna-izquierda">
-      <h1 class="titulo-principal">Mapa de Defensorías</h1>
-      <div id="listaDefensoriasContainer">
-        <!-- las tarjetas se generarán dinámicamente con JS -->
-      </div>
-    </div>
+<header class="cabecera">
+  <div class="cabecera-interior"><h1>Mapa de Defensorías</h1></div>
+</header>
 
-    <!-- COLUMNA DERECHA: info detallada -->
-    <div class="columna-derecha">
-      <button class="btn-recordar" id="btnRecordarInfo">📌 RECORDÁ ESTO</button>
-      <div id="headerDinamico">
-        <h2 id="tituloDerecho">Defensorías del Palacio de Justicia</h2>
-        <p id="subtituloDerecho">N° 3, 4, 5 y 6 · Sede central</p>
+<div class="estructura">
+  <ul class="categorias" id="lista" aria-label="Defensorías"></ul>
+
+  <main class="columna-detalle" id="detalle" aria-live="polite">
+    <div class="encabezado-panel">
+      <div>
+        <h2 id="tituloDerecho"></h2>
+        <p id="subtituloDerecho"></p>
       </div>
-      <div class="info-detalle-scroll" id="contenidoDinamico">
-        <!-- contenido dinámico -->
-      </div>
+      <button class="btn-informacion" id="btnRecordarInfo" type="button">Recordá esto</button>
     </div>
-  </div>
+    <div class="contenido" id="contenidoDinamico"></div>
+  </main>
 </div>
 
-<!-- MODAL INFORMATIVO -->
-<div class="modal-overlay" id="modalInfo" onclick="toggleModal(false)">
-  <div class="modal-content" onclick="event.stopPropagation()">
-    <button class="modal-close" onclick="toggleModal(false)">&times;</button>
-    <div class="tip-box">
-      <h4>📌 Verificá siempre tu jurisdicción</h4>
-      <p>Antes de iniciar un trámite, confirmá que tu domicilio se encuentre dentro de los límites territoriales de la defensoría correspondiente. Llevá DNI y algún comprobante de residencia (servicio o factura).</p>
-    </div>
-    <div class="tip-box" style="background:#eef2fa; border-left-color:#2c7da0;">
-      <h4>📌 Acceso a la justicia</h4>
-      <p>Las defensorías oficiales brindan patrocinio gratuito a personas de escasos recursos. Horario general de atención: 7:00 a 12:00 hs (lunes a viernes).</p>
-    </div>
-    <div class="tip-box">
-      <h4>📌 ¿Necesitás orientación?</h4>
-      <p>Si tenés dudas sobre cuál te corresponde, podés consultar en Mesa de Entradas del Poder Judicial o llamar al Centro de Información Judicial: +54 376 4453000.</p>
-    </div>
+<dialog id="modal" aria-labelledby="modalTitulo">
+  <button class="cerrar" type="button" aria-label="Cerrar" id="cerrar">&times;</button>
+  <div class="modal-contenido">
+    <h4 id="modalTitulo">📌 Antes de iniciar un trámite</h4>
+    <div class="modal-insight"><strong>📌 Verificá siempre tu jurisdicción</strong><p>Antes de iniciar un trámite, confirmá que tu domicilio se encuentre dentro de los límites territoriales de la defensoría correspondiente. Llevá DNI y algún comprobante de residencia (servicio o factura).</p></div>
+    <div class="modal-insight azul"><strong>📌 Acceso a la justicia</strong><p>Las defensorías oficiales brindan patrocinio gratuito a personas de escasos recursos. Horario general de atención: 7:00 a 12:00 hs (lunes a viernes).</p></div>
+    <div class="modal-insight"><strong>📌 ¿Necesitás orientación?</strong><p>Si tenés dudas sobre cuál te corresponde, podés consultar en Mesa de Entradas del Poder Judicial o llamar al Centro de Información Judicial: +54 376 4453000.</p></div>
   </div>
-</div>
+</dialog>
 
 <script>
-  // BASE DE DATOS DE DEFENSORÍAS (orden definitivo: primero las del Palacio, luego N°7, N°8, N°9)
-  // Direcciones y teléfonos actualizados según información proporcionada
   const defensoriasData = [
     {
       id: "def3456",
@@ -455,148 +189,67 @@
     }
   ];
 
-  // Función para renderizar la lista de tarjetas (izquierda) en el orden definido
-  function renderListaDefensorias() {
-    const container = document.getElementById("listaDefensoriasContainer");
-    if (!container) return;
-    container.innerHTML = "";
-    defensoriasData.forEach(def => {
-      const card = document.createElement("div");
-      card.className = `tarjeta-defensoria ${def.colorClase}`;
-      card.setAttribute("data-id", def.id);
-      card.innerHTML = `
-        <div class="defensoria-titulo">
-          <span class="defensoria-badge">${def.emoji}</span>
-          <span style="font-weight:800;">${def.nombre}</span>
-        </div>
-        <div class="defensoria-resumen">${def.subtitulo}</div>
-        <div style="font-size:0.75rem; color:#4f7a92; margin-top:8px;">${def.resumen}</div>
-      `;
-      card.addEventListener("click", (e) => {
-        e.stopPropagation();
-        mostrarDetalleDefensoria(def.id);
-      });
-      // soporte táctil
-      card.addEventListener("touchstart", (e) => {
-        e.preventDefault();
-        mostrarDetalleDefensoria(def.id);
-      }, { passive: false });
-      container.appendChild(card);
-    });
+  const COLORES = { "color-def-1": "#1e4a6b", "color-def-2": "#2c7da0", "color-def-3": "#8e44ad", "color-def-4": "#27ae60", "color-def-5": "#d35400" };
+  const $ = id => document.getElementById(id);
+  const lista = $('lista'), modal = $('modal');
+  let actual = null;
+  const color = d => COLORES[d.colorClase] || '#14324b';
+
+  function renderLista() {
+    lista.innerHTML = defensoriasData.map(d => `
+      <li><button class="tarjeta-categoria" type="button" data-id="${d.id}" style="--acento:${color(d)}" aria-current="${d.id === actual}">
+        <span class="categoria-titulo">${d.nombre}</span>
+        <span class="categoria-etiqueta">${d.subtitulo}</span>
+        <span class="categoria-desc">${d.resumen}</span>
+      </button></li>`).join('');
   }
 
-  // Renderizado de contenido dinámico en columna derecha con info detallada, estilo secciones
-  function mostrarDetalleDefensoria(id) {
-    const def = defensoriasData.find(d => d.id === id);
-    if (!def) return;
-
-    // Actualizar header
-    let tituloMostrado = `${def.emoji} ${def.nombre}`;
-    if (def.id === "def3456") tituloMostrado = `📌 ${def.nombre}`;
-    document.getElementById("tituloDerecho").innerHTML = tituloMostrado;
-    document.getElementById("subtituloDerecho").innerHTML = def.subtitulo;
-
-    const detalles = def.detalles;
-    // construir html modular
-    let html = `
-      <div class="info-seccion">
-        <h4>📌 Límites / Jurisdicción</h4>
-        <p>${detalles.limites || "Jurisdicción territorial según lo establecido por el Poder Judicial."}</p>
-      </div>
-      <div class="info-seccion">
-        <h4>📌 Barrios y sectores incluidos</h4>
-        <ul class="lista-geografica">
-          ${detalles.barrios.split(',').map(b => `<li>${b.trim()}</li>`).join('')}
-        </ul>
-      </div>
-      <div class="info-seccion">
-        <h4>📌 Dirección y sedes</h4>
-        <p>${detalles.direccion}</p>
-      </div>
-      <div class="info-seccion">
-        <h4>📌 Contacto y horario</h4>
-        <p><strong>Teléfono:</strong> ${detalles.telefono}<br>
-        <strong>Horario de atención:</strong> ${detalles.horario}</p>
-      </div>
-    `;
-    // Notas adicionales / dato útil
-    if (detalles.notas) {
-      html += `
-        <div class="info-seccion" style="background:#fef5e8;">
-          <h4>💡 Dato útil / Observaciones</h4>
-          <p>${detalles.notas}</p>
-        </div>
-      `;
-    }
-    // Para la defensoría 9 agregamos un destacado sobre las dos sedes
-    if (def.id === "def9") {
-      html += `
-        <div class="info-seccion" style="background:#eef2fc;">
-          <h4>📌 Puntos de atención presencial</h4>
-          <p>📌 <strong>Sede Judicial Itaembé Miní:</strong> Av. 147 s/n (casi Av. 170) — oficinas centrales.<br>
-          📌 <strong>Sede CAV Itaembé Guazú:</strong> Calle Aguará Guazú 6375 y Magnolias (Centro de Atención al Vecino).<br>
-          Ambos puntos operan en el horario habitual.</p>
-        </div>
-      `;
-    }
-    if (def.id === "def8") {
-      html += `
-        <div class="info-seccion">
-          <h4>📌 Urgencias familiares</h4>
-          <p>Para casos de violencia familiar y protección de menores fuera del horario, acudir al <strong>Juzgado de Familia y Violencia Familiar N° 1 de Garupá</strong>, ubicado sobre Colectora Ruta Nacional 12.</p>
-        </div>
-      `;
-    }
-    if (def.id === "def3456") {
-      html += `
-        <div class="info-seccion">
-          <h4>📌 ¿Cuál te corresponde?</h4>
-          <p>Las defensorías 3, 4, 5 y 6 tienen distribución geográfica interna dentro de Posadas. Para identificarla correctamente, debes dirigirte al <strong>DEUT (Departamento de Entrada Única de Trámites)</strong> en el 1° Piso, Ala Norte del Palacio de Justicia. Allí, con tu documento de identidad y comprobante de domicilio, el personal te derivará a la defensoría competente según tu barrio.</p>
-        </div>
-        <div class="info-seccion">
-          <h4>📌 Ubicación exacta y contacto central</h4>
-          <p>Palacio de Justicia, Av. Santa Catalina N° 1735, primer piso, Ala Norte. Acceso por la entrada principal. Teléfono DEUT: 0376-4446700 (internos 1300, 2805, 2811).</p>
-        </div>
-      `;
-    }
-
-    document.getElementById("contenidoDinamico").innerHTML = html;
+  const tel = t => t.replace(/0376-(\d{7})/g, (m, n) => `<a href="tel:0376${n}">${m}</a>`);
+  const sec = (t, c, cls = '') => `<section class="ley-item ${cls}"><h3>${t}</h3>${c}</section>`;
+  function barrios(txt) {
+    if (/\.\s/.test(txt)) return `<p>${txt}</p>`;
+    const items = txt.split(/,\s*(?![^()]*\))/).map(b => b.trim().replace(/\.$/, '')).filter(Boolean);
+    return `<ul class="lista-simple">${items.map(b => `<li>${b}</li>`).join('')}</ul>`;
   }
 
-  // Modal functions
-  function toggleModal(show) {
-    const modal = document.getElementById("modalInfo");
-    if (modal) {
-      modal.style.display = show ? "flex" : "none";
+  function mostrar(id, scroll) {
+    const d = defensoriasData.find(x => x.id === id);
+    if (!d) return;
+    actual = id;
+    const x = d.detalles;
+    $('tituloDerecho').textContent = d.nombre;
+    $('subtituloDerecho').textContent = d.subtitulo;
+    $('detalle').style.setProperty('--acento', color(d));
+    const consulta = encodeURIComponent(x.direccion.split('<br>')[0].replace(/<[^>]*>/g, ''));
+    let html =
+      sec('Límites y jurisdicción', `<p>${x.limites || 'Jurisdicción territorial según lo establecido por el Poder Judicial.'}</p>`) +
+      sec('Barrios y sectores incluidos', barrios(x.barrios)) +
+      sec('Dirección y sedes', `<p>${x.direccion}</p><a class="btn-mapa" href="https://www.google.com/maps/search/?api=1&query=${consulta}" target="_blank" rel="noopener">Ver en Google Maps</a>`) +
+      sec('Contacto y horario', `<p><strong>Teléfono:</strong> ${tel(x.telefono)}<br><strong>Horario de atención:</strong> ${x.horario}</p>`);
+    if (x.notas) html += sec('Dato útil', `<p>${x.notas}</p>`, 'nota');
+    if (id === 'def9') html += sec('Puntos de atención presencial', `<p><strong>Sede Judicial Itaembé Miní:</strong> Av. 147 s/n (casi Av. 170), oficinas centrales.<br><strong>Sede CAV Itaembé Guazú:</strong> Calle Aguará Guazú 6375 y Magnolias (Centro de Atención al Vecino).<br>Ambos puntos operan en el horario habitual.</p>`);
+    if (id === 'def8') html += sec('Urgencias familiares', `<p>Para casos de violencia familiar y protección de menores fuera del horario, acudir al <strong>Juzgado de Familia y Violencia Familiar N° 1 de Garupá</strong>, ubicado sobre Colectora Ruta Nacional 12.</p>`);
+    if (id === 'def3456') html += sec('¿Cuál te corresponde?', `<p>Las defensorías 3, 4, 5 y 6 tienen distribución geográfica interna dentro de Posadas. Para identificarla, dirigite al <strong>DEUT (Departamento de Entrada Única de Trámites)</strong> en el 1° Piso, Ala Norte del Palacio de Justicia. Allí, con tu documento de identidad y comprobante de domicilio, te derivarán a la defensoría competente según tu barrio.</p>`);
+    const cont = $('contenidoDinamico');
+    cont.style.animation = 'none'; cont.offsetHeight; cont.style.animation = '';
+    cont.innerHTML = html;
+    renderLista();
+    history.replaceState(null, '', '#' + id);
+    if (scroll) {
+      const b = lista.querySelector('[aria-current="true"]');
+      if (b) b.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+      if (matchMedia('(max-width:760px)').matches) $('detalle').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
 
-  // Inicializar la aplicación y mostrar por defecto la primera defensoría (Palacio de Justicia)
-  function initApp() {
-    renderListaDefensorias();
-    // Por defecto, mostrar la primera del array (Defensorías N° 3,4,5,6)
-    if (defensoriasData.length) {
-      mostrarDetalleDefensoria(defensoriasData[0].id);
-    }
-    // botón recordar
-    const btnRecordar = document.getElementById("btnRecordarInfo");
-    if (btnRecordar) {
-      btnRecordar.addEventListener("click", (e) => {
-        e.stopPropagation();
-        toggleModal(true);
-      });
-    }
-    // cerrar modal al hacer clic overlay
-    const modalOverlay = document.getElementById("modalInfo");
-    if (modalOverlay) {
-      modalOverlay.addEventListener("click", (e) => {
-        if (e.target === modalOverlay) toggleModal(false);
-      });
-    }
-  }
+  lista.addEventListener('click', e => { const b = e.target.closest('[data-id]'); if (b) mostrar(b.dataset.id, true); });
+  $('btnRecordarInfo').addEventListener('click', () => modal.showModal());
+  $('cerrar').addEventListener('click', () => modal.close());
+  modal.addEventListener('click', e => { if (e.target === modal) modal.close(); });
 
-  // Ejecutar al cargar
-  window.addEventListener("DOMContentLoaded", initApp);
+  renderLista();
+  const inicial = location.hash.slice(1);
+  mostrar(defensoriasData.some(d => d.id === inicial) ? inicial : defensoriasData[0].id, false);
 </script>
 </body>
 </html>

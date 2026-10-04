@@ -1,683 +1,302 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-  <title>Subrogancias Defensoría Nº 6</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>Subrogancias · Defensoría Nº 6</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600;6..72,700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#14324b; --ink-2:#2f4b63; --muted:#5d7388; --paper:#fff; --card:#fff;
+  --line:#dbe3ea; --amber:#f0a020; --amber-soft:#fff3dc; --blue-soft:#e8f1f8;
+  --c:#14324b;
+  --serif:'Newsreader',Georgia,'Times New Roman',serif;
+  --sans:'Public Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --r:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:var(--sans);background:var(--paper);color:var(--ink);line-height:1.6;font-size:1rem;
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--amber);outline-offset:2px;border-radius:6px}
 
-    html, body {
-      height: 100%;
-      width: 100%;
-      overflow-x: hidden;
-    }
+/* Encabezado */
+.top{background:#fff;border-bottom:1px solid var(--line)}
+.top-in{max-width:1280px;margin:0 auto;padding:clamp(1.1rem,2.5vw,1.75rem) clamp(1rem,4vw,2.5rem)}
+.top h1{font-family:var(--serif);font-weight:600;font-size:clamp(1.6rem,3.6vw,2.4rem);line-height:1.1;letter-spacing:-.01em;color:var(--ink)}
+.btn-recordar{background:transparent;color:var(--ink);border:1.5px solid var(--ink);border-radius:999px;padding:.55rem 1.1rem;font-weight:600;font-size:.9rem;
+  white-space:nowrap;transition:background .15s,color .15s}
+.btn-recordar:hover{background:var(--ink);color:#fff}
+.btn-recordar:active{transform:scale(.97)}
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #f4f7fc;
-      color: #0a2b3e;
-      line-height: 1.4;
-    }
+/* Estructura */
+.layout{max-width:1280px;margin:0 auto;padding:clamp(1rem,3vw,2rem) clamp(1rem,4vw,2.5rem) 3rem;
+  display:grid;grid-template-columns:minmax(260px,340px) minmax(0,1fr);gap:clamp(1.25rem,3vw,2.5rem);align-items:start}
 
-    .app-wrapper {
-      display: flex;
-      width: 100%;
-      min-height: 100vh;
-    }
+/* Navegación de temas */
+.nav{position:sticky;top:1rem;display:flex;flex-direction:column;gap:.5rem;list-style:none}
+.tema{width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--c);
+  border-radius:var(--r);padding:.85rem 1rem;display:grid;grid-template-columns:auto 1fr;gap:.15rem .75rem;
+  transition:background .15s,box-shadow .15s,border-color .15s}
+.tema:hover{background:#fafcfe}
+.tema .n{grid-row:1/3;font-family:var(--serif);font-weight:700;font-size:1.5rem;line-height:1;color:var(--c);padding-top:.1rem;min-width:1.2ch}
+.tema .t{font-weight:600;font-size:.95rem;line-height:1.3}
+.tema .d{font-size:.8rem;color:var(--muted);line-height:1.4}
+.tema[aria-current="true"]{background:var(--c);border-color:var(--c);box-shadow:0 8px 22px -10px var(--c)}
+.tema[aria-current="true"] .n,.tema[aria-current="true"] .t{color:#fff}
+.tema[aria-current="true"] .d{color:rgba(255,255,255,.82)}
 
-    .container {
-      display: grid;
-      grid-template-columns: 1fr 1.2fr;
-      gap: 2rem;
-      padding: 2rem;
-      width: 100%;
-      max-width: 1600px;
-      margin: 0 auto;
-    }
+/* Panel de detalle */
+.panel{background:var(--card);border:1px solid var(--line);border-radius:22px;overflow:hidden;min-height:60vh;scroll-margin-top:5rem}
+.panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;padding:clamp(1.25rem,3vw,2.25rem);border-bottom:1px solid var(--line);border-top:6px solid var(--c);background:linear-gradient(#fff,#fafcfe)}
+.panel-head h2{font-family:var(--serif);font-weight:600;font-size:clamp(1.5rem,3.2vw,2.3rem);line-height:1.15;color:var(--ink);letter-spacing:-.005em}
+.panel-head p{margin-top:.5rem;color:var(--muted);font-size:clamp(.9rem,1.4vw,1rem)}
+.panel-body{padding:clamp(1.25rem,3vw,2.25rem);max-width:78ch}
+.panel-body.wide{max-width:none}
+.panel-body.swap{animation:swap .28s ease}
+@keyframes swap{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
-    /* COLUMNA IZQUIERDA */
-    .columna-izquierda {
-      overflow-y: visible;
-      padding-right: 1rem;
-    }
+.panel-body p{margin-bottom:1rem;font-size:clamp(1rem,1.3vw,1.0625rem);color:#22394d}
+.panel-body h3{font-family:var(--serif);font-weight:600;font-size:clamp(1.2rem,2vw,1.45rem);margin:1.75rem 0 .5rem;color:var(--ink)}
+.panel-body ul,.panel-body ol{margin:0 0 1rem 1.25rem}
+.panel-body li{margin-bottom:.55rem;padding-left:.25rem;color:#22394d}
+.panel-body li::marker{color:var(--c);font-weight:700}
+.panel-body strong{color:var(--ink);font-weight:600}
 
-    .titulo-principal {
-      font-size: 1.6rem;
-      font-weight: 800;
-      color: #1e4a6b;
-      margin-bottom: 0.5rem;
-      text-transform: uppercase;
-      line-height: 1.2;
-      border-bottom: 3px solid #ff9800;
-      padding-bottom: 10px;
-    }
+.nota{background:var(--blue-soft);border-left:5px solid var(--ink);border-radius:0 var(--r) var(--r) 0;padding:1rem 1.15rem;margin:1.25rem 0}
+.nota p:last-child{margin-bottom:0}
+.nota p+p{margin-top:.6rem}
+.nota.aviso{background:#fdeee4;border-color:#c4501a}
+.nota.ok{background:var(--amber-soft);border-color:var(--amber)}
 
-    .subtitulo-header {
-      font-size: 0.85rem;
-      color: #2c7da0;
-      margin-bottom: 2rem;
-      font-weight: 500;
-      letter-spacing: -0.2px;
-    }
+.meses{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.9rem;margin:1.25rem 0}
+.mes{background:var(--ink);color:#fff;border-radius:var(--r);padding:1.1rem .8rem;text-align:center;
+  font-family:var(--serif);font-size:clamp(1.3rem,3vw,1.7rem);font-weight:600;letter-spacing:.02em}
 
-    .tarjeta-perfil {
-      background: white;
-      border-radius: 15px;
-      padding: 1.5rem;
-      margin-bottom: 1.2rem;
-      border: 1px solid #dce9f0;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      -webkit-tap-highlight-color: transparent;
-    }
+.graficos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.25rem;margin-top:1.25rem}
+.grafico{background:#fafcfe;border:1px solid var(--line);border-radius:18px;padding:1.1rem;text-align:center}
+.grafico h3{margin:0 0 .5rem;font-size:1.1rem}
+.grafico svg{width:100%;max-width:320px;height:auto;display:block;margin:0 auto}
+.grafico small{display:block;margin-top:.5rem;color:var(--muted);font-size:.85rem}
 
-    .tarjeta-perfil:active {
-      transform: scale(0.99);
-      background: #fefefe;
-    }
+.pasos{list-style:none;margin:0 0 1rem;counter-reset:p}
+.pasos li{counter-increment:p;position:relative;padding:.1rem 0 1.1rem 3.1rem;margin:0;border-left:0}
+.pasos li::before{content:counter(p);position:absolute;left:0;top:0;width:2.15rem;height:2.15rem;border-radius:50%;
+  background:var(--c);color:#fff;display:grid;place-items:center;font-weight:700;font-size:.95rem}
+.pasos li::after{content:"";position:absolute;left:1.05rem;top:2.3rem;bottom:.2rem;width:2px;background:var(--line)}
+.pasos li:last-child::after{display:none}
 
-    .perfil-titulo {
-      font-size: 1.2rem;
-      font-weight: 800;
-      margin-bottom: 0.5rem;
-      display: block;
-    }
+/* Modal */
+dialog{border:0;border-radius:24px;padding:0;width:min(560px,calc(100% - 2rem));max-height:calc(100% - 2rem);margin:auto;color:var(--ink);box-shadow:0 30px 80px -20px rgba(10,30,50,.5)}
+dialog::backdrop{background:rgba(10,30,50,.65);backdrop-filter:blur(3px)}
+.modal-in{padding:clamp(1.25rem,4vw,2rem);display:grid;gap:1rem}
+.modal-in h2{font-family:var(--serif);font-size:1.6rem;font-weight:600}
+.modal-in h3{font-family:var(--serif);font-size:1.15rem;margin-bottom:.3rem}
+.modal-in p{font-size:.97rem}
+.cerrar{position:absolute;top:.75rem;right:.75rem;width:2.5rem;height:2.5rem;border-radius:50%;border:0;background:var(--paper);font-size:1.5rem;line-height:1}
+.cerrar:hover{background:var(--line)}
 
-    .perfil-descripcion {
-      font-size: 0.85rem;
-      color: #4a627a;
-      line-height: 1.4;
-    }
+/* Tablet */
+@media (max-width:1024px){
+  .layout{grid-template-columns:minmax(230px,280px) minmax(0,1fr)}
+  .tema .d{display:none}
+  .tema{align-items:center}
+  .tema .n{grid-row:auto}
+}
 
-    /* Colores de borde izquierdo (paleta Defensoría) */
-    .color-1 { color: #1e4a6b; border-left: 6px solid #1e4a6b; padding-left: 12px; }
-    .color-2 { color: #2c7da0; border-left: 6px solid #2c7da0; padding-left: 12px; }
-    .color-3 { color: #8e44ad; border-left: 6px solid #8e44ad; padding-left: 12px; }
-    .color-4 { color: #27ae60; border-left: 6px solid #27ae60; padding-left: 12px; }
-    .color-5 { color: #d35400; border-left: 6px solid #d35400; padding-left: 12px; }
-    .color-6 { color: #e67e22; border-left: 6px solid #e67e22; padding-left: 12px; }
-    .color-7 { color: #2980b9; border-left: 6px solid #2980b9; padding-left: 12px; }
-    .color-8 { color: #16a085; border-left: 6px solid #16a085; padding-left: 12px; }
-
-    /* COLUMNA DERECHA */
-    .columna-derecha {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      background: #ffffff;
-      border-radius: 20px;
-      padding: 2rem;
-      border: 1px solid #dce9f0;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-    }
-
-    .btn-recordar {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: #ff9800;
-      color: white;
-      border: none;
-      padding: 8px 15px;
-      border-radius: 8px;
-      font-size: 0.75rem;
-      font-weight: 800;
-      cursor: pointer;
-      z-index: 10;
-      transition: background 0.2s;
-      white-space: nowrap;
-    }
-
-    .btn-recordar:active {
-      background: #e68900;
-      transform: scale(0.97);
-    }
-
-    .principios-scroll {
-      flex: 1;
-      overflow-y: auto;
-      margin-top: 1rem;
-      max-height: 65vh;
-      padding-right: 6px;
-    }
-
-    /* Estilos de contenido dinámico (bloques estilo pasos o explicaciones) */
-    .bloque-contenido {
-      animation: fadeIn 0.3s ease;
-    }
-
-    .bloque-contenido p {
-      font-size: 0.95rem;
-      line-height: 1.55;
-      margin-bottom: 1rem;
-      color: #1e2f3e;
-    }
-
-    .bloque-contenido h4 {
-      font-weight: 800;
-      font-size: 1.05rem;
-      margin: 1.2rem 0 0.5rem 0;
-      color: #1e4a6b;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .bloque-contenido ul, .bloque-contenido ol {
-      margin-left: 1.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .bloque-contenido li {
-      margin-bottom: 0.5rem;
-      font-size: 0.9rem;
-    }
-
-    .tarjeta-destacada {
-      background: #f0f7ff;
-      border-left: 5px solid #1e4a6b;
-      padding: 1rem;
-      border-radius: 12px;
-      margin: 1rem 0;
-    }
-
-    .grid-meses {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-      gap: 1rem;
-      margin: 1rem 0;
-    }
-
-    .mes-card {
-      background: #eef2fa;
-      text-align: center;
-      padding: 0.8rem;
-      border-radius: 16px;
-      font-weight: 800;
-      font-size: 1.3rem;
-      color: #1e4a6b;
-    }
-
-    .graficos-wrapper {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-      margin-top: 1rem;
-    }
-
-    .grafico-card {
-      background: #fafcff;
-      border: 1px solid #e2edf7;
-      border-radius: 20px;
-      padding: 1rem;
-      text-align: center;
-    }
-
-    .grafico-card canvas {
-      max-width: 100%;
-      height: auto;
-      background: transparent;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* MODAL */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(10, 43, 62, 0.85);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      backdrop-filter: blur(2px);
-    }
-
-    .modal-content {
-      background: white;
-      padding: 2rem 1.8rem;
-      border-radius: 25px;
-      max-width: 550px;
-      width: 90%;
-      position: relative;
-      margin: 1rem;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-
-    /* RESPONSIVE */
-    @media (max-width: 800px) {
-      .container {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-        padding: 1rem;
-        overflow: visible;
-      }
-
-      .columna-izquierda {
-        padding-right: 0;
-        width: 100%;
-      }
-
-      .columna-derecha {
-        width: 100%;
-        padding: 1.5rem 1rem;
-        padding-top: 3.2rem;
-        margin-bottom: 0.5rem;
-      }
-
-      .btn-recordar {
-        top: 12px;
-        right: 12px;
-        padding: 6px 12px;
-        font-size: 0.7rem;
-      }
-
-      .titulo-principal {
-        font-size: 1.4rem;
-      }
-
-      .perfil-titulo {
-        font-size: 1rem;
-      }
-
-      .graficos-wrapper {
-        grid-template-columns: 1fr;
-        gap: 1.2rem;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .container {
-        padding: 0.75rem;
-        gap: 1rem;
-      }
-      .columna-derecha {
-        padding: 1.2rem 0.8rem;
-        padding-top: 3rem;
-      }
-      .btn-recordar {
-        top: 8px;
-        right: 8px;
-        padding: 5px 10px;
-      }
-      .bloque-contenido p, .bloque-contenido li {
-        font-size: 0.85rem;
-      }
-    }
-  </style>
+/* Móvil: temas en tira horizontal */
+@media (max-width:760px){
+  .layout{grid-template-columns:1fr;gap:1rem}
+  .nav{position:sticky;top:0;z-index:20;flex-direction:row;overflow-x:auto;gap:.5rem;
+    margin:0 calc(-1 * clamp(1rem,4vw,2.5rem));padding:.6rem clamp(1rem,4vw,2.5rem);
+    background:rgba(255,255,255,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);
+    scroll-snap-type:x proximity;scrollbar-width:none}
+  .nav::-webkit-scrollbar{display:none}
+  .nav li{flex:0 0 auto;scroll-snap-align:start}
+  .tema{width:auto;border-left-width:1px;border-bottom:4px solid var(--c);padding:.55rem .9rem;display:flex;gap:.5rem;align-items:center;border-radius:12px}
+  .tema .n{font-size:1.05rem}
+  .tema .t{font-size:.85rem;white-space:nowrap}
+  .panel{min-height:0;border-radius:18px;scroll-margin-top:4.5rem}
+  .graficos{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  .panel-head{flex-direction:column}
+  .meses{grid-template-columns:1fr}
+}
+@media (min-width:1500px){html{font-size:17px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
 </head>
 <body>
 
-<div class="app-wrapper">
-  <div class="container" id="mainContainer">
-    <!-- COLUMNA IZQUIERDA: Tarjetas temáticas -->
-    <div class="columna-izquierda">
-      <h1 class="titulo-principal">Orden de Subrogación</h1>
-      <div class="subtitulo-header">Defensoría Civil y Comercial Nº 6 · Guía para el personal</div>
-      
-      <div class="tarjeta-perfil" data-tema="pasiva">
-        <span class="perfil-titulo color-1">1. ¿Quién nos cubre si no estamos? (Pasiva)</span>
-        <div class="perfil-descripcion">Reemplazo automático cuando el Defensor N° 6 está ausente o de licencia.</div>
-      </div>
-
-      <div class="tarjeta-perfil" data-tema="activa">
-        <span class="perfil-titulo color-2">2. ¿A quién debemos cubrir nosotros? (Activa)</span>
-        <div class="perfil-descripcion">Nuestro rol como subrogantes de la Defensoría N° 7.</div>
-      </div>
-
-      <div class="tarjeta-perfil" data-tema="turnos">
-        <span class="perfil-titulo color-3">3. Calendario de Turnos: Meses de la N° 6</span>
-        <div class="perfil-descripcion">Abril · Agosto · Diciembre — meses de recepción de causas nuevas.</div>
-      </div>
-
-      <div class="tarjeta-perfil" data-tema="permanente">
-        <span class="perfil-titulo color-4">4. Defensorías con Turno Permanente</span>
-        <div class="perfil-descripcion">N° 7 (Villa Cabello), N° 8 (Garupá), N° 9 (Itaembé Miní).</div>
-      </div>
-
-      <div class="tarjeta-perfil" data-tema="legal">
-        <span class="perfil-titulo color-5">5. Reglas y Leyes (Base Legal)</span>
-        <div class="perfil-descripcion">Art. 121 quinquies RPJ, Acordadas STJ y subrogancia automática.</div>
-      </div>
-
-      <div class="tarjeta-perfil" data-tema="pasos">
-        <span class="perfil-titulo color-6">6. Cómo se hace el trámite (Paso a paso)</span>
-        <div class="perfil-descripcion">Actuación administrativa: aviso, asunción, firma, cese.</div>
-      </div>
-
-      <div class="tarjeta-perfil" data-tema="ejemplos">
-        <span class="perfil-titulo color-7">7. Ejemplos prácticos para el día a día</span>
-        <div class="perfil-descripcion">Casos de vacaciones, enfermedad y diferencia con inhibición.</div>
-      </div>
-
-      <div class="tarjeta-perfil" data-tema="graficos">
-        <span class="perfil-titulo color-8">8. Mapa Visual de Subrogantes</span>
-        <div class="perfil-descripcion">Esquema circular de subrogancias (quién cubre a quién).</div>
-      </div>
-    </div>
-
-    <!-- COLUMNA DERECHA: DETALLE DINÁMICO -->
-    <div class="columna-derecha" id="columnaDetalles">
-      <button class="btn-recordar" id="btnRecordar">RECORDÁ ESTO</button>
-      
-      <div id="headerDinamico">
-        <h2 id="tituloDerecho" style="color: #1e4a6b; font-size: 1.4rem; margin-bottom: 5px;">Cargando...</h2>
-        <p id="subtituloDerecho" style="color: #7f8c8d; font-size: 0.85rem; margin-bottom: 12px; border-left: 3px solid #ff9800; padding-left: 10px;"></p>
-      </div>
-
-      <div class="principios-scroll" id="contenidoDerecho">
-        <!-- contenido dinámico según el tema -->
-      </div>
-    </div>
+<header class="top">
+  <div class="top-in">
+    <h1>Subrogación</h1>
   </div>
+</header>
+
+<div class="layout">
+  <ul class="nav" id="nav" aria-label="Temas"></ul>
+
+  <main class="panel" id="panel" aria-live="polite">
+    <div class="panel-head">
+      <div>
+        <h2 id="tituloDerecho">Cargando…</h2>
+        <p id="subtituloDerecho"></p>
+      </div>
+      <button class="btn-recordar" id="btnRecordar" type="button">Recordá esto</button>
+    </div>
+    <div class="panel-body" id="contenidoDerecho"></div>
+  </main>
 </div>
 
-<!-- MODAL "RECORDÁ ESTO" (contenido adaptado a subrogaciones) -->
-<div class="modal-overlay" id="modalInfo" onclick="toggleModal(false)">
-  <div class="modal-content" onclick="stopPropagation(event)">
-    <button style="position:absolute; top:12px; right:16px; background:none; border:none; font-size:1.8rem; cursor:pointer; color:#95a5a6; line-height:1;" onclick="toggleModal(false)">&times;</button>
-    <div style="background:#eef4fa; border-left:5px solid #1e6f5c; padding:1.2rem; margin-bottom:1.5rem; border-radius:12px;">
-      <h4 style="color:#1a5d6c; margin-bottom:8px;">📌 Diferencia clave</h4>
-      <p style="font-size:0.9rem; line-height:1.5;">La <strong>Subrogancia</strong> es automática por ausencia o licencia. La <strong>Inhibición</strong> requiere trámite aparte (motivo legal). Nunca dejar sin cobertura a la Defensoría.</p>
+<dialog id="modalInfo" aria-labelledby="modalTitulo">
+  <button class="cerrar" type="button" id="cerrarModal" aria-label="Cerrar">&times;</button>
+  <div class="modal-in">
+    <h2 id="modalTitulo">Recordá esto</h2>
+    <div class="nota">
+      <h3>Diferencia clave</h3>
+      <p>La <strong>subrogancia</strong> es automática por ausencia o licencia. La <strong>inhibición</strong> requiere trámite aparte (motivo legal). Nunca dejar sin cobertura a la Defensoría.</p>
     </div>
-    <div style="background:#fff4e5; border-left:5px solid #ff9800; padding:1.2rem; border-radius:12px;">
-      <h4 style="color:#a35200; margin-bottom:8px;">📌 Cadena de respaldo</h4>
-      <p style="font-size:0.9rem; line-height:1.5;">Si la N° 5 también está ausente, se retrocede a la N° 4, luego N° 3, etc. Siempre hay un subrogante. El orden está fijado por el reglamento.</p>
+    <div class="nota ok">
+      <h3>Cadena de respaldo</h3>
+      <p>Si la N° 5 también está ausente, se retrocede a la N° 4, luego N° 3, etc. Siempre hay un subrogante. El orden está fijado por el reglamento.</p>
     </div>
   </div>
-</div>
+</dialog>
 
 <script>
-  // ---------- CONTENIDOS DE CADA TEMA ----------
-  const temasData = {
-    pasiva: {
-      titulo: "📌 ¿Quién nos cubre si no estamos? (Pasiva)",
-      subtitulo: "Subrogancia automática · Defensoría Nº 6",
-      contenido: `
-        <div class="bloque-contenido">
-          <div class="tarjeta-destacada">
-            <p><strong>📌 Regla general:</strong> La Defensoría N° 5 es el respaldo inmediato de la N° 6 cuando el titular se ausenta (licencia, vacaciones, enfermedad).</p>
-          </div>
-          <p>De acuerdo con el <strong>Art. 130 RPJ</strong>, la subrogancia es <strong>automática</strong> — no se necesita intervención del Juez ni trámite especial. El defensor subrogante asume la atención de los expedientes y la facultad de firma.</p>
-          <h4>📌 ¿Y si la N° 5 también está ausente?</h4>
-          <p>Se sigue retrocediendo en el orden numérico: N° 4, luego N° 3, y así sucesivamente. La cobertura nunca debe quedar interrumpida.</p>
-          <div style="background:#f9f9fc; border-radius: 16px; padding: 1rem; text-align: center; margin-top: 1rem;">
-            </div>
-        </div>
-      `
-    },
-    activa: {
-      titulo: "📌 ¿A quién debemos cubrir nosotros? (Activa)",
-      subtitulo: "La N° 6 como subrogante de la N° 7",
-      contenido: `
-        <div class="bloque-contenido">
-          <p>Así como la Defensoría N° 5 nos cubre a nosotros, la <strong>N° 6 es el respaldo natural de la N° 7</strong>. Cuando el titular de la N° 7 se ausenta (licencia, enfermedad o cualquier causal legal), los expedientes pasan a nuestro Defensor para su firma y resolución.</p>
-          <div class="tarjeta-destacada">
-            <p><strong>📌 Flujo activo:</strong> Defensoría N° 6  ➔  cubre a Defensoría N° 7.</p>
-            <p style="margin-top: 6px;"><strong>Importante:</strong> Si la N° 7 también tiene impedimento, se continúa con la N° 8, pero el orden primario es el inmediato siguiente.</p>
-          </div>
-          <h4>📌 Registro interno</h4>
-          <p>Cuando actúe como subrogante, el personal debe cargar una nota en el sistema indicando el reemplazo y el plazo estimado, pero no requiere autorización previa del juzgado.</p>
-        </div>
-      `
-    },
-    turnos: {
-      titulo: "📌 Calendario de Turnos: Meses de la N° 6",
-      subtitulo: "Rotación mensual con las Defensorías 3, 4 y 5",
-      contenido: `
-        <div class="bloque-contenido">
-          <p>La Defensoría N° 6 recibe las <strong>causas nuevas</strong> (turno ordinario) exclusivamente durante los siguientes meses del año:</p>
-          <div class="grid-meses">
-            <div class="mes-card">ABRIL</div>
-            <div class="mes-card">AGOSTO</div>
-            <div class="mes-card">DICIEMBRE</div>
-          </div>
-          <p>El resto del año, el turno corresponde a otras Defensorías del circuito (N° 3, N° 4 y N° 5 rotan). Esta distribución está definida por Acordadas STJ (80/12, 158/15, 81/22).</p>
-          <div class="tarjeta-destacada">
-            <p><strong>📌 Durante los meses de turno:</strong> si el defensor titular está de licencia, el subrogante (N° 5) atiende las nuevas causas entrantes igualmente, porque el turno sigue activo.</p>
-          </div>
-        </div>
-      `
-    },
-    permanente: {
-      titulo: "📌 Defensorías con Turno Permanente",
-      subtitulo: "Zonas sin rotación mensual",
-      contenido: `
-        <div class="bloque-contenido">
-          <p>Estas defensorías tienen asignación territorial fija y <strong>turno todo el año</strong> (no participan del sistema rotatorio con la N° 6).</p>
-          <ul>
-            <li><strong>Defensoría N° 7:</strong> Villa Cabello</li>
-            <li><strong>Defensoría N° 8:</strong> Garupá</li>
-            <li><strong>Defensoría N° 9:</strong> Itaembé Miní</li>
-          </ul>
-          <p>En la práctica, esto significa que nunca recibimos por turno causas de esas zonas, salvo que actúemos como subrogantes de la N° 7 (por ausencia de su titular).</p>
-        </div>
-      `
-    },
-    legal: {
-      titulo: "📌 Reglas y Leyes (Base Legal)",
-      subtitulo: "Reglamento del Poder Judicial y Acordadas",
-      contenido: `
-        <div class="bloque-contenido">
-          <div class="tarjeta-destacada">
-            <p><strong>📘 Art. 121 quinquies RPJ:</strong> Establece el orden del círculo de subrogancias (3➔4➔5➔6➔7...).</p>
-            <p><strong>📘 Art. 130 RPJ:</strong> La subrogancia es automática, no requiere delegación expresa del juez.</p>
-          </div>
-          <p><strong>Acordadas del Superior Tribunal de Justicia:</strong> N° 80/12, 158/15 y 81/22 definen el cronograma de turnos mensuales y las defensorías con competencia territorial permanente.</p>
-          <h4>📌 Inhibición vs Subrogancia</h4>
-          <p>La <strong>inhibición</strong> (causa de recusación o impedimento legal) sigue el mismo orden de reemplazo, pero requiere acta y comunicación formal al juzgado.</p>
-        </div>
-      `
-    },
-    pasos: {
-      titulo: "📌 Cómo se hace el trámite (Paso a paso)",
-      subtitulo: "Procedimiento administrativo interno",
-      contenido: `
-        <div class="bloque-contenido">
-          <ol style="list-style-type: decimal; font-weight: 500;">
-            <li><strong>Aviso:</strong> El Defensor titular comunica por nota o correo interno su ausencia (licencia, capacitación, etc.).</li>
-            <li><strong>Asunción automática:</strong> El subrogante (N° 5 cuando es nuestra ausencia) queda a cargo sin necesidad de declaración jurada.</li>
-            <li><strong>Firma y gestión:</strong> Los escritos urgentes se llevan a la oficina del subrogante; se utiliza firma digital con la aclaración "por subrogancia".</li>
-            <li><strong>Registro en SIGED:</strong> Se carga la subrogancia en el sistema para que las notificaciones lleguen correctamente.</li>
-            <li><strong>Cese:</strong> Cuando el titular se reincorpora, finaliza el reemplazo de forma inmediata, sin trámite adicional.</li>
-          </ol>
-          <div class="tarjeta-destacada" style="margin-top: 1rem;">
-            <p><strong>📌 Recomendación:</strong> siempre dejar constancia en el legajo de las fechas de inicio y fin de la subrogancia.</p>
-          </div>
-        </div>
-      `
-    },
-    ejemplos: {
-      titulo: "📌 Ejemplos prácticos para el día a día",
-      subtitulo: "Casos frecuentes",
-      contenido: `
-        <div class="bloque-contenido">
-          <div class="tarjeta-destacada">
-            <p><strong>📌 Vacaciones del Defensor N°6:</strong> el abogado de la N° 5 debe firmar los escritos urgentes. Las notificaciones se remiten a la oficina subrogante.</p>
-          </div>
-          <div class="tarjeta-destacada">
-            <p><strong>📌 Turno de ABRIL (N°6 de turno):</strong> el Defensor se enferma. La N° 5 atiende las nuevas demandas y además resuelve los expedientes internos.</p>
-          </div>
-          <div style="background:#fff0e8; border-left: 5px solid #d35400; padding: 1rem; border-radius: 12px; margin: 1rem 0;">
-            <p><strong>📌 No confundir con inhibición:</strong> Si el Defensor es pariente de una parte, debe apartarse. El trámite de inhibición requiere proveído judicial y designación formal del subrogante, no es automático.</p>
-          </div>
-          <p><strong>Ejemplo extra:</strong> La N° 7 se queda sin titular por licencia prolongada. La N° 6 asume como subrogante activa: debe atender los expedientes de Villa Cabello hasta el regreso.</p>
-        </div>
-      `
-    },
-    graficos: {
-      titulo: "📌 Mapa Visual de Subrogantes",
-      subtitulo: "Esquema circular de subrogancias",
-      contenido: `
-        <div class="bloque-contenido">
-          <p>El orden de reemplazo sigue la numeración: la Defensoría anterior cubre a la siguiente. En caso de ausencia múltiple, se retrocede en el círculo.</p>
-          <div class="graficos-wrapper">
-            <div class="grafico-card">
-              <p style="font-weight:800; margin-bottom:12px; color:#d35400;">📌 ¿QUIÉN REEMPLAZA A QUIÉN?<br>(sentido inverso)</p>
-              <canvas id="canvasInverso" width="300" height="300" style="width:100%; max-width:280px; height:auto; margin:0 auto;"></canvas>
-              <p class="texto-chico" style="font-size:0.7rem; margin-top:8px;">Ejemplo: La N° 5 reemplaza a la N° 6</p>
-            </div>
-            <div class="grafico-card">
-              <p style="font-weight:800; margin-bottom:12px; color:#1e4a6b;">📌 ORDEN PROGRESIVO</p>
-              <canvas id="canvasProgresivo" width="300" height="300" style="width:100%; max-width:280px; height:auto; margin:0 auto;"></canvas>
-              <p class="texto-chico" style="font-size:0.7rem; margin-top:8px;">La N° 6 cubre a la N° 7</p>
-            </div>
-          </div>
-        </div>
-      `
-    }
-  };
+const temas = [
+  { id:"pasiva", c:"#14324b", corto:"¿Quién nos cubre? (Pasiva)", desc:"Reemplazo automático cuando el Defensor N° 6 está ausente o de licencia.",
+    titulo:"¿Quién nos cubre si no estamos? (Pasiva)", subtitulo:"Subrogancia automática · Defensoría Nº 6",
+    html:`
+      <div class="nota"><p><strong>Regla general:</strong> la Defensoría N° 5 es el respaldo inmediato de la N° 6 cuando el titular se ausenta (licencia, vacaciones, enfermedad).</p></div>
+      <p>De acuerdo con el <strong>Art. 130 RPJ</strong>, la subrogancia es <strong>automática</strong>: no se necesita intervención del Juez ni trámite especial. El defensor subrogante asume la atención de los expedientes y la facultad de firma.</p>
+      <h3>¿Y si la N° 5 también está ausente?</h3>
+      <p>Se sigue retrocediendo en el orden numérico: N° 4, luego N° 3, y así sucesivamente. La cobertura nunca debe quedar interrumpida.</p>` },
+  { id:"activa", c:"#2c7da0", corto:"¿A quién cubrimos? (Activa)", desc:"Nuestro rol como subrogantes de la Defensoría N° 7.",
+    titulo:"¿A quién debemos cubrir nosotros? (Activa)", subtitulo:"La N° 6 como subrogante de la N° 7",
+    html:`
+      <p>Así como la Defensoría N° 5 nos cubre a nosotros, la <strong>N° 6 es el respaldo natural de la N° 7</strong>. Cuando el titular de la N° 7 se ausenta (licencia, enfermedad o cualquier causal legal), los expedientes pasan a nuestro Defensor para su firma y resolución.</p>
+      <div class="nota"><p><strong>Flujo activo:</strong> Defensoría N° 6 ➔ cubre a Defensoría N° 7.</p>
+      <p><strong>Importante:</strong> si la N° 7 también tiene impedimento, se continúa con la N° 8, pero el orden primario es el inmediato siguiente.</p></div>
+      <h3>Registro interno</h3>
+      <p>Cuando actúe como subrogante, el personal debe cargar una nota en el sistema indicando el reemplazo y el plazo estimado, pero no requiere autorización previa del juzgado.</p>` },
+  { id:"turnos", c:"#8e44ad", corto:"Calendario de turnos", desc:"Abril, agosto y diciembre: meses de recepción de causas nuevas.",
+    titulo:"Calendario de turnos: meses de la N° 6", subtitulo:"Rotación mensual con las Defensorías 3, 4 y 5",
+    html:`
+      <p>La Defensoría N° 6 recibe las <strong>causas nuevas</strong> (turno ordinario) exclusivamente durante los siguientes meses del año:</p>
+      <div class="meses"><div class="mes">Abril</div><div class="mes">Agosto</div><div class="mes">Diciembre</div></div>
+      <p>El resto del año, el turno corresponde a otras Defensorías del circuito (N° 3, N° 4 y N° 5 rotan). Esta distribución está definida por Acordadas STJ (80/12, 158/15, 81/22).</p>
+      <div class="nota ok"><p><strong>Durante los meses de turno:</strong> si el defensor titular está de licencia, el subrogante (N° 5) atiende las nuevas causas entrantes igualmente, porque el turno sigue activo.</p></div>` },
+  { id:"permanente", c:"#27ae60", corto:"Turno permanente", desc:"N° 7 (Villa Cabello), N° 8 (Garupá), N° 9 (Itaembé Miní).",
+    titulo:"Defensorías con turno permanente", subtitulo:"Zonas sin rotación mensual",
+    html:`
+      <p>Estas defensorías tienen asignación territorial fija y <strong>turno todo el año</strong> (no participan del sistema rotatorio con la N° 6).</p>
+      <ul>
+        <li><strong>Defensoría N° 7:</strong> Villa Cabello</li>
+        <li><strong>Defensoría N° 8:</strong> Garupá</li>
+        <li><strong>Defensoría N° 9:</strong> Itaembé Miní</li>
+      </ul>
+      <p>En la práctica, esto significa que nunca recibimos por turno causas de esas zonas, salvo que actuemos como subrogantes de la N° 7 (por ausencia de su titular).</p>` },
+  { id:"legal", c:"#d35400", corto:"Reglas y leyes", desc:"Art. 121 quinquies RPJ, Acordadas STJ y subrogancia automática.",
+    titulo:"Reglas y leyes (base legal)", subtitulo:"Reglamento del Poder Judicial y Acordadas",
+    html:`
+      <div class="nota"><p><strong>Art. 121 quinquies RPJ:</strong> establece el orden del círculo de subrogancias (3 ➔ 4 ➔ 5 ➔ 6 ➔ 7…).</p>
+      <p><strong>Art. 130 RPJ:</strong> la subrogancia es automática, no requiere delegación expresa del juez.</p></div>
+      <p><strong>Acordadas del Superior Tribunal de Justicia:</strong> N° 80/12, 158/15 y 81/22 definen el cronograma de turnos mensuales y las defensorías con competencia territorial permanente.</p>
+      <h3>Inhibición vs. subrogancia</h3>
+      <p>La <strong>inhibición</strong> (causa de recusación o impedimento legal) sigue el mismo orden de reemplazo, pero requiere acta y comunicación formal al juzgado.</p>` },
+  { id:"pasos", c:"#e67e22", corto:"Trámite paso a paso", desc:"Actuación administrativa: aviso, asunción, firma, cese.",
+    titulo:"Cómo se hace el trámite (paso a paso)", subtitulo:"Procedimiento administrativo interno",
+    html:`
+      <ol class="pasos">
+        <li><strong>Aviso:</strong> el Defensor titular comunica por nota o correo interno su ausencia (licencia, capacitación, etc.).</li>
+        <li><strong>Asunción automática:</strong> el subrogante (N° 5 cuando es nuestra ausencia) queda a cargo sin necesidad de declaración jurada.</li>
+        <li><strong>Firma y gestión:</strong> los escritos urgentes se llevan a la oficina del subrogante; se utiliza firma digital con la aclaración "por subrogancia".</li>
+        <li><strong>Registro en SIGED:</strong> se carga la subrogancia en el sistema para que las notificaciones lleguen correctamente.</li>
+        <li><strong>Cese:</strong> cuando el titular se reincorpora, finaliza el reemplazo de forma inmediata, sin trámite adicional.</li>
+      </ol>
+      <div class="nota ok"><p><strong>Recomendación:</strong> siempre dejar constancia en el legajo de las fechas de inicio y fin de la subrogancia.</p></div>` },
+  { id:"ejemplos", c:"#2980b9", corto:"Ejemplos prácticos", desc:"Casos de vacaciones, enfermedad y diferencia con inhibición.",
+    titulo:"Ejemplos prácticos para el día a día", subtitulo:"Casos frecuentes",
+    html:`
+      <div class="nota"><p><strong>Vacaciones del Defensor N° 6:</strong> el abogado de la N° 5 debe firmar los escritos urgentes. Las notificaciones se remiten a la oficina subrogante.</p></div>
+      <div class="nota"><p><strong>Turno de abril (N° 6 de turno):</strong> el Defensor se enferma. La N° 5 atiende las nuevas demandas y además resuelve los expedientes internos.</p></div>
+      <div class="nota aviso"><p><strong>No confundir con inhibición:</strong> si el Defensor es pariente de una parte, debe apartarse. El trámite de inhibición requiere proveído judicial y designación formal del subrogante; no es automático.</p></div>
+      <p><strong>Ejemplo extra:</strong> la N° 7 se queda sin titular por licencia prolongada. La N° 6 asume como subrogante activa: debe atender los expedientes de Villa Cabello hasta el regreso.</p>` },
+  { id:"graficos", c:"#16a085", corto:"Mapa visual", desc:"Esquema circular de subrogancias (quién cubre a quién).",
+    titulo:"Mapa visual de subrogantes", subtitulo:"Esquema circular de subrogancias", wide:true,
+    html:`
+      <p>El orden de reemplazo sigue la numeración: la Defensoría anterior cubre a la siguiente. En caso de ausencia múltiple, se retrocede en el círculo.</p>
+      <div class="graficos">
+        <div class="grafico"><h3 style="color:#c4501a">¿Quién reemplaza a quién? (sentido inverso)</h3><div data-g="inverso"></div><small>Ejemplo: la N° 5 reemplaza a la N° 6.</small></div>
+        <div class="grafico"><h3>Orden progresivo</h3><div data-g="progresivo"></div><small>La N° 6 cubre a la N° 7.</small></div>
+      </div>` }
+];
 
-  // Funciones de dibujo de canvas (adaptadas del original)
-  function dibujarGrafico(canvasId, isReverse) {
-    const canvas = document.getElementById(canvasId);
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    const size = 300;
-    canvas.width = size;
-    canvas.height = size;
-    const center = size / 2;
-    const radius = 100;
-    const nodes = ["3", "4", "5", "6", "7", "8", "9"];
-    const n = nodes.length;
-    const angles = nodes.map((_, i) => i * (Math.PI * 2 / n) - Math.PI / 2);
-    const points = angles.map(a => ({ x: center + radius * Math.cos(a), y: center + radius * Math.sin(a) }));
-
-    ctx.clearRect(0, 0, size, size);
-    ctx.lineWidth = 2.5;
-    ctx.strokeStyle = isReverse ? "#d35400" : "#2c7da0";
-    ctx.fillStyle = isReverse ? "#d35400" : "#2c7da0";
-
-    for (let i = 0; i < n; i++) {
-      const from = points[i];
-      const toIdx = isReverse ? (i - 1 + n) % n : (i + 1) % n;
-      const to = points[toIdx];
-      const midAngle = (angles[i] + angles[toIdx]) / 2 + (Math.abs(angles[i]-angles[toIdx]) > Math.PI ? Math.PI : 0);
-      const cpX = center + (radius + 22) * Math.cos(midAngle);
-      const cpY = center + (radius + 22) * Math.sin(midAngle);
-      const angleToTarget = Math.atan2(to.y - cpY, to.x - cpX);
-      const edgeX = to.x - 28 * Math.cos(angleToTarget);
-      const edgeY = to.y - 28 * Math.sin(angleToTarget);
-
-      ctx.beginPath();
-      ctx.moveTo(from.x, from.y);
-      ctx.quadraticCurveTo(cpX, cpY, edgeX, edgeY);
-      ctx.stroke();
-
-      const arrowSize = 11;
-      ctx.beginPath();
-      ctx.moveTo(edgeX, edgeY);
-      ctx.lineTo(edgeX - arrowSize * Math.cos(angleToTarget - 0.45), edgeY - arrowSize * Math.sin(angleToTarget - 0.45));
-      ctx.lineTo(edgeX - arrowSize * Math.cos(angleToTarget + 0.45), edgeY - arrowSize * Math.sin(angleToTarget + 0.45));
-      ctx.fill();
-    }
-
-    nodes.forEach((label, i) => {
-      ctx.beginPath();
-      ctx.arc(points[i].x, points[i].y, 22, 0, Math.PI * 2);
-      ctx.fillStyle = label === "6" ? "#ff9800" : "white";
-      ctx.fill();
-      ctx.strokeStyle = "#1e4a6b";
-      ctx.lineWidth = 2;
-      ctx.stroke();
-      ctx.fillStyle = "#0a2b3e";
-      ctx.font = "bold 14px 'Inter', sans-serif";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText(label, points[i].x, points[i].y);
-    });
+/* Gráfico circular en SVG (nítido y adaptable a cualquier pantalla) */
+function grafico(inverso){
+  const nodos=["3","4","5","6","7","8","9"], n=nodos.length, C=150, R=104, rn=23;
+  const col = inverso ? "#c4501a" : "#2c7da0", id = inverso ? "ai" : "ap";
+  const ang = i => i*2*Math.PI/n - Math.PI/2;
+  const pt = (a,r=R) => [C+r*Math.cos(a), C+r*Math.sin(a)];
+  const d = (rn+9)/R; // margen angular para no tapar los nodos
+  let s=`<svg viewBox="0 0 300 300" role="img" aria-label="${inverso?'Orden inverso de reemplazo':'Orden progresivo de reemplazo'}">
+    <defs><marker id="${id}" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="${col}"/></marker></defs>`;
+  for(let i=0;i<n;i++){
+    const j = inverso ? (i-1+n)%n : (i+1)%n, dir = inverso ? -1 : 1;
+    const a=pt(ang(i)+dir*d), b=pt(ang(j)-dir*d);
+    s+=`<path d="M${a[0].toFixed(1)} ${a[1].toFixed(1)} A${R} ${R} 0 0 ${inverso?0:1} ${b[0].toFixed(1)} ${b[1].toFixed(1)}" fill="none" stroke="${col}" stroke-width="2.5" stroke-linecap="round" marker-end="url(#${id})"/>`;
   }
+  nodos.forEach((l,i)=>{
+    const [x,y]=pt(ang(i)), seis=l==="6";
+    s+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${rn}" fill="${seis?'#f0a020':'#fff'}" stroke="#14324b" stroke-width="2"/>
+        <text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Newsreader,Georgia,serif" font-weight="700" font-size="20" fill="#14324b">${l}</text>`;
+  });
+  return s+`</svg>`;
+}
 
-  function activarGraficos() {
-    setTimeout(() => {
-      dibujarGrafico("canvasInverso", true);
-      dibujarGrafico("canvasProgresivo", false);
-    }, 60);
-  }
+const nav=document.getElementById('nav'), panel=document.getElementById('panel'),
+      body=document.getElementById('contenidoDerecho');
 
-  // Mostrar tema seleccionado
-  function mostrarTema(temaId) {
-    const data = temasData[temaId];
-    if (!data) return;
-    document.getElementById('tituloDerecho').innerHTML = data.titulo;
-    document.getElementById('subtituloDerecho').innerText = data.subtitulo;
-    document.getElementById('contenidoDerecho').innerHTML = data.contenido;
-    
-    // Si el tema contiene gráficos, redibujamos los canvas
-    if (temaId === "graficos") {
-      activarGraficos();
-    }
-  }
+temas.forEach((t,i)=>{
+  const li=document.createElement('li');
+  li.innerHTML=`<button class="tema" type="button" data-id="${t.id}" style="--c:${t.c}">
+    <span class="n">${i+1}</span><span class="t">${t.corto}</span><span class="d">${t.desc}</span></button>`;
+  nav.appendChild(li);
+});
 
-  // Eventos de tarjetas (estilo previos)
-  function handleTarjetaClick(event, tarjeta) {
-    event.stopPropagation();
-    const tema = tarjeta.getAttribute('data-tema');
-    if (tema && temasData[tema]) {
-      mostrarTema(tema);
-    }
-  }
+function mostrar(id, desplazar){
+  const t=temas.find(x=>x.id===id); if(!t) return;
+  nav.querySelectorAll('.tema').forEach(b=>{
+    const on=b.dataset.id===id;
+    b.setAttribute('aria-current',on);
+    if(on && desplazar) b.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});
+  });
+  panel.style.setProperty('--c',t.c);
+  document.getElementById('tituloDerecho').textContent=t.titulo;
+  document.getElementById('subtituloDerecho').textContent=t.subtitulo;
+  body.className='panel-body swap'+(t.wide?' wide':'');
+  body.innerHTML=t.html;
+  body.querySelectorAll('[data-g]').forEach(el=>el.innerHTML=grafico(el.dataset.g==='inverso'));
+  history.replaceState(null,'','#'+id);
+  if(desplazar && window.matchMedia('(max-width:760px)').matches) panel.scrollIntoView({behavior:'smooth',block:'start'});
+}
 
-  function inicializarTarjetas() {
-    const tarjetas = document.querySelectorAll('.tarjeta-perfil');
-    tarjetas.forEach(tarjeta => {
-      tarjeta.removeEventListener('click', tarjeta._listener);
-      tarjeta.removeEventListener('touchstart', tarjeta._touchListener);
-      
-      const clickHandler = (e) => handleTarjetaClick(e, tarjeta);
-      const touchHandler = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        handleTarjetaClick(e, tarjeta);
-      };
-      
-      tarjeta.addEventListener('click', clickHandler);
-      tarjeta.addEventListener('touchstart', touchHandler, { passive: false });
-      
-      tarjeta._listener = clickHandler;
-      tarjeta._touchListener = touchHandler;
-    });
-  }
+nav.addEventListener('click',e=>{const b=e.target.closest('.tema'); if(b) mostrar(b.dataset.id,true);});
 
-  // Modal
-  function toggleModal(show) {
-    const modal = document.getElementById('modalInfo');
-    modal.style.display = show ? 'flex' : 'none';
-  }
-  function stopPropagation(e) {
-    e.stopPropagation();
-  }
+const dlg=document.getElementById('modalInfo');
+document.getElementById('btnRecordar').addEventListener('click',()=>dlg.showModal());
+document.getElementById('cerrarModal').addEventListener('click',()=>dlg.close());
+dlg.addEventListener('click',e=>{ if(e.target===dlg) dlg.close(); });
 
-  // Inicialización
-  window.onload = () => {
-    inicializarTarjetas();
-    // Tema por defecto: "Pasiva"
-    mostrarTema('pasiva');
-    
-    const btnRecordar = document.getElementById('btnRecordar');
-    if (btnRecordar) {
-      btnRecordar.addEventListener('click', (e) => {
-        e.stopPropagation();
-        toggleModal(true);
-      });
-    }
-  };
+const inicial=location.hash.slice(1);
+mostrar(temas.some(t=>t.id===inicial)?inicial:'pasiva',false);
 </script>
 </body>
 </html>
